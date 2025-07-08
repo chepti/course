@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הטמעה, חסמים ובניית אתר פורטפוליו</title>
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #34495e;
+            --nav-width: 300px;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            direction: rtl;
+        }
+
+        #nav {
+            width: var(--nav-width);
+            height: 100vh;
+            background: #f8f9fa;
+            padding: 30px;
+            overflow-y: auto;
+            position: fixed;
+            right: 0;
+            font-size: 1.1em;
+            border-left: 1px solid #dee2e6;
+        }
+
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        #content {
+            margin-right: var(--nav-width);
+            padding: 40px;
+            width: calc(100% - var(--nav-width));
+            margin-top: var(--header-height);
+            max-width: 1200px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            right: var(--nav-width);
+            left: 0;
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .progress-indicator {
+            height: 10px;
+            background: linear-gradient(to right, var(--primary-color), #27ae60);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0;
+        }
+
+        .nav-item {
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-item, .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .main-item {
+            font-weight: bold;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+        }
+
+        .sub-item {
+            margin: 8px 0;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            border-width: 1px;
+        }
+
+        .main-item:hover {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        .sub-item:hover {
+            background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+            border-color: var(--primary-color);
+            transform: translateX(-5px);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+        }
+
+        .completion-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .completed > .main-item,
+        .nav-item.completed > .sub-item {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-item.completed > .sub-item {
+           background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+           border-color: var(--primary-color);
+           color: initial;
+        }
+
+        .completed .completion-circle {
+            background: white;
+            border-color: white;
+        }
+
+        .completed .completion-circle::after {
+            content: "✓";
+            color: var(--primary-color);
+        }
+
+        .main-item:hover .completion-circle,
+        .sub-item:hover .completion-circle {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .sub-items {
+            margin-right: 34px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .sub-items.active {
+            max-height: 1000px;
+        }
+
+        .video-container {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+        }
+
+        iframe {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .illustration {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .content-section {
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .content-section ul, .content-section ol, .checklist {
+            padding-right: 20px;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 800px) {
+            body { display: block; }
+            #content { display: none; }
+            #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+            .progress-bar { right: 0; width: 100%; }
+            .sub-items { margin-right: 0; }
+            .sub-item { padding-right: 8px; padding-left: 8px; }
+
+            .section-wrapper {
+                padding: 15px;
+                background: #ffffff;
+                border-top: 1px solid #e5e7eb;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+            }
+
+            .section-wrapper.active {
+                max-height: 5000px;
+            }
+
+            .sub-items.active {
+                max-height: 5000px;
+            }
+
+            .content-section {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+
+    <div id="nav">
+        <div class="sidebar-title">הטמעה ופורטפוליו 🌐</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="intro">
+                <div class="completion-circle"></div>
+                <span>במבט על</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="implementation">
+                        <div class="completion-circle"></div>
+                        <span>תכנון הטמעה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="google-sites">
+                        <div class="completion-circle"></div>
+                        <span>גוגל סייטס</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="wix">
+                        <div class="completion-circle"></div>
+                        <span>וויקס</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="assignment">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const content = {
+                'intro': `
+                    <div class="content-section">
+                        <h1>הטמעה, חסמים ובניית אתר פורטפוליו לרכז</h1>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/geJU8SNsKOw" allowfullscreen></iframe>
+                        </div>
+                        <h3>גרף החדשנות</h3>
+                        <p>רעיון שהתקבל באופן רחב, שמחלק את היחס של כל אוכלוסיה אנושית ביחס לשינוי.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/SvvJzETmWnQ" allowfullscreen></iframe>
+                        </div>
+                        <h3>למה בעל תפקיד בחינוך צריך פורטפוליו דיגיטלי?</h3>
+                        <ul>
+                            <li><b>יצירת השפעה חינוכית רחבה:</b> הפצת חומרי למידה ותכניות שפיתחתם למורים נוספים והרחבת המעגל החינוכי.</li>
+                            <li><b>פיתוח זהות מקצועית:</b> גיבוש והצגת ה"אני מאמין" החינוכי שלכם, תיעוד צמיחה ויצירת נראות למומחיות.</li>
+                            <li><b>תרומה לקהילה המקצועית:</b> יצירת בנק משאבים, בניית רשת שיתופי פעולה וקידום תרבות של שיתוף.</li>
+                            <li><b>ניהול ידע חינוכי:</b> תיעוד שיטות עבודה ופרקטיקות מוצלחות ויצירת מאגר מתפתח.</li>
+                        </ul>
+                        <img src="https://i.imgur.com/OAyjewC.png" alt="פורטפוליו דיגיטלי" class="illustration">
+                    </div>`,
+                'implementation': `
+                    <div class="content-section">
+                        <h1>תכנון הטמעה</h1>
+                        <p>חשבו על תכנית הטמעה יצירתית של מיומנויות בינה מלאכותית בבית הספר שלכם - בעזרת בינה. חשבו על קבוצות המורים בצוות לפי גרף החדשנות.</p>
+                        <p>נסו לדייק את העקרונות <em>שלכם</em> לגבי שילוב טכנולוגיה בבית הספר תוך התייעצות עם בינה. תוכלו לאסוף כחומר גלם את התגובות שלכם לדיונים ביחידות הקודמות, הן מבטאות חשיבה רבה.</p>
+                        <p>את התוצר המנוסח - שלבו באתר החדש שלכם במקטע "אודות".</p>
+                        <img src="https://i.imgur.com/cScBArT.jpg" alt="תכנון הטמעה" class="illustration">
+                    </div>`,
+                'google-sites': `
+                    <div class="content-section">
+                        <h1>גוגל סייטס</h1>
+                        <p>סרטונים של אדיר ברטוב (שולבו כאן באישורו):</p>
+                        <div class="video-container">
+                            <h4>חלק א: יצירת אתר, עריכת עמוד</h4>
+                            <iframe src="https://www.youtube.com/embed/Yp4sczbfaZg" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h4>חלק ב: ניווט, עמודים ותפריט</h4>
+                            <iframe src="https://www.youtube.com/embed/FQc-bbrkans" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h4>חלק ג: שיתוף האתר</h4>
+                            <iframe src="https://www.youtube.com/embed/l_IldmsX6UA" allowfullscreen></iframe>
+                        </div>
+                    </div>`,
+                'wix': `
+                    <div class="content-section">
+                        <h1>וויקס</h1>
+                        <h3>איך לבנות אתר וויקס?</h3>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/48ScL5gdkfw" allowfullscreen></iframe>
+                        </div>
+                        <p>סרטון הסבר (לא מוצלח במיוחד) איך ליצור עותק ולערוך קצת</p>
+                    </div>`,
+                'discussion': `
+                    <div class="content-section">
+                        <h1>דיון</h1>
+                        <p>מה חוסם אנשים בצוות שלכם מלהשתלב ולהתחבר לשינוי הטכנולוגי בכלל, והבינה המלאכותית בפרט?</p>
+                        <p>נסו לחלק אותם לקבוצות לפי גרף החדשנות (חדשנים, סתגלנים, רוב מהיר, רוב איטי ומאספים). מה הצורך של כל קבוצה? מה יכול לתמוך בהם?</p>
+                        <img src="https://i.imgur.com/Lhm3HM5.jpg" alt="חסמים בהטמעת טכנולוגיה" class="illustration">
+                    </div>`,
+                'assignment': `
+                    <div class="content-section">
+                        <h1>משימה</h1>
+                        <p>צרו אתר גוגל סייט (או אתר וויקס) וארגנו בתוכו תוצרים שלכם כמורים וכבעלי תפקידים.</p>
+                        <h4>הנחיות:</h4>
+                        <ul>
+                            <li>הטמיעו סרטונים שיצרתם, משחקונים וחומרי למידה, תכניות שהובלתם, דשבורדים, אפיונים, אפליקציות ועוד.</li>
+                            <li>בכל פריט - הקפידו על ייצוג ויזואלי וצרפו טקסט שנותן הסבר והקשר.</li>
+                            <li>אם מתאים - תנו קישור ליצירת עותק מהתכנים.</li>
+                            <li>ארגנו את התוכן בכמה עמודים לפי חלוקה הגיונית.</li>
+                            <li>הוסיפו עמוד אודות - תמונה, אני מאמין ועקרונות.</li>
+                        </ul>
+                        <h4>בונוס:</h4>
+                        <p>צרו עמוד לינקטרי LINKTREE ושלבו בו קישור לאתר שלכם ואל דרכי יצירת קשר.</p>
+                        <h4>מחוון להערכה עצמית:</h4>
+                        <h5>✓ תוכן</h5>
+                        <div class="checklist">
+                            <div class="checklist-item"><input type="checkbox" id="c1"><label for="c1">האתר כולל לפחות 3 תוצרים משמעותיים שיצרתי</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c2"><label for="c2">כל תוצר מלווה בהסבר והקשר ברור</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c3"><label for="c3">קיים עמוד "אודות" עם תמונה ו"אני מאמין"</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="c4"><label for="c4">התכנים מאורגנים בצורה הגיונית בעמודים/קטגוריות</label></div>
+                        </div>
+                        <h5>✓ עיצוב וניווט</h5>
+                        <div class="checklist">
+                            <div class="checklist-item"><input type="checkbox" id="d1"><label for="d1">יש ייצוג ויזואלי לכל תוצר</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="d2"><label for="d2">הניווט באתר אינטואיטיבי וברור</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="d3"><label for="d3">העיצוב נקי ועקבי לאורך כל האתר</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="d4"><label for="d4">האתר נראה טוב גם במובייל</label></div>
+                        </div>
+                        <h5>✓ נגישות ושיתוף</h5>
+                        <div class="checklist">
+                            <div class="checklist-item"><input type="checkbox" id="a1"><label for="a1">כל הקישורים פעילים ונגישים</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="a2"><label for="a2">ניתנות אפשרויות ליצירת עותקים</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="a3"><label for="a3">קיימים פרטי יצירת קשר</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="a4"><label for="a4">האתר מקושר לפלטפורמות רלוונטיות אחרות</label></div>
+                        </div>
+                        <h5>✓ מקצועיות</h5>
+                        <div class="checklist">
+                            <div class="checklist-item"><input type="checkbox" id="p1"><label for="p1">התוכן נקי משגיאות כתיב ותחביר</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p2"><label for="p2">הטקסטים תמציתיים ובהירים</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p3"><label for="p3">השפה מקצועית ומותאמת לקהל היעד</label></div>
+                            <div class="checklist-item"><input type="checkbox" id="p4"><label for="p4">קיימת עקביות בפורמט ובעיצוב</label></div>
+                        </div>
+                        <img src="https://i.imgur.com/dPqoAK7.jpg" alt="בניית אתר פורטפוליו" class="illustration">
+                    </div>`
+            };
+
+            const isMobile = window.innerWidth <= 800;
+            const timers = {};
+
+            function updateProgress() {
+                const allItems = document.querySelectorAll('.main-item, .sub-item');
+                const completedItems = document.querySelectorAll('.nav-item.completed');
+                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+                document.querySelector('.progress-indicator').style.width = `${percentage}%`;
+            }
+
+            function setItemCompleted(item) {
+                const navItem = item.closest('.nav-item');
+                const section = item.dataset.section;
+                if (!navItem.classList.contains('completed')) {
+                    clearTimeout(timers[section]);
+                    timers[section] = setTimeout(() => {
+                        navItem.classList.add('completed');
+                        updateProgress();
+                    }, 10000); 
+                }
+            }
+
+            function handleMainItemClick(e) {
+                const mainItem = e.currentTarget;
+                const navItem = mainItem.closest('.nav-item');
+                const section = mainItem.dataset.section;
+                const subItemsContainer = navItem.querySelector('.sub-items');
+
+                if (subItemsContainer) {
+                    subItemsContainer.classList.toggle('active');
+                }
+
+                if (content[section]) {
+                    if (isMobile) {
+                        let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                        if (!wrapper) {
+                            wrapper = document.createElement('div');
+                            wrapper.className = 'section-wrapper';
+                            navItem.appendChild(wrapper);
+                        }
+                        
+                        const shouldShow = !wrapper.classList.contains('active');
+                        
+                        document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                            if (w !== wrapper) w.classList.remove('active');
+                        });
+
+                        wrapper.innerHTML = content[section];
+                        
+                        if(shouldShow) {
+                            setTimeout(() => wrapper.classList.add('active'), 10);
+                        } else {
+                            wrapper.classList.remove('active');
+                        }
+                    } else {
+                        document.getElementById('content-area').innerHTML = content[section];
+                    }
+                }
+
+                if (content[section]) {
+                    setItemCompleted(mainItem);
+                }
+            }
+            
+            function handleSubItemClick(e) {
+                e.stopPropagation();
+                const subItem = e.currentTarget;
+                const section = subItem.dataset.section;
+                const navItem = subItem.closest('.nav-item').parentElement.closest('.nav-item');
+
+                if (isMobile) {
+                    let wrapper = navItem.querySelector('.section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    const shouldShow = !wrapper.classList.contains('active');
+
+                    document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+                    
+                    wrapper.innerHTML = content[section];
+
+                    if (shouldShow) {
+                         setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    document.getElementById('content-area').innerHTML = content[section];
+                }
+                setItemCompleted(subItem);
+            }
+
+            document.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            document.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobile) {
+                document.querySelector('.main-item[data-section="intro"]').click();
+            }
+            
+            let lastWidth = window.innerWidth;
+            window.addEventListener('resize', () => {
+                const newWidth = window.innerWidth;
+                if ((newWidth > 800 && lastWidth <= 800) || (newWidth <= 800 && lastWidth > 800)) {
+                    location.reload();
+                }
+                lastWidth = newWidth;
+            });
+        });
+    </script>
+</body>
+</html> 

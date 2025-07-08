@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פיתוח אפליקציה בית ספרית עם אפפסקריפט</title>
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #34495e;
+            --nav-width: 300px;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            direction: rtl;
+        }
+
+        #nav {
+            width: var(--nav-width);
+            height: 100vh;
+            background: #f8f9fa;
+            padding: 30px;
+            overflow-y: auto;
+            position: fixed;
+            right: 0;
+            font-size: 1.1em;
+            border-left: 1px solid #dee2e6;
+        }
+
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        #content {
+            margin-right: var(--nav-width);
+            padding: 40px;
+            width: calc(100% - var(--nav-width));
+            margin-top: var(--header-height);
+            max-width: 1200px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            right: var(--nav-width);
+            left: 0;
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .progress-indicator {
+            height: 10px;
+            background: linear-gradient(to right, var(--primary-color), #27ae60);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0;
+        }
+
+        .nav-item {
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-item, .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .main-item {
+            font-weight: bold;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+        }
+
+        .sub-item {
+            margin: 8px 0;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            border-width: 1px;
+        }
+
+        .main-item:hover {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        .sub-item:hover {
+            background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+            border-color: var(--primary-color);
+            transform: translateX(-5px);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+        }
+
+        .completion-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .completed > .main-item,
+        .nav-item.completed > .sub-item {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-item.completed > .sub-item {
+           background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+           border-color: var(--primary-color);
+           color: initial;
+        }
+
+        .completed .completion-circle {
+            background: white;
+            border-color: white;
+        }
+
+        .completed .completion-circle::after {
+            content: "✓";
+            color: var(--primary-color);
+        }
+
+        .main-item:hover .completion-circle,
+        .sub-item:hover .completion-circle {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .sub-items {
+            margin-right: 34px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .sub-items.active {
+            max-height: 1000px;
+        }
+
+        .video-container {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+        }
+
+        iframe {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .illustration {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+        
+        .chip {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #2980b9, #7d3c98);
+        }
+        
+        .embedded-page {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        pre {
+            background-color: #eee;
+            border: 1px solid #999;
+            display: block;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .content-section {
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .content-section ul, .content-section ol {
+            padding-right: 20px;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 800px) {
+            body { display: block; }
+            #content { display: none; }
+            #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+            .progress-bar { right: 0; width: 100%; }
+            .sub-items { margin-right: 0; }
+            .sub-item { padding-right: 8px; padding-left: 8px; }
+
+            .section-wrapper {
+                padding: 15px;
+                background: #ffffff;
+                border-top: 1px solid #e5e7eb;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+            }
+
+            .section-wrapper.active {
+                max-height: 5000px;
+            }
+
+            .sub-items.active {
+                max-height: 5000px;
+            }
+
+            .content-section {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+
+    <div id="nav">
+        <div class="sidebar-title">פיתוח אפליקציה בית ספרית 📚</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="intro">
+                <div class="completion-circle"></div>
+                <span>מבוא</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>במבט על</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="presentation">
+                        <div class="completion-circle"></div>
+                        <span>מצגת שלבי העבודה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tutorial">
+                        <div class="completion-circle"></div>
+                        <span>סרטון הסבר</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="prompt">
+                        <div class="completion-circle"></div>
+                        <span>כתיבת הפרומפט</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="sheet">
+                        <div class="completion-circle"></div>
+                        <span>עריכת הגליון</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="deployment">
+                        <div class="completion-circle"></div>
+                        <span>פריסה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="examples">
+                        <div class="completion-circle"></div>
+                        <span>דוגמאות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="bugs">
+                        <div class="completion-circle"></div>
+                        <span>באגים</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="cursor">
+                        <div class="completion-circle"></div>
+                        <span>קורסור</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="assignment">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const content = {
+                'intro': `
+                    <div class="content-section">
+                        <h1>פיתוח אפליקציה בית ספרית עם אפפסקריפט</h1>
+                        <p>כולנו משתמשים באפליקציות שאחרים יצרו. אבל לפעמים חסר משהו! לפעמים יש צורך ספציפי שאין לו מענה קיים, מענה לא מותאם לצרכינו, או - עלות גבוהה.</p>
+                        <p>היכולת לקבל יישומונים קטנים מכלי בינה, מאפשרת לנו להגדיר את המוצר הרצוי, ולבנות אותו בשיחה עם הבינה.</p>
+                        <p>הבינה מייצרת קוד, ואנחנו צריכים להלביש אותו באתר או IDE - סביבת פיתוח, שבה הוא ממומש. אנחנו גם צריכים בסיס נתונים לשמור את המידע, כדי שהקוד יוכל להיות קל וזריז.</p>
+                        <img src="https://i.imgur.com/LeoN6Ln.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'overview': `
+                    <div class="content-section">
+                        <h1>במבט על</h1>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/xcmpU7E34AQ" allowfullscreen></iframe>
+                        </div>
+                    </div>`,
+                'presentation': `
+                    <div class="content-section">
+                        <h1>מצגת שלבי העבודה</h1>
+                        <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                            <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;" src="https://www.canva.com/design/DAGaAzsfGrY/ljZdHCkkkPPrtDO3dBCjNg/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+                        </div>
+                        <p><a href="https://www.canva.com/design/DAGaAzsfGrY/ljZdHCkkkPPrtDO3dBCjNg/view" target="_blank">עותק של בונים אפליקציות GEG</a> על ידי חפציה</p>
+                    </div>`,
+                'tutorial': `
+                    <div class="content-section">
+                        <h1>סרטון הסבר</h1>
+                        <div class="video-container">
+                            <h4>שלב 2 - אפליקציה חד כיוונית, שמתעדת מידע אל גליון נתונים</h4>
+                            <iframe src="https://www.youtube.com/embed/RobIxL2jhuY" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h4>שלב 3 - אפליקציה דו כיוונית</h4>
+                            <iframe src="https://www.youtube.com/embed/83-5Ew7EVho" allowfullscreen></iframe>
+                        </div>
+                        <img src="https://i.imgur.com/9wwCuRw.png" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'prompt': `
+                    <div class="content-section">
+                        <h1>כתיבת הפרומפט</h1>
+                        <div class="text-content">
+                            <h4>נתכנן:</h4>
+                            <ul>
+                                <li>הגדרה ברורה של הצורך, מה הבעיה, מה חסר לנו.</li>
+                                <li>הגדרה של הפתרון - מה המוצר שלנו יעשה. מה היוזר יבצע במוצר.</li>
+                                <li>חלוקה לשלבים - מסע לקוח. לכתוב פעלים: ילחץ, יבחר, יתקשר.</li>
+                                <li>תכנון מסכים - טקסט, כפתור, חלוקת המסך. ניווט</li>
+                                <li>תכנון מבנה נתונים - אילו פריטי אינפורמציה יש? מה צריך להיות פתוח לשינוי? מה נעדכן רק בגליון? אילו גליונות נחלק? מה הכותרות?</li>
+                            </ul>
+                            <h4>העתיקו, הדביקו וערכו:</h4>
+                            <pre>
+"אני רוצה לבנות אפליקצית HTML, עם בסיס נתונים בGoogle Sheets. תכין לי 2 קבצים לAppScript.
+האפליקציה תעשה... / היוזר יבצע....
+מבנה הנתונים שלי הוא... (כולל שמות הגליונות, כותרות)
+במסך הראשון יהיה…"</pre>
+                            <p>נריץ, נמתין, ובסוף - </p>
+                            <p>- נעתיק את שני קטעי הקוד שקיבלנו.</p>
+                        </div>
+                        <div class="images-section">
+                            <img src="https://i.imgur.com/ZLuAMgz.jpg" alt="כתיבת פרומפט" class="illustration">
+                        </div>
+                    </div>`,
+                'sheet': `
+                    <div class="content-section">
+                        <h1>עריכת הגליון</h1>
+                        <ol>
+                            <li>נבנה את הנתונים בהתאם לתכנון: כותרות, שמות לגליון, נכניס קצת מידע לדוגמא</li>
+                            <li>נפתח את אפפסקריפט בתוך התוספים</li>
+                            <li>נדביק את הקוד של CODE GS בעמוד הראשי (במקום מה שיש שם)</li>
+                            <li>נלחץ על פלוס, נוסיף קובץ HTML. ניתן שם index ונדביק בו את הקוד המתאים</li>
+                            <li>ניתן שם לפרויקט, נבצע שמירה, ונריץ את אחת הפונקציות</li>
+                        </ol>
+                        <img src="https://i.imgur.com/y2l7eOo.png" alt="הגדרות גליון" class="illustration">
+                    </div>`,
+                'deployment': `
+                    <div class="content-section">
+                        <h1>פריסה</h1>
+                        <ol>
+                            <li>נלחץ על כפתור הפריסה. נבחר פריסה חדשה</li>
+                            <li>נגדיר בגלגל - אפליקציית WEB</li>
+                            <li>נבחר גישה - לכולם</li>
+                            <li>לפריסה - ותוך כמה שניות נקבל קישור. נבדוק איך יצא! נבחן אם הפעולות אכן מפעילות מה שצריך וכותבו לקובץ המקושר.</li>
+                        </ol>
+                        <p>מה לא עובד? מה צריך לשפר? נחזור לבינה ונבקש בפירוט את כל התיקונים הנדרשים</p>
+                        <p>כאשר אנחנו מעדכנים תיקונים קטנים - במקום ליצור פריסה חדשה, נעדיף ללחוץ "ניהול פריסות", ללחוץ על העיפרון, ושם לבחור גרסה חדשה. היתרון - לא נצטרך להחליף את הקישור לאפליקציה שלנו.</p>
+                        <p>יש באפפסקריפט היסטוריה (כפתור שעון בצד), כך שנוכל לחזור אל גרסה קודמת אם צריך.</p>
+                        <img src="https://i.imgur.com/Nqh5FMb.png" alt="פריסת האפליקציה" class="illustration">
+                    </div>`,
+                'examples': `
+                    <div class="content-section">
+                        <h1>דוגמאות</h1>
+                        <h4>חד כיווני:</h4>
+                        <iframe src="http://did.li/feedbackw" class="embedded-page"></iframe>
+                        <a href="http://did.li/feedbackw" target="_blank" class="chip">פתח בחלון חדש</a>
+                        <h4>דו כיווני:</h4>
+                        <p>תוכלו לקרוא על דוגמאות שונות, לראות ואפילו ליצור עותק מהגליונות ולחקור בעצמכם.</p>
+                        <iframe src="https://tikshuv.chepti.com/apps/" class="embedded-page"></iframe>
+                        <a href="https://tikshuv.chepti.com/apps/" target="_blank" class="chip">פתח בחלון חדש</a>
+                    </div>`,
+                'bugs': `
+                    <div class="content-section">
+                        <h1>באגים</h1>
+                        <ul>
+                            <li>לפעמים צריך להחליף את שם הקובץ index ל Index.</li>
+                            <li>ככלל - אנחנו ננסה לבקש מהבינה לפתור כל באג שיצוף, היא יודעת להתמודד.</li>
+                            <li>חלק מהשגיאות נוכל למצוא אם נלחץ F12, ונפתח את ה"קונסול" של הדפדפן.</li>
+                            <li>יש תצוגות מסוימות שנתקעות (לשוניות למשל) ואחרות שעובדות היטב (אקורדיון למשל).</li>
+                            <li>לפעמים הקובץ נחסם לצפיה מבחינת אבטחה. הקפידו לעבוד מאותו חשבון ולא לעבור דפדפנים ששייכים לפרופיל אחר.</li>
+                        </ul>
+                    </div>`,
+                'cursor': `
+                    <div class="content-section">
+                        <h1>קורסור</h1>
+                        <p>אתם כבר מתקדמים עם יצירת אפליקציות? רוצים לשדרג את צורת העבודה בפרויקטים קצת יותר מורכבים?</p>
+                        <p>תכירו את קורסור. כלי לעריכת קוד, סביבת עבודה (נקרא IDE). מחובר לבינה, כך שכאשר מדובר בפרויקט מתקדם, שחורג ממגבלות השיחה הרגילות, הוא מאפשר לעבוד עם הקוד בצורה יעילה.</p>
+                        <p>לפעמים בשלבי התיקונים, נרצה להדביק קטעי קוד במקום חלקים שלא עובדים בצורה טובה. לפעמים ישלחו אותנו להחליף קטעים בכמה מיקומים, וזה גם גוזל זמן - וגם עלול להסתיים בהדבקה לא נכונה שתשבור חלקים אחרים בקוד. קורסור יודע להדביק את הקוד בדיוק במקום הנכון, ולהראות לנו בצבעים איפה הוא מחק דברים ואיפה הוסיף קטעים נוספים.</p>
+                        <p>שבועיים ראשונים אחרי ההתקנה - תקבלו 500 עריכות חינם, ואחרי כן - 50 עריכות בחודש בחינם.</p>
+                        <a href="https://www.cursor.com/" target="_blank" class="chip">קישור לכלי</a>
+                        <div class="video-container">
+                            <h4>סרטון הסבר על צורת העבודה מאת שחר גולן</h4>
+                            <p class="video-duration">משך: 18 דקות</p>
+                            <iframe src="https://www.youtube.com/embed/1Po-2fBhh3k" allowfullscreen></iframe>
+                        </div>
+                        <img src="https://i.imgur.com/57Ca0Au.jpg" alt="קורסור IDE" class="illustration">
+                    </div>`,
+                'discussion': `
+                    <div class="content-section">
+                        <h1>דיון</h1>
+                        <p>כתבו רעיון או שניים לאפליקציות שהייתם רוצים ואולי יתאימו ליכולות של הבינה כרגע.</p>
+                        <img src="https://i.imgur.com/YRsFTcj.png" alt="עריכת גליון" class="illustration">
+                    </div>`,
+                'assignment': `
+                    <div class="content-section">
+                        <h1>משימה</h1>
+                        <p>צרו טופס שאיננו גוגל פורם או תבנית דומה - אלא אפליקציית HTML שתיצרו בעזרת בינה.</p>
+                        <p>כתבו את הפרומפט, כולל הפעולות שעיקריות שהיוזר יבצע, מבנה נתונים ל הגליון (מה הכותרות), ומבנה המסך הראשי.</p>
+                        <p>תנו קישור לתוצר, גם אינו מושלם.</p>
+                        <p>מה כדאי לשפר?</p>
+                        <img src="https://i.imgur.com/StRrBeh.png" alt="תכנון מבנה" class="illustration">
+                    </div>`
+            };
+
+            const isMobile = window.innerWidth <= 800;
+            const timers = {};
+
+            function updateProgress() {
+                const allItems = document.querySelectorAll('.main-item, .sub-item');
+                const completedItems = document.querySelectorAll('.nav-item.completed');
+                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+                document.querySelector('.progress-indicator').style.width = `${percentage}%`;
+            }
+
+            function setItemCompleted(item) {
+                const navItem = item.closest('.nav-item');
+                const section = item.dataset.section;
+                if (!navItem.classList.contains('completed')) {
+                    clearTimeout(timers[section]);
+                    timers[section] = setTimeout(() => {
+                        navItem.classList.add('completed');
+                        updateProgress();
+                    }, 10000); // 10 seconds 
+                }
+            }
+
+            function handleMainItemClick(e) {
+                const mainItem = e.currentTarget;
+                const navItem = mainItem.closest('.nav-item');
+                const section = mainItem.dataset.section;
+                const subItemsContainer = navItem.querySelector('.sub-items');
+
+                if (subItemsContainer) {
+                    subItemsContainer.classList.toggle('active');
+                }
+
+                if (content[section]) {
+                    if (isMobile) {
+                        let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                        if (!wrapper) {
+                            wrapper = document.createElement('div');
+                            wrapper.className = 'section-wrapper';
+                            navItem.appendChild(wrapper);
+                        }
+                        
+                        const shouldShow = !wrapper.classList.contains('active');
+                        
+                        document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                            if (w !== wrapper) w.classList.remove('active');
+                        });
+
+                        wrapper.innerHTML = content[section];
+                        
+                        if(shouldShow) {
+                            setTimeout(() => wrapper.classList.add('active'), 10);
+                        } else {
+                            wrapper.classList.remove('active');
+                        }
+                    } else {
+                        document.getElementById('content-area').innerHTML = content[section];
+                    }
+                }
+
+                if (content[section]) {
+                    setItemCompleted(mainItem);
+                }
+            }
+            
+            function handleSubItemClick(e) {
+                e.stopPropagation();
+                const subItem = e.currentTarget;
+                const section = subItem.dataset.section;
+                const navItem = subItem.closest('.nav-item').parentElement.closest('.nav-item');
+
+                if (isMobile) {
+                    let wrapper = navItem.querySelector('.section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    const shouldShow = !wrapper.classList.contains('active');
+
+                    document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+                    
+                    wrapper.innerHTML = content[section];
+
+                    if (shouldShow) {
+                         setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    document.getElementById('content-area').innerHTML = content[section];
+                }
+                setItemCompleted(subItem);
+            }
+
+            document.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            document.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobile) {
+                document.querySelector('.main-item[data-section="intro"]').click();
+            }
+            
+            let lastWidth = window.innerWidth;
+            window.addEventListener('resize', () => {
+                const newWidth = window.innerWidth;
+                if ((newWidth > 800 && lastWidth <= 800) || (newWidth <= 800 && lastWidth > 800)) {
+                    location.reload();
+                }
+                lastWidth = newWidth;
+            });
+        });
+    </script>
+</body>
+</html> 

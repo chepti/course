@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שילוב תוכן ויזואלי בבית הספר</title>
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #34495e;
+            --nav-width: 300px;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            direction: rtl;
+        }
+
+        #nav {
+            width: var(--nav-width);
+            height: 100vh;
+            background: #f8f9fa;
+            padding: 30px;
+            overflow-y: auto;
+            position: fixed;
+            right: 0;
+            font-size: 1.1em;
+            border-left: 1px solid #dee2e6;
+        }
+
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        #content {
+            margin-right: var(--nav-width);
+            padding: 40px;
+            width: calc(100% - var(--nav-width));
+            margin-top: var(--header-height);
+            max-width: 1200px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            right: var(--nav-width);
+            left: 0;
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .progress-indicator {
+            height: 10px;
+            background: linear-gradient(to right, var(--primary-color), #27ae60);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0;
+        }
+
+        .nav-item {
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-item, .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .main-item {
+            font-weight: bold;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+        }
+
+        .sub-item {
+            margin: 8px 0;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            border-width: 1px;
+        }
+
+        .main-item:hover {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        .sub-item:hover {
+            background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+            border-color: var(--primary-color);
+            transform: translateX(-5px);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+        }
+
+        .completion-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .completed > .main-item,
+        .nav-item.completed > .sub-item {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-item.completed > .sub-item {
+           background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+           border-color: var(--primary-color);
+           color: initial;
+        }
+
+        .completed .completion-circle {
+            background: white;
+            border-color: white;
+        }
+
+        .completed .completion-circle::after {
+            content: "✓";
+            color: var(--primary-color);
+        }
+
+        .main-item:hover .completion-circle,
+        .sub-item:hover .completion-circle {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .sub-items {
+            margin-right: 34px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .sub-items.active {
+            max-height: 500px;
+        }
+
+        .video-container {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+        }
+
+        .video-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        iframe {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .content-section {
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .illustration {
+            max-width: 100%;
+            height: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .content-section ul {
+            padding-right: 20px;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 800px) {
+            body { display: block; }
+            #content { display: none; }
+            #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+            .main-content { margin: 0; width: 100%; padding: 10px; }
+            .progress-bar { right: 0; width: 100%; }
+            .sub-items { margin-right: 0; }
+            .sub-item { padding-right: 8px; padding-left: 8px; }
+
+            .section-wrapper {
+                padding: 15px;
+                background: #ffffff;
+                border-top: 1px solid #e5e7eb;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+            }
+
+            .section-wrapper.active {
+                max-height: 5000px;
+            }
+
+            .sub-items.active {
+                max-height: 5000px;
+            }
+
+            .content-section {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+
+    <div id="nav">
+        <div class="sidebar-title">שילוב תוכן ויזואלי בבית הספר 📚</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="intro">
+                <div class="completion-circle"></div>
+                <span>שילוב תוכן ויזואלי בבית הספר</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>במבט על</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="animations">
+                        <div class="completion-circle"></div>
+                        <span>הנפשות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="canva">
+                        <div class="completion-circle"></div>
+                        <span>סרטון בקנבה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="talking-head">
+                        <div class="completion-circle"></div>
+                        <span>דמות מדברת</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="images">
+                        <div class="completion-circle"></div>
+                        <span>תמונות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="screen-recording">
+                        <div class="completion-circle"></div>
+                        <span>סרטון סמן</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="3d">
+                        <div class="completion-circle"></div>
+                        <span>תלת מימד</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="assignment">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const content = {
+                'intro': `
+                    <div class="content-section">
+                        <h1>שילוב תוכן ויזואלי בבית הספר</h1>
+                        <p>בעידן שבו תלמידים צורכים תוכן ויזואלי באופן יומיומי, היכולת ליצור תוכן חינוכי מושך ואפקטיבי הפכה למיומנות הכרחית עבור צוותי החינוך. הבינה המלאכותית מציעה כלים חדשניים שמאפשרים ליצור תכנים ויזואליים איכותיים בקלות ובמהירות, תוך חיסכון משמעותי במשאבים.</p>
+                        <p>תוכן ויזואלי הוא חלק בלתי נפרד מהחיים המודרניים, ובית הספר נדרש להתאים את עמו למציאות זו.</p>
+                        <h3>תחומי שימוש:</h3>
+                        <ul>
+                            <li>חומרי למידה והוראה
+                                <ul>
+                                    <li>מצגות אינטראקטיביות (רקעים לחדר בריחה, למשחקונים, דמויות מעולות)</li>
+                                    <li>סרטוני הסבר</li>
+                                    <li>אינפוגרפיקה לימודית</li>
+                                </ul>
+                            </li>
+                            <li>תקשורת בית ספרית
+                                <ul>
+                                    <li>הזמנות לאירועים</li>
+                                    <li>פרסומים שוטפים</li>
+                                    <li>ניוזלטר להורים</li>
+                                </ul>
+                            </li>
+                            <li>תיעוד ומזכרות
+                                <ul>
+                                    <li>ספר מחזור</li>
+                                    <li>סיכומי אירועים</li>
+                                    <li>תערוכות וירטואליות</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>`,
+                'overview': `
+                    <div class="content-section">
+                        <h1>במבט על</h1>
+                        <p>הבנת העקרונות של עיצוב ויזואלי אפקטיבי חיונית ליצירת תוכן שישיג את מטרותיו החינוכיות. נלמד שיטות וכלים שיהפכו כל תוכן למושך ומעניין.</p>
+                        <div class="video-container">
+                            <h3 class="video-title">במבט על</h3>
+                            <p class="video-duration">משך: 7:10 דקות</p>
+                            <iframe src="https://www.youtube.com/embed/9vABayvwA5Q" allowfullscreen></iframe>
+                        </div>
+                    </div>`,
+                'animations': `
+                    <div class="content-section">
+                        <h1>הנפשות</h1>
+                        <p>מתחילים מתמונה ומקבלים סרטון קצר באמצעות מינמקס</p>
+                        <div class="video-container">
+                            <h3 class="video-title">יצירת הנפשות</h3>
+                            <p class="video-duration">הדרכה מלאה</p>
+                            <iframe src="https://www.youtube.com/embed/NTc7w1e77Hs" allowfullscreen></iframe>
+                        </div>
+                        <p>קישור לכלי: <a href="https://hailuoai.video/" target="_blank">HailuoAI</a></p>
+                        <p>חלופות אחרת: קלינג, וידו, לומה, סורה (בתשלום), ראנווי (בתשלום)</p>
+                    </div>`,
+                'canva': `
+                    <div class="content-section">
+                        <h1>סרטון בקנבה</h1>
+                        <div class="video-container">
+                            <h3 class="video-title">קנבה מחוללת סרטון אוטומטי</h3>
+                            <iframe src="https://www.youtube.com/embed/Ctwhc2cUPXg" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h3 class="video-title">בניית סרטון בקנבה בעצמנו</h3>
+                            <p class="video-duration">משך: 23 דקות</p>
+                            <iframe src="https://www.youtube.com/embed/Ir5cIs6ITm8" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h3 class="video-title">הוספת כתוביות</h3>
+                            <iframe src="https://www.youtube.com/embed/zFbS3xISup8" allowfullscreen></iframe>
+                        </div>
+                    </div>`,
+                'talking-head': `
+                    <div class="content-section">
+                        <h1>דמות מדברת</h1>
+                        <p>תחליף חינם ל-D-ID</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/YWeVoU3UgKQ" allowfullscreen></iframe>
+                        </div>
+                        <p>קישור לכלי: <a href="https://huggingface.co/spaces/vinthony/SadTalker" target="_blank">SadTalker</a></p>
+                    </div>`,
+                'images': `
+                    <div class="content-section">
+                        <h1>תמונות</h1>
+                        <div class="video-container">
+                            <h3 class="video-title">לאונרדו (קנבה)</h3>
+                            <iframe src="https://www.youtube.com/embed/ETdi7ilVY94" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h3 class="video-title">מיסטראל (פלאקס)</h3>
+                            <iframe src="https://www.youtube.com/embed/_MvOzmMMFFo" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-container">
+                            <h3 class="video-title">וובינר מקיף - ליאת ונגרובסקי</h3>
+                            <iframe src="https://www.youtube.com/embed/NSNG1q9x-cQ" allowfullscreen></iframe>
+                        </div>
+                        <p><a href="https://docs.google.com/document/d/197as3NewX8uXz1gF2-CglTgXviF-3YKEwbP3UoEuETI/edit?usp=drive_link" target="_blank">קישור למסמך הסבר על עקביות תמונה</a></p>
+                        <img src="https://i.imgur.com/7iHsACg.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'discussion': `
+                    <div class="content-section">
+                        <h1>דיון</h1>
+                        <p>הדיון בשילוב כלי בינה מלאכותית ביצירת תוכן חינוכי מעלה שאלות מהותיות על תפקיד המורה, איכות התוכן, ואתיקה. זוהי הזדמנות לבחון יחד את ההשלכות והאפשרויות שהטכנולוגיה החדשה מציעה לעולם החינוך.</p>
+                        <p>כיצד שומרים על מקוריות ויצירתיות בעידן AI? ביחס אלינו כמורים, וביחס לתלמידינו.</p>
+                    </div>`,
+                'assignment': `
+                    <div class="content-section">
+                        <h1>משימה</h1>
+                        <h3>בחרו באחת מהחלופות הבאות:</h3>
+                        <p><strong>חלופה א:</strong> צרו בעצמכם סרטון סמן על כלי בינה ויזואלי שיועיל לצוות המורים אצלכם.</p>
+                        <p><strong>חלופה ב:</strong> צרו סרטון לימודי עבור תלמידיכם, שלבו בתוכו תמונות בינה, הנפשות או דמות מדברת.</p>
+                    </div>`,
+                'screen-recording': `
+                    <div class="content-section">
+                        <h1>סרטון סמן - סקריןפאל</h1>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/j8eljodcbLE" allowfullscreen></iframe>
+                        </div>
+                        <p>חלופות נוספות - הקלטה עצמית בקנבה או פאוארפוינט.</p>
+                        <p>עוד חלופה עם בונוס למורים - LOOM. היתרון - מעלה מיד לענן את הסרטון, אפשר לתת סרטון צפיה תוך דקות ספורות.</p>
+                        <p><a href="https://tikshuv.chepti.com/%D7%90%D7%99%D7%9A-%D7%A4%D7%AA%D7%97%D7%AA%D7%99-%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%95%D7%9D-loom-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A/" target="_blank">אפשר לבקש חשבון חינוך</a> ולקבל סרטונים ארוכים יותר.</p>
+                    </div>`,
+                '3d': `
+                    <div class="content-section">
+                        <h1>תלת מימד פשוט - הפיכת תמונה לאלמנט תלת מימד</h1>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/CFTGiHlVORQ" allowfullscreen></iframe>
+                        </div>
+                         <p><a href="https://huggingface.co/spaces/stabilityai/stable-fast-3d" target="_blank">קישור לאתר</a></p>
+                    </div>`
+            };
+
+            const isMobile = window.innerWidth <= 800;
+            const timers = {};
+
+            function updateProgress() {
+                const allItems = document.querySelectorAll('.main-item, .sub-item');
+                const completedItems = document.querySelectorAll('.nav-item.completed');
+                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+                document.querySelector('.progress-indicator').style.width = `${percentage}%`;
+            }
+
+            function setItemCompleted(item) {
+                const navItem = item.closest('.nav-item');
+                const section = item.dataset.section;
+                if (!navItem.classList.contains('completed')) {
+                    clearTimeout(timers[section]);
+                    timers[section] = setTimeout(() => {
+                        navItem.classList.add('completed');
+                        updateProgress();
+                    }, 10000); // 10 seconds 
+                }
+            }
+
+            function handleMainItemClick(e) {
+                const mainItem = e.currentTarget;
+                const navItem = mainItem.closest('.nav-item');
+                const section = mainItem.dataset.section;
+                const subItemsContainer = navItem.querySelector('.sub-items');
+
+                if (subItemsContainer) {
+                    subItemsContainer.classList.toggle('active');
+                }
+
+                if (content[section]) {
+                    if (isMobile) {
+                        let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                        if (!wrapper) {
+                            wrapper = document.createElement('div');
+                            wrapper.className = 'section-wrapper';
+                            navItem.appendChild(wrapper);
+                        }
+                        
+                        const shouldShow = !wrapper.classList.contains('active');
+                        
+                        document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                            if (w !== wrapper) w.classList.remove('active');
+                        });
+
+                        wrapper.innerHTML = content[section];
+                        
+                        if(shouldShow) {
+                            setTimeout(() => wrapper.classList.add('active'), 10);
+                        } else {
+                            wrapper.classList.remove('active');
+                        }
+                    } else {
+                        document.getElementById('content-area').innerHTML = content[section];
+                    }
+                }
+
+                if (!subItemsContainer) {
+                    setItemCompleted(mainItem);
+                }
+            }
+            
+            function handleSubItemClick(e) {
+                e.stopPropagation();
+                const subItem = e.currentTarget;
+                const section = subItem.dataset.section;
+                const navItem = subItem.closest('.nav-item');
+
+                if (isMobile) {
+                    let wrapper = navItem.querySelector('.section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    const shouldShow = !wrapper.classList.contains('active');
+
+                    document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+                    
+                    wrapper.innerHTML = content[section];
+
+                    if (shouldShow) {
+                         setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    document.getElementById('content-area').innerHTML = content[section];
+                }
+                setItemCompleted(subItem);
+            }
+
+            document.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            document.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobile) {
+                document.querySelector('.main-item[data-section="intro"]').click();
+            }
+            
+            let lastWidth = window.innerWidth;
+            window.addEventListener('resize', () => {
+                const newWidth = window.innerWidth;
+                if ((newWidth > 800 && lastWidth <= 800) || (newWidth <= 800 && lastWidth > 800)) {
+                    location.reload();
+                }
+                lastWidth = newWidth;
+            });
+        });
+    </script>
+</body>
+</html> 
