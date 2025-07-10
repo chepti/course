@@ -1,7 +1,10 @@
 <html><head><base href="." />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>התיעצות עם בינה</title>
     <style>
     :root {
-      --primary-color: #2ecc71;
+      --primary-color: #8E44AD; /* Purple */
       --secondary-color: #34495e;
       --nav-width: 300px;
       --header-height: 60px;
@@ -193,6 +196,25 @@
       line-height: 1.6;
     }
     
+    .styled-button {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s, transform 0.2s;
+    }
+
+    .styled-button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+    
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -273,6 +295,12 @@
               <span>פיי</span>
             </div>
           </div>
+          <div class="nav-item">
+            <div class="sub-item" data-section="maya">
+              <div class="completion-circle"></div>
+              <span>מאיה של ססמי</span>
+            </div>
+          </div>
         </div>
       </div>
       
@@ -336,6 +364,18 @@
                   <div class="video-title">היכרות עם פיי</div>
                   <iframe src="https://www.youtube.com/embed/ziAjcaioAZQ" allowfullscreen></iframe>
                 </div>
+            </div>
+          `,
+          maya: `
+            <div class="content-section">
+                <h2>מאיה של ססמי</h2>
+                <p>שיחה בעל פה עם בינה. רק באנגלית. רק על נושאים של חשיבה ורגש, ולא מידע.</p>
+                <p>ניתן לקיים שיחות של 5 דקות, או להירשם ולשוחח חצי שעה בכל פעם. מאיה זוכרת נקודות מהשיחה, שמה לב לשעה ביום, ומגיבה במהירות לרגשות ולצלילים, ולא רק למילים. חווייה חזקה - ומעוררת מחשבה.</p>
+                <div class="video-container">
+                  <div class="video-title">היכרות עם מאיה</div>
+                  <iframe src="https://www.youtube.com/embed/2tqrhZAQyk0" allowfullscreen></iframe>
+                </div>
+                <a href="https://app.sesame.com/" target="_blank" class="styled-button">מעבר לכלי מאיה</a>
             </div>
           `,
           discussion: `
