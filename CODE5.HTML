@@ -211,6 +211,38 @@
             margin-bottom: 15px;
         }
 
+        .tool-item {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tool-item:last-of-type {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .link-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            color: white !important;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            border: none;
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.2);
+        }
+
+        .link-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+        }
+
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -375,14 +407,18 @@
                 'animations': `
                     <div class="content-section">
                         <h1>הנפשות</h1>
-                        <p>מתחילים מתמונה ומקבלים סרטון קצר באמצעות מינמקס</p>
-                        <div class="video-container">
-                            <h3 class="video-title">יצירת הנפשות</h3>
-                            <p class="video-duration">הדרכה מלאה</p>
-                            <iframe src="https://www.youtube.com/embed/NTc7w1e77Hs" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <p>מתחילים מתמונה ומקבלים סרטון קצר באמצעות מינמקס</p>
+                            <div class="video-container">
+                                <h3 class="video-title">יצירת הנפשות</h3>
+                                <p class="video-duration">הדרכה מלאה</p>
+                                <iframe src="https://www.youtube.com/embed/NTc7w1e77Hs" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://hailuoai.video/" target="_blank" class="link-button">קישור לכלי: HailuoAI</a>
                         </div>
-                        <p>קישור לכלי: <a href="https://hailuoai.video/" target="_blank">HailuoAI</a></p>
-                        <p>חלופות אחרת: קלינג, וידו, לומה, סורה (בתשלום), ראנווי (בתשלום)</p>
+                        <div class="tool-item">
+                           <p>חלופות אחרת: קלינג, וידו, לומה, סורה (בתשלום), ראנווי (בתשלום)</p>
+                        </div>
                     </div>`,
                 'canva': `
                     <div class="content-section">
@@ -404,55 +440,66 @@
                 'talking-head': `
                     <div class="content-section">
                         <h1>דמות מדברת</h1>
-                        <p>תחליף חינם ל-D-ID</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/YWeVoU3UgKQ" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <p>תחליף חינם ל-D-ID</p>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/YWeVoU3UgKQ" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://huggingface.co/spaces/vinthony/SadTalker" target="_blank" class="link-button">קישור לכלי: SadTalker</a>
                         </div>
-                        <p>קישור לכלי: <a href="https://huggingface.co/spaces/vinthony/SadTalker" target="_blank">SadTalker</a></p>
                     </div>`,
                 'images': `
                     <div class="content-section">
                         <h1>תמונות</h1>
-                        
-                        <div class="video-container">
-                            <h3 class="video-title">לאונרדו (קנבה)</h3>
-                            <iframe src="https://www.youtube.com/embed/ETdi7ilVY94" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <h3>לאונרדו (קנבה)</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/ETdi7ilVY94" allowfullscreen></iframe>
+                            </div>
                         </div>
-
-                        <div class="video-container">
-                            <h3 class="video-title">מיסטראל (פלאקס)</h3>
-                            <iframe src="https://www.youtube.com/embed/_MvOzmMMFFo" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <h3>מיסטראל (פלאקס)</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/_MvOzmMMFFo" allowfullscreen></iframe>
+                            </div>
+                            <p>לאחרונה מיסטראל מגבילים לבערך 5 תמונות ביום.</p>
+                            <a href="https://chat.mistral.ai/chat" target="_blank" class="link-button">קישור לכלי: Mistral Chat</a>
                         </div>
-                        <p>לאחרונה מיסטראל מגבילים לבערך 5 תמונות ביום. קישור לכלי: <a href="https://chat.mistral.ai/chat" target="_blank">Mistral Chat</a></p>
-
-                        <div class="video-container">
-                            <h3 class="video-title">REVE</h3>
-                            <iframe src="https://www.youtube.com/embed/wU__O0_R6yw" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <h3>REVE</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/wU__O0_R6yw" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://preview.reve.art/app" target="_blank" class="link-button">קישור לכלי: REVE</a>
                         </div>
-                        <p>קישור לכלי: <a href="https://preview.reve.art/app" target="_blank">REVE</a></p>
-
-                        <div class="video-container">
-                            <h3 class="video-title">פרפלקסיטי</h3>
-                            <iframe src="https://www.youtube.com/embed/fhyB-A6cvds" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <h3>פרפלקסיטי</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/fhyB-A6cvds" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://wa.me/18334363285" target="_blank" class="link-button">קישור לכלי: Perplexity (WhatsApp)</a>
                         </div>
-                        <p>קישור לכלי: <a href="https://wa.me/18334363285" target="_blank">Perplexity (WhatsApp)</a></p>
-                        
-                        <h3>ג'יפיטי</h3>
-                        <p>מאז טרנד 'סטודיו ג'יבלי' כולנו הכרנו את היכולת החדשה של GPT לחולל תמונות. אפשר לתת לו תמונה קיימת ולקבל תמונה עם רקע או סגנון אחר, עיצוב פנים שונה ועוד. לוקח זמן ליצירה ויש מגבלה בחינמי של 3 תמונות ביום.</p>
-
-                        <h3>סטודיו</h3>
-                        <p>גם AI STUDIO של גוגל יוצר תמונות, <a href="https://aistudio.google.com/gen-media" target="_blank">קישור לכלי</a>, ויודע גם לבצע עריכה - החלף את צבע החולצה וכדומה.</p>
-                        
-                        <div class="video-container">
-                            <h3 class="video-title">הקלטה של הוובינר המעולה של ליאת ונגרובסקי</h3>
-                            <iframe src="https://www.youtube.com/embed/NSNG1q9x-cQ" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <h3>ג'יפיטי</h3>
+                            <p>מאז טרנד 'סטודיו ג'יבלי' כולנו הכרנו את היכולת החדשה של GPT לחולל תמונות. אפשר לתת לו תמונה קיימת ולקבל תמונה עם רקע או סגנון אחר, עיצוב פנים שונה ועוד. לוקח זמן ליצירה ויש מגבלה בחינמי של 3 תמונות ביום.</p>
                         </div>
-
-                        <h3>חומרים נוספים</h3>
-                        <p><a href="https://docs.google.com/document/d/197as3NewX8uXz1gF2-CglTgXviF-3YKEwbP3UoEuETI/edit?usp=drive_link" target="_blank">עקביות תמונה של איריס פלד - קישור למסמך הסבר</a></p>
-                        <p><a href="https://tikshuv.chepti.com/%d7%9e%d7%97%d7%95%d7%9c%d7%9c-%d7%a4%d7%a8%d7%95%d7%9e%d7%a4%d7%98-%d7%9c%d7%99%d7%a6%d7%99%d7%a8%d7%aa-%d7%93%d7%9e%d7%95%d7%aa-%d7%a2%d7%a7%d7%91%d7%99%d7%aa/" target="_blank">דמות עקבית - פוסט בחולמים תקשוב</a></p>
-                        
-                        <img src="https://i.imgur.com/7iHsACg.jpg" alt="אילוסטרציה" class="illustration">
+                        <div class="tool-item">
+                            <h3>סטודיו</h3>
+                            <p>גם AI STUDIO של גוגל יוצר תמונות, ויודע גם לבצע עריכה - החלף את צבע החולצה וכדומה.</p>
+                            <a href="https://aistudio.google.com/gen-media" target="_blank" class="link-button">קישור לכלי: Google AI Studio</a>
+                        </div>
+                        <div class="tool-item">
+                            <h3>הקלטה של הוובינר המעולה של ליאת ונגרובסקי</h3>
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/NSNG1q9x-cQ" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                        <div class="tool-item">
+                            <h3>חומרים נוספים</h3>
+                            <a href="https://tikshuv.chepti.com/%d7%9e%d7%97%d7%95%d7%9c%d7%9c-%d7%a4%d7%a8%d7%95%d7%9e%d7%a4%d7%98-%d7%9c%d7%99%d7%a6%d7%99%d7%a8%d7%aa-%d7%93%d7%9e%d7%95%d7%aa-%d7%a2%d7%a7%d7%91%d7%99%d7%aa/" target="_blank" class="link-button">דמות עקבית - פוסט בחולמים תקשוב</a>
+                            <br>
+                            <img src="https://i.imgur.com/7iHsACg.jpg" alt="אילוסטרציה" class="illustration">
+                        </div>
                     </div>`,
                 'discussion': `
                     <div class="content-section">
@@ -475,15 +522,17 @@
                         </div>
                         <p>חלופות נוספות - הקלטה עצמית בקנבה או פאוארפוינט.</p>
                         <p>עוד חלופה עם בונוס למורים - LOOM. היתרון - מעלה מיד לענן את הסרטון, אפשר לתת סרטון צפיה תוך דקות ספורות.</p>
-                        <p><a href="https://tikshuv.chepti.com/%D7%90%D7%99%D7%9A-%D7%A4%D7%AA%D7%97%D7%AA%D7%99-%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%95%D7%9D-loom-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A/" target="_blank">אפשר לבקש חשבון חינוך</a> ולקבל סרטונים ארוכים יותר.</p>
+                        <p><a href="https://tikshuv.chepti.com/%D7%90%D7%99%D7%9A-%D7%A4%D7%AA%D7%97%D7%AA%D7%99-%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%95%D7%9D-loom-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A/" target="_blank" class="link-button">אפשר לבקש חשבון חינוך</a> ולקבל סרטונים ארוכים יותר.</p>
                     </div>`,
                 '3d': `
                     <div class="content-section">
                         <h1>תלת מימד פשוט - הפיכת תמונה לאלמנט תלת מימד</h1>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/CFTGiHlVORQ" allowfullscreen></iframe>
+                        <div class="tool-item">
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/CFTGiHlVORQ" allowfullscreen></iframe>
+                            </div>
+                            <a href="https://huggingface.co/spaces/stabilityai/stable-fast-3d" target="_blank" class="link-button">קישור לכלי</a>
                         </div>
-                         <p><a href="https://huggingface.co/spaces/stabilityai/stable-fast-3d" target="_blank">קישור לאתר</a></p>
                     </div>`
             };
 
