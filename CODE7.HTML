@@ -245,6 +245,17 @@
             margin-bottom: 15px;
         }
 
+        .bug-card {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+            font-size: 1.05em;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -479,14 +490,24 @@
                     </div>`,
                 'bugs': `
                     <div class="content-section">
-                        <h1>באגים</h1>
-                        <ul>
-                            <li>לפעמים צריך להחליף את שם הקובץ index ל Index.</li>
-                            <li>ככלל - אנחנו ננסה לבקש מהבינה לפתור כל באג שיצוף, היא יודעת להתמודד.</li>
-                            <li>חלק מהשגיאות נוכל למצוא אם נלחץ F12, ונפתח את ה"קונסול" של הדפדפן.</li>
-                            <li>יש תצוגות מסוימות שנתקעות (לשוניות למשל) ואחרות שעובדות היטב (אקורדיון למשל).</li>
-                            <li>לפעמים הקובץ נחסם לצפיה מבחינת אבטחה. הקפידו לעבוד מאותו חשבון ולא לעבור דפדפנים ששייכים לפרופיל אחר.</li>
-                        </ul>
+                        <h1>באגים וטריקים</h1>
+                        <div class="bug-card">לפעמים צריך להחליף את שם הקובץ index ל Index.</div>
+                        <div class="bug-card">ככלל - אנחנו ננסה לבקש מהבינה לפתור כל באג שיצוף, היא יודעת להתמודד.</div>
+                        <div class="bug-card">חלק מהשגיאות נוכל למצוא אם נלחץ F12, ונפתח את ה"קונסול" של הדפדפן.</div>
+                        <div class="bug-card">יש תצוגות מסוימות שנתקעות (לשוניות למשל) ואחרות שעובדות היטב (אקורדיון למשל).</div>
+                        <div class="bug-card">לפעמים הקובץ נחסם לצפיה מבחינת אבטחה. הקפידו לעבוד מאותו חשבון ולא לעבור דפדפנים ששייכים לפרופיל אחר.</div>
+                        
+                        <hr style="margin: 40px 0 30px; border: 0; border-top: 2px solid #f0f0f0;">
+                        
+                        <h4>העלאת תמונות לאחסון IMGUR</h4>
+                        <p>כדי לשלב תמונות באפליקציה שלנו - ברקע, בכפתורים וכדומה.</p>
+                        <p>כאשר אנו רוצים לשלב תמונות באפליקציה, תמונה מהדרייב לא תפעל ברוב המקרים. צריך קישור *ישיר* אל התמונה, עם סיומת JPG או PNG וכדומה. השירות של אימגור מאפשר להעלות תמונה משלנו ולקבל קישור ישיר שישתלב היטב באפליקציה.</p>
+                        
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/EFSWC5MKajU" allowfullscreen></iframe>
+                        </div>
+                        
+                        <a href="https://imgur.com/upload" target="_blank" class="chip">קישור להעלאת תמונות</a>
                     </div>`,
                 'cursor': `
                     <div class="content-section">
