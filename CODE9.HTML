@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יחידה 9: הערכה</title>
+    <style>
+        :root {
+            --primary-color: #F39C12; /* Gold */
+            --secondary-color: #34495e;
+            --nav-width: 300px;
+            --header-height: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            direction: rtl;
+        }
+
+        #nav {
+            width: var(--nav-width);
+            height: 100vh;
+            background: #f8f9fa;
+            padding: 30px;
+            overflow-y: auto;
+            position: fixed;
+            right: 0;
+            font-size: 1.1em;
+            border-left: 1px solid #dee2e6;
+        }
+
+        .sidebar-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        #content {
+            margin-right: var(--nav-width);
+            padding: 40px;
+            width: calc(100% - var(--nav-width));
+            margin-top: var(--header-height);
+            max-width: 1200px;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            right: var(--nav-width);
+            left: 0;
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .progress-indicator {
+            height: 10px;
+            background: linear-gradient(to right, var(--primary-color), #27ae60);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0;
+        }
+
+        .nav-item {
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .main-item, .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .main-item {
+            font-weight: bold;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+        }
+
+        .sub-item {
+            margin: 8px 0;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            border-width: 1px;
+        }
+
+        .main-item:hover {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        .sub-item:hover {
+            background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+            border-color: var(--primary-color);
+            transform: translateX(-5px);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+        }
+
+        .completion-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .completed > .main-item,
+        .nav-item.completed > .sub-item {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nav-item.completed > .sub-item {
+           background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+           border-color: var(--primary-color);
+           color: initial;
+        }
+
+        .completed .completion-circle {
+            background: white;
+            border-color: white;
+        }
+
+        .completed .completion-circle::after {
+            content: "✓";
+            color: var(--primary-color);
+        }
+
+        .main-item:hover .completion-circle,
+        .sub-item:hover .completion-circle {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        .sub-items {
+            margin-right: 34px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .sub-items.active {
+            max-height: 1000px;
+        }
+
+        .video-container {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+        }
+
+        iframe {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .illustration {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+        
+        .chip {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #2980b9, #7d3c98);
+        }
+        
+        .embedded-page {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        pre {
+            background-color: #eee;
+            border: 1px solid #999;
+            display: block;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .content-section {
+            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .content-section ul, .content-section ol {
+            padding-right: 20px;
+            margin-bottom: 15px;
+        }
+
+        .bug-card {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+            font-size: 1.05em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 800px) {
+            body { display: block; }
+            #content { display: none; }
+            #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+            .progress-bar { right: 0; width: 100%; }
+            .sub-items { margin-right: 0; }
+            .sub-item { padding-right: 8px; padding-left: 8px; }
+
+            .section-wrapper {
+                padding: 15px;
+                background: #ffffff;
+                border-top: 1px solid #e5e7eb;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+            }
+
+            .section-wrapper.active {
+                max-height: 5000px;
+            }
+
+            .sub-items.active {
+                max-height: 5000px;
+            }
+
+            .content-section {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+
+    <div id="nav">
+        <div class="sidebar-title">יחידה 9: הערכה 📝</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>מבט על</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="assignment">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const content = {
+                'overview': `
+                    <div class="content-section">
+                        <h1>מבט על</h1>
+                        <p><strong>ברוכים הבאים למפגש העוסק בשילוב טכנולוגיות בינה מלאכותית בתהליכי הערכה. במפגש זה נלמד כיצד ניתן להיעזר בכלי AI כדי לייעל ולשפר את תהליכי ההערכה, תוך שמירה על האיכות הפדגוגית והמגע האישי שלנו כמורים.</strong></p>
+                        <p><strong>לפני שנצלול לכלים הספציפיים, חשוב להבין את התמונה הרחבה. נתחיל מבסיס תיאורטי והשראה. הסרטונים עוסקים ביסודות ההערכה הפדגוגית, בהבנת מודלי שפה, ומציגים חזון עתידני של שילוב AI בתהליכי הערכה.</strong></p>
+                        <h3>סרטון במבט על - הערכה פדגוגית בעידן הדיגיטלי</h3>
+                        <div class="video-container">
+                           <iframe src="https://www.youtube.com/embed/FiEcaKlEjHk" allowfullscreen></iframe>
+                        </div>
+                        <img src="https://i.imgur.com/Dq43X0q.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'tools': `
+                    <div class="content-section">
+                        <h1>כלים</h1>
+                        <p><strong>בחלק זה נכיר מגוון כלים מעשיים שיסייעו לנו ביצירת כלי הערכה. נתחיל בהיכרות עם הכלים הבסיסיים כמו Claude ו-ChatGPT, נמשיך למתווכי בינה שמקלים על העבודה, ונסיים בטריקים שימושיים ליצירת מבחנים ורובריקות באמצעות AI.</strong></p>
+                        <h2>סרטוני הדגמה - כלים -</h2>
+                        <h3>הכנה,</h3>
+                        <h4>מג'יק סקול - בוט תרגול ללמידה למבחן</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/rECV-0MKLgw" allowfullscreen></iframe>
+                        </div>
+                        <p>מאושר לשימוש מכיתה ה. המורה יוצר חדר עם כמה בוטים - למשל בוט "בחן אותי", בוט דמות עם מטרה לדון בנושא מסוים - והתלמיד נכנס ומתרגל, מקבל שאלות ומשוב על המענה שלו, עידוד,</p>
+                        
+                        <h4>בניית המבחן</h4>
+                        <p>שקף - מה אפשר לבקש מהבינה על מבחן?</p>
+                        
+                        <h3>טריק - יצירת טופס פורמס בעזרת קוד מהבינה, אפשר לקבל קוד מקלוד, סטודיו, ג'מיני ועוד</h3>
+                         <div class="video-container">
+                           <iframe src="https://www.youtube.com/embed/4TQ8xXBw3XY" allowfullscreen></iframe>
+                        </div>
+
+                        <h3>מיקרו הערכה</h3>
+                        <p>חלוקה של ההערכה לחלקים קטנים שמפוזרים לאורך השנה ולא רק מבחן מסכם כבד מורידים מתח ומעודדים התנסות ואפילו לקבל באהבה כשלון מדי פעם.</p>
+                        <h4>פליקרס</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/3Vg21D8HIgw" allowfullscreen></iframe>
+                        </div>
+                        <p>כלי לקיום למידה אינטראקטיבית בלי אמצעי קצה לתלמידים. מקרן וטלפון מורה מספיקים כדי לתת נתונים בזמן אמת ומשוב מיידי, תיעוד התוצאות ועוד.</p>
+                        <p>המלצה חמה - תנו לבינה לנסח את השאלות.</p>
+                        <p>מתאים לכרטיס כניסה או יציאה מהשיעור, מבדקי ידע קטנים וגם סתם לכיף.</p>
+                        <a href="https://www.plickers.com/" target="_blank" class="chip">קישור לכלי: https://www.plickers.com/</a>
+
+                        <h3>ניתוח התוצאות</h3>
+                        <h4>סטודיו - ניתוח נתונים</h4>
+                        <div class="video-container">
+                           <iframe src="https://www.youtube.com/embed/PC7cJuqmKKg" allowfullscreen></iframe>
+                        </div>
+                        <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" class="chip">קישור לכלי</a>
+                        <p>חשוב מאוד להתמים את התוצאות של המבחן!! (למחוק שמות ולהחליף אותם בסימון שרק המורה יזהה)</p>
+
+                        <h4>משוב אישי לתלמיד</h4>
+                        <p>בסטודיו אפשר לבקש בעקבות המבחן ליצור הודעה מתאימה לכל תלמיד.</p>
+
+                        <img src="https://i.imgur.com/BJNJC5c.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'discussion': `
+                    <div class="content-section">
+                        <h1>דיון</h1>
+                        <p><strong>לאחר שנכיר את הכלים, נפתח דיון משמעותי על השפעת הטכנולוגיה על תפקידנו כמורים בתהליכי ההערכה. נחשוב יחד על האתגרים וההזדמנויות, ונדמיין כיצד ייראה ההערכה בעתיד הקרוב. זוהי הזדמנות לשתף תובנות ולשמוע מניסיונם של עמיתים.</strong></p>
+                        <h3>שאלות לדיון:</h3>
+                        <ul>
+                            <li>כיצד משתנה תפקידנו כמורים כשאנחנו משלבים בינה מלאכותית בתהליכי ההערכה?</li>
+                            <li>איך נשמר את הייחודיות והמגע האישי שלנו בהערכה כשאנחנו משתמשים ב-AI?</li>
+                            <li>מה האתגרים האתיים בשימוש ב-AI בהערכה? (הוגנות, פרטיות, שקיפות)</li>
+                            <li>כיצד נבטיח שההערכה תישאר משמעותית ומותאמת לכל תלמיד?</li>
+                        </ul>
+                        <h3>דמיינו את בית הספר בעוד שנתיים:</h3>
+                        <ul>
+                           <li>איך ייראה תהליך ההערכה? מה אנחנו מודדים ועל מה מוותרים?</li>
+                           <li>מה התפקיד של המורה בתהליך? איך כדאי להכין את עצמנו?</li>
+                           <li>כיצד התלמידים יקבלו משוב על למידתם?</li>
+                           <li>הגיבו לחזון של עמית אחד.</li>
+                        </ul>
+                        <img src="https://i.imgur.com/wd3ivlG.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'assignment': `
+                    <div class="content-section">
+                        <h1>משימה:</h1>
+                        <p><strong>החלק המעשי של ההשתלמות מאפשר התנסות אישית ביצירת כלי הערכה בעזרת AI. המשימה כוללת יצירת מגוון רכיבי הערכה, החל ממבחנים ועד רובריקות, תוך שימוש בכלים שהכרנו. חשוב במיוחד לשתף את הפרומפטים ששימשו ליצירת החומרים, כך שכולם יוכלו ללמוד מהניסיון המשותף.</strong></p>
+                        <h3>שתפו מערכת הערכה שבניתם בעזרת בינה:</h3>
+                        <p>צרו תיקייה ושתפו את הקישור לצפייה.</p>
+                        <p>בתוך התיקיה - הגישו לפחות 3 רכיבים, צרפו פרומפטים:</p>
+                        <ul>
+                            <li><strong>מבחן או מבדק</strong> (כולל בקשת שיפור, או בקשת תוכן - שאלות מגוונות, הנחיות מפורשות, ניסוח למצגת...)</li>
+                            <li><strong>מחוון מפורט</strong> - למשימה או לפרויקט</li>
+                            <li><strong>כרטיסי יציאה</strong> (Exit Tickets) - שאלות מהירות לסיום השיעור</li>
+                            <li><strong>משימת הערכה חלופית</strong> - פורטפוליו, פרויקט, מצגת</li>
+                            <li><strong>טופס הערכה עצמית</strong> לתלמידים</li>
+                            <li><strong>מערכת משוב מותאמת אישית</strong> כולל בחירה UDL</li>
+                            <li><strong>בנק שאלות</strong> בדרגות קושי שונות</li>
+                            <li><strong>הנחיות להערכה מעצבת (צ'קליסט)</strong> בזמן השיעור</li>
+                        </ul>
+                        <p>אפשר לרכז בקובץ דוקס אחד ולהשתמש בטאבים.</p>
+                        <h3>דוגמאות לפרומפטים שימושיים:</h3>
+                        <ul>
+                            <li>"צור רובריקה מפורטת להערכת מצגת בנושא X, עם 4 רמות ו-5 קריטריונים"</li>
+                            <li>"כתב 10 שאלות exit ticket לשיעור על Y, ברמות קושי שונות"</li>
+                            <li>"צור מבחן עם 20 שאלות על נושא Z, כולל שאלות פתוחות וסגורות"</li>
+                        </ul>
+                        <img src="https://i.imgur.com/hPNkP6F.png" alt="אילוסטרציה" class="illustration">
+                    </div>`
+            };
+
+            const isMobile = window.innerWidth <= 800;
+            const timers = {};
+
+            function updateProgress() {
+                const allItems = document.querySelectorAll('.main-item, .sub-item');
+                const completedItems = document.querySelectorAll('.nav-item.completed');
+                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+                document.querySelector('.progress-indicator').style.width = `${percentage}%`;
+            }
+
+            function setItemCompleted(item) {
+                const navItem = item.closest('.nav-item');
+                const section = item.dataset.section;
+                if (!navItem.classList.contains('completed')) {
+                    clearTimeout(timers[section]);
+                    timers[section] = setTimeout(() => {
+                        navItem.classList.add('completed');
+                        updateProgress();
+                    }, 10000); // 10 seconds 
+                }
+            }
+
+            function handleMainItemClick(e) {
+                const mainItem = e.currentTarget;
+                const navItem = mainItem.closest('.nav-item');
+                const section = mainItem.dataset.section;
+                const subItemsContainer = navItem.querySelector('.sub-items');
+
+                if (subItemsContainer) {
+                    subItemsContainer.classList.toggle('active');
+                }
+
+                if (content[section]) {
+                    if (isMobile) {
+                        let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                        if (!wrapper) {
+                            wrapper = document.createElement('div');
+                            wrapper.className = 'section-wrapper';
+                            navItem.appendChild(wrapper);
+                        }
+                        
+                        const shouldShow = !wrapper.classList.contains('active');
+                        
+                        document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                            if (w !== wrapper) w.classList.remove('active');
+                        });
+
+                        wrapper.innerHTML = content[section];
+                        
+                        if(shouldShow) {
+                            setTimeout(() => wrapper.classList.add('active'), 10);
+                        } else {
+                            wrapper.classList.remove('active');
+                        }
+                    } else {
+                        document.getElementById('content-area').innerHTML = content[section];
+                    }
+                }
+
+                if (content[section]) {
+                    setItemCompleted(mainItem);
+                }
+            }
+            
+            function handleSubItemClick(e) {
+                e.stopPropagation();
+                const subItem = e.currentTarget;
+                const section = subItem.dataset.section;
+                const navItem = subItem.closest('.nav-item').parentElement.closest('.nav-item');
+
+                if (isMobile) {
+                    let wrapper = navItem.querySelector('.section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    const shouldShow = !wrapper.classList.contains('active');
+
+                    document.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+                    
+                    wrapper.innerHTML = content[section];
+
+                    if (shouldShow) {
+                         setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    document.getElementById('content-area').innerHTML = content[section];
+                }
+                setItemCompleted(subItem);
+            }
+
+            document.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            document.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobile) {
+                document.querySelector('.main-item[data-section="overview"]').click();
+            }
+            
+            let lastWidth = window.innerWidth;
+            window.addEventListener('resize', () => {
+                const newWidth = window.innerWidth;
+                if ((newWidth > 800 && lastWidth <= 800) || (newWidth <= 800 && lastWidth > 800)) {
+                    location.reload();
+                }
+                lastWidth = newWidth;
+            });
+        });
+    </script>
+</body>
+</html> 
