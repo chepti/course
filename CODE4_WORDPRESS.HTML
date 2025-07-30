@@ -27,10 +27,10 @@
       overflow-y: auto;
       position: sticky;
       top: 0;
-      right: 0;
       font-size: 1.1em;
       border-left: 1px solid #dee2e6;
       z-index: 1001;
+      order: 2; /* Set nav to be the second item */
     }
 
     #interactive-unit-container .sidebar-title {
@@ -47,22 +47,13 @@
       margin-right: var(--nav-width);
       padding: 40px;
       width: calc(100% - var(--nav-width));
-      margin-top: var(--header-height);
+      margin-top: 0; /* Remove margin-top as progress bar is gone */
       max-width: 1200px;
+      order: 1; /* Set content to be the first item */
     }
     
     #interactive-unit-container .progress-bar {
-      position: fixed;
-      top: 0;
-      right: var(--nav-width);
-      left: 0;
-      height: var(--header-height);
-      background: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      z-index: 1000;
+      display: none;
     }
     
     #interactive-unit-container .progress-indicator {
