@@ -1,0 +1,651 @@
+<html><head><base href="https://example.com" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניתוח נתונים </title>
+    <style>
+    #interactive-unit-container {
+      --primary-color: #E67E22; /* Orange */
+      --secondary-color: #34495e;
+      --nav-width: 300px;
+      --header-height: 60px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    #interactive-unit-container #nav {
+      width: var(--nav-width);
+      height: 100vh;
+      background: #f8f9fa;
+      padding: 30px;  /* Increased padding */
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      right: 0;
+      font-size: 1.1em;  /* Larger font */
+      border-left: 1px solid #dee2e6;
+      z-index: 1001;
+    }
+    
+    #interactive-unit-container #content {
+      margin-right: var(--nav-width);
+      padding: 40px;  /* Increased padding */
+      width: calc(100% - var(--nav-width));
+      margin-top: var(--header-height);
+      max-width: 1200px;  /* Limit maximum width */
+    }
+    
+    #interactive-unit-container .progress-bar {
+      position: fixed;
+      top: 0;
+      right: var(--nav-width);
+      left: 0;
+      height: var(--header-height);
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+    
+    #interactive-unit-container .progress-indicator {
+      height: 10px;
+      background: linear-gradient(to right, var(--primary-color), #27ae60);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+    
+    #interactive-unit-container .nav-item {
+      margin: 15px 0; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .main-item {
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      background: linear-gradient(45deg, #f3f4f6, #ffffff);
+      border-radius: 25px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .main-item:hover {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+    }
+    
+    #interactive-unit-container .completion-circle {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: white;
+    }
+    
+    #interactive-unit-container .completed .main-item {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+    }
+    
+    #interactive-unit-container .sub-items {
+      margin-right: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    #interactive-unit-container .sub-items.active {
+      max-height: 500px; /* Adjust based on content */
+    }
+    
+    #interactive-unit-container .sub-item {
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 8px 0;
+      border-radius: 20px;
+      background: linear-gradient(45deg, #ffffff, #f8f9fa);
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .sub-item:hover {
+      background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+    }
+    
+    #interactive-unit-container .completed .sub-item {
+      background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+      border-color: var(--primary-color);
+    }
+    
+    #interactive-unit-container .completed .completion-circle {
+      background: white;
+      border-color: white;
+    }
+    
+    #interactive-unit-container .completed .completion-circle::after {
+      content: "✓";
+      color: var(--primary-color);
+    }
+    
+    #interactive-unit-container .main-item:hover .completion-circle,
+    #interactive-unit-container .sub-item:hover .completion-circle {
+      border-color: white;
+      transform: scale(1.1);
+    }
+    
+    #interactive-unit-container .video-container {
+      margin: 30px 0;  /* Increased margin */
+      background: #f8f9fa;
+      padding: 20px;  /* Increased padding */
+      border-radius: 8px;
+      max-width: 800px;  /* Limit maximum width */
+    }
+    
+    #interactive-unit-container .video-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    #interactive-unit-container .video-duration {
+      color: #666;
+      font-size: 0.9em;
+    }
+    
+    #interactive-unit-container iframe {
+      width: 100%;
+      max-width: 800px;  /* Limit maximum width */
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);  /* Added shadow */
+    }
+    
+    #interactive-unit-container .discussion-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    #interactive-unit-container .discussion-image {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    #interactive-unit-container .assignment-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    #interactive-unit-container .content-section {
+      animation: fadeIn-scoped 0.5s ease-out;
+      margin-bottom: 40px;  /* Increased margin */
+      line-height: 1.6;  /* Better readability */
+    }
+    
+    #interactive-unit-container .section-title {
+      font-size: 24px;
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+    }
+    
+    #interactive-unit-container .section-intro {
+      line-height: 1.8;  /* Increased line height for better readability */
+      margin-bottom: 30px;
+      white-space: pre-line;  /* Preserve line breaks in the text */
+      max-width: 800px;  /* Limit text width for better readability */
+    }
+    
+    #interactive-unit-container .links-section {
+      margin: 25px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    #interactive-unit-container .link-item {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 24px;
+      color: var(--secondary-color);
+      text-decoration: none;
+      background: linear-gradient(45deg, #f3f4f6, #ffffff);
+      border-radius: 25px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      max-width: fit-content;
+    }
+    
+    #interactive-unit-container .link-item:hover {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+    }
+    
+    #interactive-unit-container .link-item::before {
+      content: "🔗";
+      margin-left: 8px;
+      font-size: 1.1em;
+    }
+    
+    @keyframes fadeIn-scoped {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    #interactive-unit-container .sub-nav .nav-item {
+         margin: 0;
+         padding: 0.5rem 1rem;
+         font-size: 0.95em;
+      }
+
+    @media (max-width: 800px) {
+        #interactive-unit-container { display: block; }
+        #interactive-unit-container #content { display: none; }
+        #interactive-unit-container #nav { position: static; width: 100%; height: auto; padding: 10px; }
+        #interactive-unit-container .progress-bar { right: 0; }
+        
+        /* Reset indentation for mobile view */
+        #interactive-unit-container .sub-items {
+            margin-right: 0;
+        }
+
+        #interactive-unit-container .sub-item {
+            padding-right: 8px; /* Keep some indentation for hierarchy */
+            padding-left: 8px;
+        }
+
+        #interactive-unit-container .section-wrapper {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        
+        #interactive-unit-container .section-wrapper.active {
+            max-height: 5000px; /* Large enough for content */
+        }
+        
+        #interactive-unit-container .sub-items.active {
+            max-height: 5000px; /* Override for mobile */
+        }
+
+        #interactive-unit-container .content-section {
+            animation: none;
+        }
+    }
+    </style>
+    </head>
+    <body>
+    <div id="interactive-unit-container">
+        <div id="nav">
+          <!-- Navigation items will be populated by JavaScript -->
+        </div>
+        
+        <div id="content">
+          <div class="progress-bar">
+            <div class="progress-indicator" style="width: 0%"></div>
+          </div>
+          <div id="content-area"></div>
+          <!-- Content section -->
+        </div>
+    </div>
+    
+    <script>
+    (function() {
+        function onReady(callback) {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', callback);
+            } else {
+                callback();
+            }
+        }
+
+        onReady(() => {
+            const container = document.querySelector('#interactive-unit-container');
+            if (!container) { return; }
+
+            const contentData = {
+              'מבט על': {
+                intro: 'כבעל תפקיד בבית הספר, יש מבט מערכתי ושותפות לתהליכים שמתרחשים בבית הספר. את המשימות - לייעל את הצורה בה נאספים נתונים, מנותחים, ומיושמים פרויקטים. נשתמש בפרק הזה בטכנולוגיה מכל מיני סוגים, לא דווקא בינה מלאכותית - כי לפעמים נוכל להפיק תועלת מבינה רק אחרי שנקיים לפניה תהליך נכון.',
+                videos: [
+                  {
+                    title: 'סרטון מבוא',
+                    url: 'https://youtu.be/ZBefCHysbJU'
+                  }
+                ]
+              },
+            
+              'כלים': {
+                subItems: {
+                  'ניהול פגישות': {
+                    intro: 'ניהול זמן ומשימות הוא אומנות המחייבת כלים טכנולוגיים יעילים. בפרק זה נכיר מספר פלטפורמות דיגיטליות שיסייעו לנו לארגן, לתעדף ולבצע משימות בצורה אופטימלית.',
+                    videos: [
+                      {
+                        title: "צ'יפים, TASKS חלוקת משימות",
+                        url: 'https://youtu.be/A4lIW_TH8s0'
+                      },
+                      {
+                        title: 'אבני בנין',
+                        url: 'https://youtu.be/ISQhtXPR0f8'
+                      },
+                      {
+                        title: 'טאבים',
+                        url: 'https://youtu.be/E0NyR4N1X7k'
+                      },
+                      {
+                        title: 'ניהול יומנים',
+                        url: 'https://youtu.be/NMbwB4MExCw'
+                      },
+                      {
+                        title: 'קביעת פגישות ביומן',
+                        url: 'https://youtu.be/d71diqdV0_c'
+                      },
+                      {
+                        title: 'Goblin Tools - מפרק מטלות',
+                        url: 'https://youtu.be/lF2SWH5PM0g'
+                      },
+                      {
+                        title: 'Agenda Hero - מזין אירועים ליומן (קרין רוזנר)',
+                        url: 'https://youtu.be/mINL0gG-ofI'
+                      }
+                    ],
+                    links: [
+                      {
+                        title: 'Goblin Tools',
+                        url: 'https://goblin.tools'
+                      },
+                      {
+                        title: 'Agenda Hero Magic',
+                        url: 'https://agendahero.com/magic'
+                      }
+                    ]
+                  },
+                  'ניתוח ותובנות': {
+                    intro: 'בעידן של שפע מידע, היכולת להפיק תובנות משמעותיות היא מפתח להצלחה. נלמד כיצד להשתמש בכלי AI מתקדמים לאיגום מידע, חילוץ תובנות וניתוח יעיל של נתונים.',
+                    videos: [
+                      {
+                        title: 'הנה AI - איגום כל הקבצים',
+                        url: 'https://youtu.be/hlNVruYpAXk?t=185'
+                      }
+                    ],
+                    links: [
+                      {
+                        title: 'חוברת פרומפטים של עומרי אירם',
+                        url: 'https://sites.google.com/mhb.org.il/geg/%D7%9B%D7%A0%D7%A1%D7%99%D7%9D/NLM'
+                      }
+                    ]
+                  },
+                  'ניתוח נתונים עם AI': {
+                    intro: 'הבינה המלאכותית מהווה כיום כלי עוצמתי לניתוח נתונים. נחשף לפלטפורמות מובילות כמו קלוד, GPT וכלים נוספים המאפשרים ניתוח מתקדם של מידע.',
+                    videos: [
+                      {
+                        title: 'AI STUDIO',
+                        url: 'https://youtu.be/PC7cJuqmKKg'
+                      },
+                      {
+                        title: 'קלוד וGPT',
+                        url: 'https://youtu.be/DOILtZHp0Ns'
+                      }
+                    ],
+                    links: [
+                      {
+                        title: 'ערכה לרכז הערכה - אריאל קלפנר',
+                        url: 'https://view.genial.ly/65ff4ce170bf98001328c2f8'
+                      }
+                    ]
+                  },
+                  'דשבורד': {
+                    intro: 'מידע מצטבר במערכות בית הספר - סביבת הענן, תוכנת הניהול הפדגוגי (תל"פ), משובים ועוד. כדי לקבל תמונה מובנת מתוך כל הנתונים, נוכל להיעזר בכלי בינה לניתוח, וביצירת דשבורד - לוח בקרה ויזואלי עם גרפים מתאימים.',
+                    videos: [
+                      {
+                        title: 'נוסחת XLOOKUP לטיוב נתונים',
+                        url: 'https://youtu.be/v86WrqKPnqM'
+                      },
+                      {
+                        title: 'הצגת נתונים ויזואלית - לוקר',
+                        url: 'https://youtu.be/QHrz5x1Q9Us'
+                      }
+                    ]
+                  }
+                }
+              },
+              'דיון': {
+                intro: 'כיצד הופכים אצלכם נתונים לפעולות מעשיות? מה החלק המאתגר לגבי התנהלות אצלכם - והאם יש משהו שלמדתם ביחידה שיכול לעזור?',
+                image: 'https://i.imgur.com/QiaQy92.jpg'
+              },
+              'משימה': {
+                intro: `המשימה המעשית תאפשר לכם לתרגל את הכלים שלמדתם, תוך יצירת דשבורד ראשוני על נתוני גלם, ובהמשך תוכלו ליצור דשבורד מותאם, המשקף את צרכי בית הספר שלכם.
+            
+            בנו דשבורד בכלי LOOKER. אם אין לכם קובץ נתונים מתאים, השתמשו בקובץ הדוגמא המצורף.
+            
+            בתוך הדשבורד, וודאו שהMETRICS מוגדר על ממד אחיד. בקובץ לדוגמא - יוניקים הוא המטריקה המשותפת.
+            
+            הוסיפו:
+            - גרף עוגה (להצגת החלוקה בין התוכניות)
+            - גרף עמודות (לבחירת מחוז)
+            - טבלה (להגת רשימת בתי הספר)
+            - כרטיסי מספר (כמה תלמידים, כמה קבוצות)
+            - רכיבים נוספים לבחירתכם
+            
+            לסיום:
+            1. שתפו והדביקו צילום מסך + קישור לצפיה
+            2. כתבו - איזה דשבורד הייתם רוצים להכין עבור בית הספר שלכם? 
+            3. אילו נתונים יש לאסוף לקראת זה?`,
+                image: 'https://i.imgur.com/PTZawOK.png',
+                links: [
+                  {
+                    title: 'קובץ נתונים לדוגמא',
+                    url: 'https://docs.google.com/spreadsheets/d/1o1p3yua7_2QdDEiCXGePpLZOF6a_XbjGP2UK3yrN5wU/copy?usp=sharing'
+                  }
+                ]
+              }
+            };
+            
+            let isMobileView = window.innerWidth <= 800;
+            let completionTimers = {};
+            const nav = container.querySelector('#nav');
+            const contentArea = container.querySelector('#content-area');
+            const progressIndicator = container.querySelector('.progress-indicator');
+
+            function generateContentHTML(sectionData, title) {
+                let html = `<div class="content-section">
+                              <h2 class="section-title">${title}</h2>
+                              <div class="section-intro">${sectionData.intro}</div>`;
+
+                if (sectionData.videos) {
+                    sectionData.videos.forEach(video => {
+                        html += `<div class="video-container">
+                                   <div class="video-title">${video.title}</div>
+                                   <iframe src="${video.url.replace('youtu.be/', 'youtube.com/embed/')}" allowfullscreen></iframe>
+                                 </div>`;
+                    });
+                }
+                if (sectionData.image) {
+                    html += `<img src="${sectionData.image}" alt="${title}" class="discussion-image">`;
+                }
+                if (sectionData.links) {
+                    html += '<div class="links-section">';
+                    sectionData.links.forEach(link => {
+                        html += `<a href="${link.url}" class="link-item" target="_blank">${link.title}</a>`;
+                    });
+                    html += '</div>';
+                }
+                html += '</div>';
+                return html;
+            }
+
+            function createNavigation() {
+                if(!nav) return;
+                nav.innerHTML = ''; 
+
+                Object.entries(contentData).forEach(([mainTitle, mainData], index) => {
+                    const mainItemDiv = document.createElement('div');
+                    mainItemDiv.className = 'nav-item';
+                    mainItemDiv.dataset.sectionId = mainTitle;
+
+                    const mainHeader = document.createElement('div');
+                    mainHeader.className = 'main-item';
+                    mainHeader.innerHTML = `<div class="completion-circle"></div><span>${mainTitle}</span>`;
+                    mainItemDiv.appendChild(mainHeader);
+
+                    if (mainData.subItems) {
+                        const subItemsContainer = document.createElement('div');
+                        subItemsContainer.className = 'sub-items';
+                        Object.keys(mainData.subItems).forEach(subTitle => {
+                            const subItemDiv = document.createElement('div');
+                            subItemDiv.className = 'nav-item'; // Nesting nav-item for consistency if needed
+                            subItemDiv.dataset.sectionId = subTitle;
+
+                            const subItem = document.createElement('div');
+                            subItem.className = 'sub-item';
+                            subItem.innerHTML = `<div class="completion-circle"></div><span>${subTitle}</span>`;
+                            
+                            subItemDiv.appendChild(subItem);
+                            subItemsContainer.appendChild(subItemDiv);
+                        });
+                        mainItemDiv.appendChild(subItemsContainer);
+                    }
+                    nav.appendChild(mainItemDiv);
+                });
+            }
+
+            function setupEventListeners() {
+                container.querySelectorAll('.main-item').forEach(mainHeader => {
+                    mainHeader.addEventListener('click', () => {
+                        const navItem = mainHeader.closest('.nav-item');
+                        const mainTitle = navItem.dataset.sectionId;
+                        const mainData = contentData[mainTitle];
+                        const subItemsContainer = navItem.querySelector('.sub-items');
+
+                        if (mainData.subItems) {
+                            if (subItemsContainer) subItemsContainer.classList.toggle('active');
+                        } else {
+                            const contentHTML = generateContentHTML(mainData, mainTitle);
+                            if (isMobileView) {
+                                let wrapper = navItem.querySelector('.section-wrapper');
+                                if (!wrapper) {
+                                    wrapper = document.createElement('div');
+                                    wrapper.className = 'section-wrapper';
+                                    navItem.appendChild(wrapper);
+                                }
+                                wrapper.innerHTML = contentHTML;
+                                setTimeout(() => wrapper.classList.toggle('active'), 10);
+                            } else {
+                                if(contentArea) contentArea.innerHTML = contentHTML;
+                            }
+                        }
+                        startCompletionTimer(navItem);
+                    });
+                });
+
+                container.querySelectorAll('.sub-item').forEach(subItemEl => {
+                    subItemEl.addEventListener('click', e => {
+                        e.stopPropagation();
+                        const subNavItem = subItemEl.closest('.nav-item');
+                        const subTitle = subNavItem.dataset.sectionId;
+                        const subData = contentData['כלים'].subItems[subTitle];
+                        const contentHTML = generateContentHTML(subData, subTitle);
+                        
+                        if (isMobileView) {
+                             const mainNavItem = subNavItem.closest('.sub-items').closest('.nav-item');
+                             let wrapper = mainNavItem.querySelector('.section-wrapper');
+                             if(!wrapper){
+                                 wrapper = document.createElement('div');
+                                 wrapper.className = 'section-wrapper';
+                                 mainNavItem.appendChild(wrapper);
+                             }
+                             wrapper.innerHTML = contentHTML;
+                             // ensure it's visible
+                             if(!wrapper.classList.contains('active')){
+                                 container.querySelectorAll('.section-wrapper.active').forEach(w => w.classList.remove('active'));
+                                 setTimeout(() => wrapper.classList.add('active'), 10);
+                             }
+                        } else {
+                            if(contentArea) contentArea.innerHTML = contentHTML;
+                        }
+                        startCompletionTimer(subNavItem);
+                    });
+                });
+            }
+            
+            function startCompletionTimer(element) {
+                const elementId = element.dataset.sectionId;
+                if (element.classList.contains('completed') || completionTimers[elementId]) {
+                    return;
+                }
+                completionTimers[elementId] = setTimeout(() => {
+                    element.classList.add('completed');
+                    updateProgress();
+                }, 30000);
+            }
+
+            function updateProgress() {
+                if(!progressIndicator) return;
+                const allItems = container.querySelectorAll('.main-item, .sub-item');
+                const completedItems = container.querySelectorAll('.nav-item.completed');
+                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+                progressIndicator.style.width = `${percentage}%`;
+            }
+            
+            function initializeView() {
+                createNavigation();
+                setupEventListeners();
+
+                if (!isMobileView) {
+                    const firstMainItem = container.querySelector('.main-item');
+                     if(firstMainItem) firstMainItem.click();
+                }
+            }
+
+            function handleResize() {
+                const newIsMobile = window.innerWidth <= 800;
+                if(newIsMobile !== isMobileView) {
+                    isMobileView = newIsMobile;
+                    container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
+                    if(contentArea) contentArea.innerHTML = '';
+                    initializeView();
+                }
+            }
+
+            initializeView();
+            window.addEventListener('resize', handleResize);
+        });
+    })();
+    </script>
+    </body>
+    </html> 
