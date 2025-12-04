@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יחידה 5 - יצירת חומרי לימוד אינטראקטיביים</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+    :root { --primary-color: #9B59B6; }
+    
+    #interactive-unit-container {
+      --primary-color: #9B59B6; /* Purple */
+      --secondary-color: #34495e;
+      --nav-width: 300px;
+      --header-height: 60px;
+      font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    #interactive-unit-container #nav {
+      width: var(--nav-width);
+      height: 100vh;
+      background: #f8f9fa;
+      padding: 20px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      font-size: 1.1em;
+      border-left: 1px solid #dee2e6;
+      z-index: 1001;
+      order: 1;
+    }
+
+    #interactive-unit-container .sidebar-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--secondary-color);
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    #interactive-unit-container #content {
+      margin-right: var(--nav-width);
+      padding: 30px;
+      width: calc(100% - var(--nav-width));
+      margin-top: 50px;
+      max-width: 1000px;
+      order: 2;
+    }
+    
+    #interactive-unit-container .progress-bar {
+      position: fixed;
+      top: 0;
+      right: var(--nav-width);
+      left: 0;
+      height: 50px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container .progress-indicator {
+      height: 10px;
+      background: linear-gradient(to right, var(--primary-color), #27ae60);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+      width: 0;
+    }
+    
+    #interactive-unit-container .nav-item {
+      margin: 15px 0; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .main-item, #interactive-unit-container .sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    #interactive-unit-container .main-item {
+      font-weight: bold;
+      background: linear-gradient(45deg, #f3f4f6, #ffffff);
+    }
+
+    #interactive-unit-container .sub-item {
+      margin: 8px 0;
+      background: linear-gradient(45deg, #ffffff, #f8f9fa);
+      border-width: 1px;
+    }
+    
+    #interactive-unit-container .main-item:hover {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+    }
+    
+    #interactive-unit-container .sub-item:hover {
+      background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+    }
+
+    #interactive-unit-container .completion-circle {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: white;
+      flex-shrink: 0;
+    }
+    
+    /* Completed sections - circle gets checkmark with colored background */
+    #interactive-unit-container .nav-item.completed .completion-circle {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      border-width: 2px;
+    }
+    
+    #interactive-unit-container .nav-item.completed .completion-circle::after {
+      content: "✓";
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* Don't change background color for completed items - only active items get colored background */
+    
+    #interactive-unit-container .main-item:hover .completion-circle,
+    #interactive-unit-container .sub-item:hover .completion-circle {
+      border-color: white;
+      transform: scale(1.1);
+    }
+    
+    #interactive-unit-container .sub-items {
+      margin-right: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    #interactive-unit-container .sub-items.active {
+      max-height: 800px;
+    }
+    
+    #interactive-unit-container .video-container {
+      margin: 30px 0;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+    }
+    
+    #interactive-unit-container .video-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+        
+    #interactive-unit-container iframe {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+        
+    #interactive-unit-container .content-section {
+      animation: fadeIn-scoped 0.5s ease-out;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    #interactive-unit-container .content-section h1 {
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h2 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h4 {
+      font-size: 1.4em;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+    
+    #interactive-unit-container .content-section p:first-of-type {
+      font-size: 1.15em;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+    
+    #interactive-unit-container .content-section ul {
+      padding-right: 20px;
+      margin-bottom: 15px;
+    }
+    
+    #interactive-unit-container .styled-button {
+        display: inline-block;
+        background: linear-gradient(45deg, var(--primary-color), #27ae60);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    #interactive-unit-container .styled-button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .button-wrapper {
+        margin-top: 15px;
+        text-align: left;
+    }
+    
+    .content-section hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+        margin: 40px 0;
+    }
+    
+    #interactive-unit-container .illustration {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+    
+    #interactive-unit-container .full-width-image {
+        width: 100%;
+        max-width: 800px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+
+    #interactive-unit-container .small-illustration {
+        max-width: 33%;
+    }
+
+    /* Active section - colored background, no side marker */
+    #interactive-unit-container .main-item.active,
+    #interactive-unit-container .sub-item.active {
+        background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
+        border: 2px solid var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: white !important;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle,
+    #interactive-unit-container .sub-item.active .completion-circle {
+        border-color: white !important;
+        background: white !important;
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle::after,
+    #interactive-unit-container .sub-item.active .completion-circle::after {
+        content: "";
+    }
+
+    @keyframes fadeIn-scoped {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 800px) {
+        #interactive-unit-container { display: block; }
+        #interactive-unit-container #content { display: none; }
+        #interactive-unit-container #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+        #interactive-unit-container .main-content { margin: 0; width: 100%; padding: 10px; }
+        #interactive-unit-container .progress-bar { right: 0; left: 0; width: 100%; }
+        #interactive-unit-container .sub-items { margin-right: 0; }
+        #interactive-unit-container .sub-item { padding-right: 8px; padding-left: 8px; }
+
+        #interactive-unit-container .section-wrapper {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        
+        #interactive-unit-container .section-wrapper.active {
+            max-height: 5000px;
+        }
+        
+        #interactive-unit-container .sub-items.active {
+            max-height: 5000px;
+        }
+
+        #interactive-unit-container .content-section {
+            animation: none;
+        }
+    }
+    </style>
+</head>
+<body>
+<div id="interactive-unit-container">
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+    
+    <div id="nav">
+        <div class="sidebar-title">יחידה 5 - חומרי לימוד אינטראקטיביים 🎮</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>מבט על</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_games">
+                        <div class="completion-circle"></div>
+                        <span>משחקים ולומדות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_complex">
+                        <div class="completion-circle"></div>
+                        <span>פעילויות מורכבות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_studio">
+                        <div class="completion-circle"></div>
+                        <span>סטודיו</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_bots">
+                        <div class="completion-circle"></div>
+                        <span>בוטים</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_more">
+                        <div class="completion-circle"></div>
+                        <span>עוד אינטראקציות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_code">
+                        <div class="completion-circle"></div>
+                        <span>פתרונות עבודה עם קוד</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_helpers">
+                        <div class="completion-circle"></div>
+                        <span>כלי עזר</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="task">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    function onReady(callback) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', callback);
+        } else {
+            callback();
+        }
+    }
+
+    onReady(() => {
+        const container = document.querySelector('#interactive-unit-container');
+        if (!container) { return; }
+
+        const content = {
+            overview: `
+                <div class="content-section" data-track-section="overview">
+                    <h1>יצירת חומרי לימוד אינטראקטיביים בעזרת AI</h1>
+                    <p>חומרי לימוד אינטראקטיביים הם כיף גדול. מגדילים מעורבות, מוטיבציה, מאפשרים התקדמות בקצב מותאם, גיוון ושימוש בויזואליה. שדרוג הלמידה בעזרת תוכן דיגיטלי קל יותר מבעבר. בעזרת AI ניתן ליצור משחקים, דפים מפעילים, תוכן אינטראקטיבי להקרנה ולהפעלה ועוד.</p>
+                    <p>מה הופך שיעור טוב לשיעור מעולה? איך גורמים לתלמידים להשתתף בהתלהבות? כאן נלמד איך AI יכול להיות השותף הסודי שלנו ביצירת חומרי למידה שתלמידים פשוט אוהבים להשתמש בהם.</p>
+                    
+                    <div class="video-container">
+                        <div class="video-title">סרטון: מבט על הכוח של למידה אינטראקטיבית (4:05)</div>
+                        <iframe src="https://www.youtube.com/embed/JJU7IEbIZv8" allowfullscreen data-track-video="overview"></iframe>
+                    </div>
+
+                    <hr>
+
+                    <h4>הסבר - למה קוד בכלל?</h4>
+                    <p>עבור רובנו, קוד ותכנות הם מחוץ לתחום. קוד נראה מפחיד, דורש עולמות ידע שלמים שלא קשורים להוראה ולתחביבים שלנו. בזכות כלי הבינה, הכתיבה של הקוד כבר לא נחוצה. צריך רק לומר בשפת בני אדם מה שאנחנו רוצים - וזה לא תמיד פשוט להסביר, ויש הבדל ושיפור ככל שמתנסים - אבל זה כבר לגמרי בהישג היד, ונוכל ליצור את מה שנרצה.</p>
+                    <p>למה לטרוח? קוד הוא השפה הבסיסית שבה כתוב כל מה שעובד בדיגיטל. עד תקופת הבינה הגנרטיבית נאלצנו להשתמש בתיווך של תוכנות ופלטפורמות שאיפשרו לדלג על הקוד כדי ליצור מסמך, מצגת, משחק או אתר. ואם אנחנו עובדים דרך תוכנת תיווך - היא בהכרח מוגבלת ליכולות מסוימות, וכנראה דורשת תשלום.</p>
+                    <p>כעת היכולת לעבוד ישירות עם הקוד פתוחה יותר. אנחנו יכולים לעבוד ישירות על רמת הקוד, בלי לכתוב אותו ואפילו בלי לקרוא אותו. כלי הבינה לא מכוונים אל תבניות מסוימות דווקא, ויכולים לכתוב עבורנו כל משחק או פעילות שנרצה. ככל שהרצון שלנו מדויק - התוצר יהיה מוצלח יותר וידרוש פחות שלבים.</p>
+                    <p>השפה שרוב כלי הבינה כותבים עבורנו נקראת HTML, והיא נוחה - נוצר קובץ יחיד, שאפשר להעביר בין כלים, לשמור ולפתוח בדפדפן אפילו במצב אופליין. זה קובץ קל משקל שיודע להכיל המון פונקציונליות ועיצובים מגוונים מאוד.</p>
+                    <p>חלק מהכלים, למשל AI STUDIO או וובסים, ייצרו לנו קוד יותר מורכב, למשל בשפת React, שכבר קשה יותר לפתוח ודורש תוכנת עריכה מיוחדת ואירוח בכלים ייעודיים. לכן הפרדנו אותם מהכלים שנותנים קוד פשוט.</p>
+
+                    <hr>
+
+                    <h4>תרשים - התועלת בלמידה דיגיטלית</h4>
+                    <img src="https://i.imgur.com/HTuB6xs.jpg" alt="התועלת בלמידה דיגיטלית" class="illustration">
+                </div>
+            `,
+            tools: `
+                <div class="content-section" data-track-section="tools">
+                    <h1>כלים ליצירת חומרי לימוד אינטראקטיביים</h1>
+                    <p>הגיע הזמן להכיר ולארגן את ארגז הכלים שעומד לרשותנו! כל כלי יוצר סוג פריטים בדרך קצת שונה - וביחד הם מאפשרים לנו ליצור יצירות מופת פדגוגיות.</p>
+                    <img src="https://i.imgur.com/nQk06VJ.png" alt="אילוסטרציה של מגוון כלים אינטראקטיביים" class="illustration">
+                </div>
+            `,
+            tools_games: `
+                <div class="content-section" data-track-section="tools_games">
+                    <h1>משחקים ולומדות</h1>
+                    <p>פעילויות אינטראקטיביות למקרן או ללומד באופן עצמאי יכולות ללוות את הלמידה, לתת משוב מיידי, לשלב מדיה ומשחקיות ולהפוך כל שיעור לחוויה.</p>
+
+                    <hr>
+
+                    <h4>קנבה קוד</h4>
+                    <p>יצירת משחק בעיצוב מהמם שישתלב במצגות או אתרי קנבה ויאפשר אינטראקטיביות. אפשר ליצור צירי זמן, מיון, התאמות מושגים וכל רעיון אחר. נראה גם איך לחלץ את הקוד ואיך להגיע אל היסטוריית הצ'אטים.</p>
+                    <p><strong>יתרונות</strong> - עיצוב יפה, מתחבר לממשק שבו עובדים, שיתוף קל.</p>
+                    <p><strong>חסרונות</strong> - כשהשיחה מתארכת הוא מאבד ולא מבין. לא ניתן לבצע רמיקס ולערוך קוד של אחרים.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/K_S7rno9Buc" allowfullscreen data-track-video="tools_games"></iframe>
+                    </div>
+                    <p>חדש - קנבה קוד מאפשרת גם שמירת נתונים בסיסית: לזכור את שם השחקן, לתעד את ההתקדמות, התשובות והציון שלו. הנתונים נשמרים בגליון קנבה נפרד. מומלץ להוסיף כפתור ייעודי למורה שמוגן בסיסמה ומאפשר לגשת לדוח מעוצב.</p>
+                    <p>חדש - שילוב יכולות בינה: אפשר לתת לבינה לקריין מילים, להוסיף צלילים ועוד.</p>
+                    <div class="button-wrapper">
+                        <a href="https://www.canva.com/ai/code" target="_blank" class="styled-button" data-track-click>קנבה קוד</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>ג'מיני קנבס</h4>
+                    <p>יכולת פשוטה ויעילה של ג'מיני ליצור משחקוני קוד, פעילויות למקרן וללמידה עצמאית ועוד. דומה לארטיפקטס של קלוד, קנבה קוד ועוד. מתאים גם ליצירה על ידי תלמידים - מגיל 13 זה מאושר, והם נהנים, יצירתיים וסבלניים.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/I3_tZwvKjm0" allowfullscreen data-track-video="tools_games"></iframe>
+                    </div>
+                    <p>שימו לב: שיתוף ישיר של קישור מג'מיני קנבס עובד רק בחשבון הפרטי. בחשבון ארגוני יותר מוגן, ולכן תצטרכו לייצא את הקוד אל כלי חיצוני - CodePen, הטמעה בגוגל סייטס וכדומה.</p>
+                    <p>חדש - שילוב בינה בלחיצת כפתור: בפינת הקנבס למטה יש סרגל צף שמאפשר להוסיף יכולות של בינה לקנבס, גם אחרי שכבר קיים תוצר.</p>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני קנבס</a>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/3550/" target="_blank" class="styled-button" data-track-click>דוגמת כלי אינטראקטיבי בג'מיני</a>
+                    </div>
+                    <img src="https://i.imgur.com/C0dME1l.png" alt="ממשק ג'מיני קנבס" class="illustration small-illustration">
+
+                    <hr>
+
+                    <h4>קלוד ארטיפקטס</h4>
+                    <p>ארטיפקטס הם "קבצים" קטנים שהבינה יוצרת מעבר לטקסט. קלוד היה הראשון שהציע את היכולת הזו, וההבנה העמוקה שלו את הפרומפט וההקשר הופכת את התוצרים לחכמים במיוחד.</p>
+                    <p>השיתוף מקלוד נוח - כפתור Publish אחד, וקל ליצור רמיקסים מתוצרים של אחרים. אפשר גם לשלב בינה בתוצר עצמו, אם מבקשים פעילות שדורשת זאת.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/L9Bdr8WnZRs" allowfullscreen data-track-video="tools_games"></iframe>
+                    </div>
+                    <img src="https://i.imgur.com/DhENnJw.png" alt="אילוסטרציה של ארטיפקטס" class="illustration">
+                </div>
+            `,
+            tools_complex: `
+                <div class="content-section" data-track-section="tools_complex">
+                    <h1>פעילויות מורכבות</h1>
+                    <p>מעבר למשחק בודד או בוחן קצר, יש כלים שמאפשרים לבנות עולמות לימוד שלמים: לוחות עבודה, חוברות אינטראקטיביות, סימולציות ועוד.</p>
+
+                    <hr>
+
+                    <h4>וובסים</h4>
+                    <p>וובסים מאפשר ליצור חוויות אינטראקטיביות מורכבות, כולל עבודה עם נתונים, שיתופיות ושילוב בינה.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/DV6_y7fbkDw" allowfullscreen data-track-video="tools_complex"></iframe>
+                    </div>
+                    <p>קל מאוד לשכפל תוצרים בוובסים ולהמשיך יצירות של אחרים (רמיקס). בתוך כל פעילות, לחיצה על האייקון של העיפרון תאפשר "לשרשר" ולשדרג את הפעילות, בלי לפגוע בתוצר המקורי של היוצר.</p>
+                    <p>מוזמנים לקבל השראה, ליצור רמיקסים ולהוסיף פריטים יפים שיצרתם.</p>
+                    <div class="button-wrapper">
+                        <a href="https://websim.com/@chepti/websims" target="_blank" class="styled-button" data-track-click>מאגר וובסימים</a>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.canva.com/design/DAGW6xtIIBo/dC6X47aXbphC7oSxkXkHeA/view" target="_blank" class="styled-button" data-track-click>חוברת עבודה ודוגמאות</a>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://websim.com/" target="_blank" class="styled-button" data-track-click>וובסים</a>
+                    </div>
+                </div>
+            `,
+            tools_studio: `
+                <div class="content-section" data-track-section="tools_studio">
+                    <h1>סטודיו ואפליקציות</h1>
+                    <p>מחוללי אפליקציות מאפשרים ליצור תוצרים מורכבים יותר: מערכות עם מסדי נתונים, לוגיקה פנימית ושילוב בינה בתוך החוויה עצמה.</p>
+
+                    <hr>
+
+                    <h4>AI Studio של גוגל</h4>
+                    <p>מחולל האפליקציות בתוך AI STUDIO מאפשר לבנות אפליקציות מתקדמות יותר מהארטיפקטים או הקנבסים. יש גישה לקוד, אפליקציות עם מסד קבצים מורכב ושילוב בינה בתוצר הפעיל (ולא רק בשלבי ההכנה).</p>
+                    <p>כל הקוד שקוף וניתן לעריכה בתוך הכלי עצמו. גם אפשרויות הפרסום והשיתוף מגוונות: הורדת הקוד והעלאתו במקום אחר, שיתוף פשוט, פריסה בכלי גוגל לקבלת קישור נקי, ויצירת עותקים.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/hZHDEtHnOMs" allowfullscreen data-track-video="tools_studio"></iframe>
+                    </div>
+                </div>
+            `,
+            tools_bots: `
+                <div class="content-section" data-track-section="tools_bots">
+                    <h1>בוטים ללמידה מונחית</h1>
+                    <p>בוטים יכולים לשמש כמורה פרטי חכם: ללוות תלמיד במשימה, לשאול שאלות, להציע רעיונות ולהסביר שוב ושוב בסבלנות.</p>
+
+                    <hr>
+
+                    <h4>ג'אמים GEM</h4>
+                    <p>כלי מושלם ליצירת בוט מותאם אישית. המורה מגדיר את מאפייני השיחה, האופי והמשימה שהתלמיד אמור לבצע, והבוט מלווה את התלמיד - מבין אותו היטב, מציע, שואל ונותן הסברים.</p>
+                    <p>המלצה: בשלב זה שילוב הקבצים לא תמיד עובד באופן יציב. עדיף להדביק את הטקסט החשוב בהנחיות הבוט.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/KCN47ZThFsI" allowfullscreen data-track-video="tools_bots"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/3697/" target="_blank" class="styled-button" data-track-click>בוט סוגי תאים</a>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/4939/" target="_blank" class="styled-button" data-track-click>מוזאיק בוט</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>מג'יק סקול</h4>
+                    <p>מג'יק סקול מאפשר למורה ליצור "חדרים" ובתוכם כמה בוטים, שכל אחד מסייע בחלק אחר של המשימה.</p>
+                    <p><strong>יתרון</strong> - מותר לשימוש כבר מכיתות ה'-ו', ללא צורך במייל לתלמידים. הם מזינים רק שם.</p>
+                    <p><strong>חיסרון</strong> - יצירה מעט מסורבלת יותר, מהירות טעינה ותגובה נמוכות יותר, והבנה פחות טובה לעומת GEMS.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/rECV-0MKLgw" allowfullscreen data-track-video="tools_bots"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://app.magicschool.ai/tools" target="_blank" class="styled-button" data-track-click>מג'יק סקול</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>מצב למידה</h4>
+                    <p>גם מצב הלמידה שלמדנו עליו ביחידה הראשונה יכול לשמש כמעין בוט מלווה למשימות, עם שאלות מכוונות ומשוב.</p>
+                    <img src="https://i.imgur.com/lugLzDD.png" alt="אילוסטרציה של מצב למידה" class="illustration">
+                </div>
+            `,
+            tools_more: `
+                <div class="content-section" data-track-section="tools_more">
+                    <h1>עוד אינטראקציות</h1>
+                    <p>לפעמים אנחנו רוצים פעילות חדה ומהירה: בוחן קצר, סיפורון דיגיטלי או חידון חי. גם כאן AI יכול לעזור להכין את הכל בכמה דקות.</p>
+
+                    <hr>
+
+                    <h4>בחן אותי</h4>
+                    <p>מצב קל וזריז להכנה - מחולל בוחן אינטראקטיבי בכל נושא ורמה, תוך שניות. ההפעלה פשוטה: מכניסים בפרומפט את ההנחיה "בחן אותי" והקסם קורה.</p>
+                    <p>אם יצרתם בחשבון פרטי, תוכלו לשתף קישור לתלמידים.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/3Hss39zdJv8" allowfullscreen data-track-video="tools_more"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>קוויזיז - Wayground</h4>
+                    <p>פלטפורמה ליצירת חידון אוטומטי מעמוד אינטרנט - למשל קישור לויקיפדיה.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/rkAQTEG6sKc" allowfullscreen data-track-video="tools_more"></iframe>
+                    </div>
+                    <p>קוויזיז דומה לקהוט אך פחות מוגבל, מאפשר הפעלה במגוון תצורות - אפילו עם כרטיסי נייר, מצב שיעורי בית ובכמה כיתות במקביל.</p>
+                    <div class="button-wrapper">
+                        <a href="https://wayground.com/admin" target="_blank" class="styled-button" data-track-click>Wayground</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>ספרון בג'מיני - Storybook</h4>
+                    <p>יצירה חמודה שמתאימה במיוחד ללומדים צעירים: ספרונים שכוללים טקסט, תמונות מלוות, תצוגת דפדוף ואפילו קריינות.</p>
+                    <p>לא חייבים לפתוח GEM: מספיק להזכיר את המילה Storybook בהנחיה, וג'מיני יבין שמדובר ביצירת ספרון.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/SsamprrBJnk" allowfullscreen data-track-video="tools_more"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני - סטוריבוק</a>
+                    </div>
+                </div>
+            `,
+            tools_code: `
+                <div class="content-section" data-track-section="tools_code">
+                    <h1>פתרונות לעבודה עם קוד</h1>
+                    <p>אחרי שקיבלנו מהבינה קוד של משחק או פעילות, צריך לדעת איך לשמור, לשתף ולהטמיע אותו כך שיעבוד טוב בסביבה הבית-ספרית.</p>
+
+                    <hr>
+
+                    <h4>שמירה כקובץ מקומי</h4>
+                    <p>במיוחד לבתי ספר עם אתגרי רשת - למשל במגזר החרדי - כדאי להכיר איך לשמור את קובץ הקוד שקיבלנו מהבינה כקובץ HTML פשוט, אפילו על דיסק און קי, ולפתוח אותו בדפדפן גם בלי חיבור לרשת.</p>
+                    <p>מה לא יעבוד? תמונות שמקושרות מהרשת, בסיס נתונים מקוון ושילוב בינה "חיה".</p>
+                    <p><strong>איך עושים את זה?</strong></p>
+                    <ul>
+                        <li>אם יש כפתור הורדה - זו האופציה הנוחה ביותר.</li>
+                        <li>כשאין כפתור הורדה: מעתיקים את הקוד, פותחים "פנקס רשימות" במחשב, מדביקים את הקוד ושומרים בשם שנגמר ב-<code>.html</code>.</li>
+                        <li>פותחים את הקובץ השמור - והוא ייפתח כדף אינטראקטיבי בדפדפן.</li>
+                    </ul>
+                    <p>מומלץ לבדוק מראש שהכל תקין.</p>
+                    <img src="https://i.imgur.com/Q8OLE6E.png" alt="שמירת קובץ HTML במחשב" class="illustration">
+
+                    <hr>
+
+                    <h4>שילוב בתוך גוגל סייטס</h4>
+                    <p>לא כולם יודעים כמה קל ליצור אתר בגוגל סייטס ואז לשתול בו את המשחק או הפעילות.</p>
+                    <ul>
+                        <li>בדרייב לוחצים על "+ חדש" &gt; "עוד" &gt; Google Sites.</li>
+                        <li>נותנים כותרת לאתר, ובתפריט הימני בוחרים "הטמעה".</li>
+                        <li>בלשונית "קוד" מדביקים את קוד ה-HTML של המשחק ומאשרים.</li>
+                        <li>מתאימים את הגודל כך שהתוכן יוצג טוב ומפרסמים את האתר.</li>
+                    </ul>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/-5CUge40wVA" allowfullscreen data-track-video="tools_code"></iframe>
+                    </div>
+
+                    <hr>
+
+                    <h4>CodePen</h4>
+                    <p>נתקעתם עם קוד שאי אפשר להעלות לבית הספר? הסינון חוסם את הפעילות?</p>
+                    <p>CodePen הוא כלי חינמי קטן שמאפשר להדביק ואף לערוך את הקוד, לראות תצוגה מקדימה "חיה" ולקבל קישור ישיר נקי יחסית שמציג רק את הפעילות.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/5AS-igf-uQU" allowfullscreen data-track-video="tools_code"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://codepen.io/" target="_blank" class="styled-button" data-track-click>CodePen</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>הטמעת תמונה ב-Imgur</h4>
+                    <p>Imgur מאפשר להעלות תמונה במהירות - אפילו בהדבקה מהלוח - ולקבל קישור ישיר עם סיומת JPG או PNG.</p>
+                    <p>את הקישור אפשר לשלב במשחקים ובתוצרים מבוססי קוד: כרקע לקנבס או ארטיפקט, כדמות במשחק ועוד. בתוך חלק מהכלים התמונה לא תוצג (למשל בקלוד), אבל כשהקוד יוטמע - היא תופיע ותשדרג את התוצר.</p>
+                    <p>התמונות אינן מתפרסמות בזירה ציבורית אם לא ביקשנו, אבל עדיין חשוב לא להעלות תוכן פרטי או מוגן.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/EFSWC5MKajU" allowfullscreen data-track-video="tools_code"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://imgur.com/upload" target="_blank" class="styled-button" data-track-click>העלאה ל-Imgur</a>
+                    </div>
+                </div>
+            `,
+            tools_helpers: `
+                <div class="content-section" data-track-section="tools_helpers">
+                    <h1>כלי עזר</h1>
+                    <p>כדי לתכנן ולזקק את הרעיונות, נשתמש גם בכלים משלימים לניהול ידע ולהצגת הדגמות.</p>
+
+                    <hr>
+
+                    <h4>NotebookLM</h4>
+                    <p>נוטבוק מסודר שמרכז חומרים, טיוטות ותובנות על יצירת חומרי לימוד אינטראקטיביים.</p>
+                    <div class="button-wrapper">
+                        <a href="https://notebooklm.google.com/notebook/bdb69b81-4f02-418d-9c67-faaab36c64b8" target="_blank" class="styled-button" data-track-click>NotebookLM ליחידה</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>מצגת מלווה</h4>
+                    <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                      <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                        src="https://www.canva.com/design/DAG48quKddU/2oAmhVQwhMJ6fqKGGO0N6g/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen" data-track-video="tools_helpers">
+                      </iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.canva.com/design/DAG48quKddU/2oAmhVQwhMJ6fqKGGO0N6g/view?utm_content=DAG48quKddU&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" class="styled-button" data-track-click>כלים שלובים - אינטראקטיבי ולומדות</a>
+                    </div>
+                </div>
+            `,
+            help_tools: `
+                <div class="content-section" data-track-section="help_tools">
+                    <h1>מדיה משלימה</h1>
+                    <p>ביחידה זו יש גם משאבים נלווים שיכולים להקל על ההעברה בכיתה ולהעמיק את ההבנה.</p>
+
+                    <hr>
+
+                    <h4>NotebookLM ליחידה</h4>
+                    <div class="button-wrapper">
+                        <a href="https://notebooklm.google.com/notebook/bdb69b81-4f02-418d-9c67-faaab36c64b8" target="_blank" class="styled-button" data-track-click>NotebookLM</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>מצגת מלווה</h4>
+                    <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                      <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;"
+                        src="https://www.canva.com/design/DAG48quKddU/2oAmhVQwhMJ6fqKGGO0N6g/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen" data-track-video="help_tools">
+                      </iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.canva.com/design/DAG48quKddU/2oAmhVQwhMJ6fqKGGO0N6g/view?utm_content=DAG48quKddU&amp;utm_campaign=designshare&amp;utm_medium=embeds&amp;utm_source=link" target="_blank" class="styled-button" data-track-click>כלים שלובים - אינטראקטיבי ולומדות</a>
+                    </div>
+                </div>
+            `,
+            discussion: `
+                <div class="content-section" data-track-section="discussion">
+                    <h1>דיון: למידה מניסיון של אחרים</h1>
+                    <p>אין כמו ללמוד מניסיון של אחרים! בואו נצא למסע קצר בין יצירות דיגיטליות של מורים כמוכם, ונגלה את הסודות שהופכים פעילות דיגיטלית למוצלחת במיוחד.</p>
+                    <p>היכנסו אל לוח השיתוף וצפו בתוצרי מורים דיגיטליים. בחרו פריט אחד וחשבו:</p>
+                    <ul>
+                        <li>מה עובד טוב?</li>
+                        <li>מה פחות?</li>
+                        <li>איך הייתם משפרים?</li>
+                        <li>מה גורם לכם כמורים לשתף פריט שיצרתם? מה אולי חוסם?</li>
+                    </ul>
+                    <p>שתפו והגיבו לניתוחים של עמיתים.</p>
+                    <div class="button-wrapper">
+                        <a href="https://padlet.com/chepti/padlet-929n03pgpduzj28d" target="_blank" class="styled-button" data-track-click>לוח השיתוף בפדלט</a>
+                    </div>
+                    <img src="https://i.imgur.com/wUPauEk.png" alt="אילוסטרציה ללוח שיתוף" class="illustration">
+                </div>
+            `,
+            task: `
+                <div class="content-section" data-track-section="task">
+                    <h1>משימה: יוצרים חוויית למידה אינטראקטיבית</h1>
+                    <p>הגיע הרגע שכולנו חיכינו לו - להפוך מצופים ליוצרים! עכשיו תורכם לקחת את כל מה שלמדנו ולהפוך אותו למשהו מיוחד משלכם. זכרו - אין דרך אחת נכונה, יש את הדרך שלכם.</p>
+                    <p>בחרו נושא לימודי, תחמו יחידה ספציפית ושכבת גיל. צרו פעילות אינטראקטיבית לשלב המליאה (מקרן מול כיתה שלמה), או לפעילות עצמאית של התלמידים.</p>
+                    <p>בתיאור הפוסט שתפרסמו כתבו:</p>
+                    <ul>
+                        <li>הפרומפט שבו השתמשתם.</li>
+                        <li>קישור לצפייה בתוצר.</li>
+                        <li>משפט שמסביר מה הערך המוסף של הפעילות בהשוואה ללמידה מסורתית.</li>
+                    </ul>
+                    <p>העלו למאגר "חומר פתוח" את התוצר, ואל תשכחו את התגית המיוחדת של הקורס.</p>
+                    <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid #9B59B6; border-radius: 4px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
+                            <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
+                        </label>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>מאגר חומר פתוח</a>
+                    </div>
+                    <img src="https://i.imgur.com/7lolI5p.png" alt="אילוסטרציה למשימה אינטראקטיבית" class="illustration">
+                </div>
+            `
+        };
+        
+        let isMobileView = window.innerWidth <= 800;
+        const contentArea = container.querySelector('#content-area');
+        const progressIndicator = container.querySelector('.progress-indicator');
+
+        function updateProgress() {
+            const allItems = container.querySelectorAll('.main-item, .sub-item');
+            const completedItems = container.querySelectorAll('.nav-item.completed');
+            const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+            if (progressIndicator) progressIndicator.style.width = `${percentage}%`;
+        }
+
+        // Completion is handled by course-tracker.js
+
+        function handleMainItemClick(e) {
+            const mainItem = e.currentTarget;
+            const navItem = mainItem.closest('.nav-item');
+            const section = mainItem.dataset.section;
+            const subItemsContainer = navItem.querySelector('.sub-items');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            mainItem.classList.add('active');
+
+            if (subItemsContainer) {
+                subItemsContainer.classList.toggle('active');
+            }
+
+            if (content[section]) {
+                const contentHTML = content[section];
+                if (isMobileView) {
+                    let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    
+                    const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+                    
+                    container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+
+                    wrapper.innerHTML = contentHTML;
+                    
+                    if (shouldShow) {
+                        setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    if (contentArea) contentArea.innerHTML = contentHTML;
+                }
+            }
+
+            // Completion is handled by course-tracker.js
+        }
+        
+        function handleSubItemClick(e) {
+            e.stopPropagation();
+            const subItem = e.currentTarget;
+            const section = subItem.dataset.section;
+            const navItem = subItem.closest('.nav-item');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item and its parent main item
+            subItem.classList.add('active');
+            const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+            if (mainNavItem) {
+                const mainItem = mainNavItem.querySelector('.main-item');
+                if (mainItem) mainItem.classList.add('active');
+            }
+
+            const contentHTML = content[section];
+
+            if (isMobileView) {
+                const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+                let wrapper = mainNavItem.querySelector('.section-wrapper');
+                if (!wrapper) {
+                    wrapper = document.createElement('div');
+                    wrapper.className = 'section-wrapper';
+                    mainNavItem.appendChild(wrapper);
+                }
+                const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+
+                container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                    if (w !== wrapper) w.classList.remove('active');
+                });
+                
+                wrapper.innerHTML = contentHTML;
+
+                if (shouldShow) {
+                     setTimeout(() => wrapper.classList.add('active'), 10);
+                } else {
+                    wrapper.classList.remove('active');
+                }
+            } else {
+                if (contentArea) contentArea.innerHTML = contentHTML;
+            }
+            // Completion is handled by course-tracker.js
+        }
+        
+        function initializeView() {
+            container.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            container.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobileView) {
+                const overviewItem = container.querySelector('.main-item[data-section="overview"]');
+                if (overviewItem) overviewItem.click();
+            }
+        }
+
+        function handleResize() {
+            const newIsMobile = window.innerWidth <= 800;
+            if (newIsMobile !== isMobileView) {
+                isMobileView = newIsMobile;
+                container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
+                if (contentArea) contentArea.innerHTML = '';
+                initializeView();
+            }
+        }
+
+        initializeView();
+        window.addEventListener('resize', handleResize);
+    });
+})();
+</script>
+
+</body>
+</html>
+
+

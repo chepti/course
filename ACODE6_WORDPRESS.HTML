@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>יחידה 6 - מדיה ואודיו</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+    :root { --primary-color: #E67E22; }
+    
+    #interactive-unit-container {
+      --primary-color: #E67E22; /* Orange */
+      --secondary-color: #34495e;
+      --nav-width: 300px;
+      --header-height: 60px;
+      font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    #interactive-unit-container #nav {
+      width: var(--nav-width);
+      height: 100vh;
+      background: #f8f9fa;
+      padding: 20px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      font-size: 1.1em;
+      border-left: 1px solid #dee2e6;
+      z-index: 1001;
+      order: 1;
+    }
+
+    #interactive-unit-container .sidebar-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--secondary-color);
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    #interactive-unit-container #content {
+      margin-right: var(--nav-width);
+      padding: 30px;
+      width: calc(100% - var(--nav-width));
+      margin-top: 50px;
+      max-width: 1000px;
+      order: 2;
+    }
+    
+    #interactive-unit-container .progress-bar {
+      position: fixed;
+      top: 0;
+      right: var(--nav-width);
+      left: 0;
+      height: 50px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container .progress-indicator {
+      height: 10px;
+      background: linear-gradient(to right, var(--primary-color), #27ae60);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+      width: 0;
+    }
+    
+    #interactive-unit-container .nav-item {
+      margin: 15px 0; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .main-item, #interactive-unit-container .sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    #interactive-unit-container .main-item {
+      font-weight: bold;
+      background: linear-gradient(45deg, #f3f4f6, #ffffff);
+    }
+
+    #interactive-unit-container .sub-item {
+      margin: 8px 0;
+      background: linear-gradient(45deg, #ffffff, #f8f9fa);
+      border-width: 1px;
+    }
+    
+    #interactive-unit-container .main-item:hover {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+    }
+    
+    #interactive-unit-container .sub-item:hover {
+      background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+    }
+
+    #interactive-unit-container .completion-circle {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: white;
+      flex-shrink: 0;
+    }
+    
+    /* Completed sections - circle gets checkmark with colored background */
+    #interactive-unit-container .nav-item.completed .completion-circle {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      border-width: 2px;
+    }
+    
+    #interactive-unit-container .nav-item.completed .completion-circle::after {
+      content: "✓";
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* Don't change background color for completed items - only active items get colored background */
+    
+    #interactive-unit-container .main-item:hover .completion-circle,
+    #interactive-unit-container .sub-item:hover .completion-circle {
+      border-color: white;
+      transform: scale(1.1);
+    }
+    
+    #interactive-unit-container .sub-items {
+      margin-right: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    #interactive-unit-container .sub-items.active {
+      max-height: 800px;
+    }
+    
+    #interactive-unit-container .video-container {
+      margin: 30px 0;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+    }
+    
+    #interactive-unit-container .video-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+        
+    #interactive-unit-container iframe {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+        
+    #interactive-unit-container .content-section {
+      animation: fadeIn-scoped 0.5s ease-out;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    #interactive-unit-container .content-section h1 {
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h2 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h4 {
+      font-size: 1.4em;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+    
+    #interactive-unit-container .content-section p:first-of-type {
+      font-size: 1.15em;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+    
+    #interactive-unit-container .content-section ul {
+      padding-right: 20px;
+      margin-bottom: 15px;
+    }
+    
+    #interactive-unit-container .styled-button {
+        display: inline-block;
+        background: linear-gradient(45deg, var(--primary-color), #27ae60);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    #interactive-unit-container .styled-button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .button-wrapper {
+        margin-top: 15px;
+        text-align: left;
+    }
+    
+    .content-section hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+        margin: 40px 0;
+    }
+    
+    #interactive-unit-container .illustration {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+    
+    #interactive-unit-container .full-width-image {
+        width: 100%;
+        max-width: 800px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+
+    /* Active section - colored background, no side marker */
+    #interactive-unit-container .main-item.active,
+    #interactive-unit-container .sub-item.active {
+        background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
+        border: 2px solid var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: white !important;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle,
+    #interactive-unit-container .sub-item.active .completion-circle {
+        border-color: white !important;
+        background: white !important;
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle::after,
+    #interactive-unit-container .sub-item.active .completion-circle::after {
+        content: "";
+    }
+
+    @keyframes fadeIn-scoped {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 800px) {
+        #interactive-unit-container { display: block; }
+        #interactive-unit-container #content { display: none; }
+        #interactive-unit-container #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+        #interactive-unit-container .main-content { margin: 0; width: 100%; padding: 10px; }
+        #interactive-unit-container .progress-bar { right: 0; left: 0; width: 100%; }
+        #interactive-unit-container .sub-items { margin-right: 0; }
+        #interactive-unit-container .sub-item { padding-right: 8px; padding-left: 8px; }
+
+        #interactive-unit-container .section-wrapper {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        
+        #interactive-unit-container .section-wrapper.active {
+            max-height: 5000px;
+        }
+        
+        #interactive-unit-container .sub-items.active {
+            max-height: 5000px;
+        }
+
+        #interactive-unit-container .content-section {
+            animation: none;
+        }
+    }
+    </style>
+</head>
+<body>
+<div id="interactive-unit-container">
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+    
+    <div id="nav">
+        <div class="sidebar-title">יחידה 6 - מדיה ואודיו 🎬</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>מבט על</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_audio">
+                        <div class="completion-circle"></div>
+                        <span>אודיו</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_dubbing">
+                        <div class="completion-circle"></div>
+                        <span>דיבוב</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_animation">
+                        <div class="completion-circle"></div>
+                        <span>הנפשה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_explanation">
+                        <div class="completion-circle"></div>
+                        <span>סרטוני הסבר</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_video">
+                        <div class="completion-circle"></div>
+                        <span>וידאו</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="task">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    function onReady(callback) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', callback);
+        } else {
+            callback();
+        }
+    }
+
+    onReady(() => {
+        const container = document.querySelector('#interactive-unit-container');
+        if (!container) { return; }
+
+        const content = {
+            overview: `
+                <div class="content-section" data-track-section="overview">
+                    <h1>מבט על</h1>
+                    <p>אתם רוצים להכין סרטון הסבר לתלמידים? או פודקאסט על נושא שהם לומדים? אולי להנפיש תמונה של דמות היסטורית שתדבר על עצמה?</p>
+                    <p>עד לא מזמן זה דרש ציוד, זמן וידע טכני. היום אפשר ליצור את כל אלה תוך דקות, בלי מצלמה ובלי עריכה מורכבת.</p>
+                    <p>ביחידה הזו נלמד איך ליצור חמישה סוגי תוכן מדיה - אודיו, סרטוני הסבר, הנפשות, סרטונים עלילתייםונטאז'ים. נכיר את הכלים ונבין מתי להשתמש בכל אחד.</p>
+                    
+                    <div class="video-container">
+                        <div class="video-title">מבט על - יצירת מדיה ואודיו (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/VMOrQTrCAT4" allowfullscreen data-track-video="overview"></iframe>
+                    </div>
+
+                    <img src="https://i.imgur.com/5sxpD5S.jpg" alt="איור מדיה ואודיו" class="illustration">
+                </div>
+            `,
+            tools: `
+                <div class="content-section" data-track-section="tools">
+                    <h1>כלים</h1>
+                    <p>ביחידה זו נכיר כלים ליצירת תוכן מדיה ואודיו - מפודקאסטים אוטומטיים ועד סרטונים עלילתיים. כל כלי מתאים לסוג תוכן אחר ולצרכים שונים.</p>
+                </div>
+            `,
+            tools_audio: `
+                <div class="content-section" data-track-section="tools_audio">
+                    <h2>אודיו</h2>
+                    
+                    <hr>
+                    
+                    <h4>פודקאסט אוטומטי בנוטבוקLM</h4>
+                    <p>ניתן ליצור פודקאסט אוטומטי שבו שני מנחים צוללים ומעמיקים במקורות שהעלינו או קישרנו למחברת. איכות מפתיעה, ומאפשר למידה דרך האוזניים.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/sGkleItTNrs" allowfullscreen data-track-video="tools_audio"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוק</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>טקסט לדיבור ב-AI STUDIO</h4>
+                    <p>כאשר נרצה שליטה יותר מדוייקת בתוכן, נעדיף ליצור את האודיו. סטודיו (איזור המפתחים של גוגל) מאפשר להדביק טקסט ולקבל קריינות של דובר אחד (למשל הקראת מבחן) או שניים (דו שיח מכל סוג שנרצה). אפשר לשלוט ברמה די טובה על תוכן הדברים. כדאי לנקד, אבל עדיין יהיו שגיאות. אפשר ליצור שוב עד להגעה לתוצאה מוצלחת.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/caojfQOqUSw" allowfullscreen data-track-video="tools_audio"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://aistudio.google.com/generate-speech?model=gemini-2.5-flash-preview-tts" target="_blank" class="styled-button" data-track-click>AI STUDIO TTS</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>טקסט לדיבור ב-OPENAI FM</h4>
+                    <p>פשוט ובסיסי</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/YzjIe1qaEJ0" allowfullscreen data-track-video="tools_audio"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.openai.fm/" target="_blank" class="styled-button" data-track-click>OPENAI FM</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>שירים בסונו</h4>
+                    <p>סונו - הכלי היחיד שיודע ליצור שירים בעברית. בגרסה החינמית נוכל לקבל רק שירים שיישמעו שגויים למדי, ורק מודלים מסויימים מאפשרים הורדת השיר.</p>
+                    <p>רק בגרסה בתשלום אפשר להעלות הקלטה ולקבל תזמורת מלווה, החלפת הקול ועוד.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/wfCTHXML_SI" allowfullscreen data-track-video="tools_audio"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://suno.com/" target="_blank" class="styled-button" data-track-click>סונו</a>
+                    </div>
+                </div>
+            `,
+            tools_dubbing: `
+                <div class="content-section" data-track-section="tools_dubbing">
+                    <h2>דיבוב</h2>
+                    
+                    <hr>
+                    
+                    <h4>דיבוב עם HEDRA</h4>
+                    <p>הדרה מאפשרת להעלות תמונה של דמות, לכתוב טקסט, ולקבל דמות מדובבת עם תמיכה טובה בעברית.</p>
+                    <p>300 קרדיטים בחודש, סימן מים על התוצאה, סרטון מוגבל ל-20 שניות.</p>
+                    <div class="button-wrapper">
+                        <a href="https://www.hedra.com/app" target="_blank" class="styled-button" data-track-click>הדרה</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>וידנוז</h4>
+                    <p>וידנוז מאפשר לדובב דמות, שתקריין את הטקסט או ההקלטה שלכם. הדמות קצת "קרטונית" או רובוטית ולא מניעה הרבה תווי פנים.</p>
+                    <p>2 דקות חינם ביום, וגם יצירת אווטאר אישי בחינם - כולל קול ווידאו.</p>
+                    <div class="button-wrapper">
+                        <a href="https://aiapp.vidnoz.com/" target="_blank" class="styled-button" data-track-click>וידנוז</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>למון סלייס / אינפיניטי</h4>
+                    <p>הכלי נהיה מוגבל מאוד, אם תרצו להכיר את היכולות:</p>
+                    <div class="button-wrapper">
+                        <a href="https://youtu.be/Fct7r3m2FeE" target="_blank" class="styled-button" data-track-click>למון סלייס / אינפיניטי</a>
+                    </div>
+                </div>
+            `,
+            tools_animation: `
+                <div class="content-section" data-track-section="tools_animation">
+                    <h2>הנפשה</h2>
+                    
+                    <hr>
+                    
+                    <h4>גרוק</h4>
+                    <p>מנפיש במהירות שיא את התמונה שמעלים אליו. מוסיף אודיו (אבל לא מילים). אפשר לבחור להוסיף פרומפט שיתאר מה בדיוק קורה בסרטון וזה עוזר. אורך הסרטון כ-6 שניות, מגבלה יומית של 30 סרטונים.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/GOt1uyZN294" allowfullscreen data-track-video="tools_animation"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://grok.com/imagine/favorites" target="_blank" class="styled-button" data-track-click>גרוק</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>מינמקס</h4>
+                    <p>מתחילים מתמונה ומקבלים סרטון קצר. המתנה ארוכה של כמה שעות לקבלת התוצר. מגבלה חודשית, הקרדיטים מתחדשים. כלי סיני.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/NTc7w1e77Hs" allowfullscreen data-track-video="tools_animation"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://hailuoai.video/" target="_blank" class="styled-button" data-track-click>מינמקס</a>
+                    </div>
+                    <p>חלופות אחרות: קלינג, וידו, לומה, סורה (בתשלום), ראנווי (בתשלום)</p>
+                </div>
+            `,
+            tools_explanation: `
+                <div class="content-section" data-track-section="tools_explanation">
+                    <h2>סרטוני הסבר</h2>
+                    
+                    <hr>
+                    
+                    <h4>נוטבוקLM</h4>
+                    <p>בתוך נוטבוק ניתן ליצור סרטון סקירה, זו בעצם מצגת מעוצבת שמלווה בקריינות, שמציגה את התוכן בצורה בהירה ומעניינת יחסית.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/DByAr6q2Uhs" allowfullscreen data-track-video="tools_explanation"></iframe>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>ואני</h4>
+                    <p>ואני כלי חמוד ומקסים להסברונים קצרים וחמודים, באורך כדקה. מחולל סרטוני הסבר שתומך בעברית, כולל תמונות, קריינות וכתוביות.</p>
+                    <p>אבל - המגבלה על השימוש השתנתה, וכיום אפשר ליצור רק 4 סרטונים בחשבון חינמי.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/qU_ls32oWyg" allowfullscreen data-track-video="tools_explanation"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.vany.ai/" target="_blank" class="styled-button" data-track-click>ואני</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>סימוול</h4>
+                    <p>תוסף לדפדפן שמאפשר להעלות קובץ או נושא וליצור עליו סרטון הסבר. בסיסי מבחינת עיצוב, תוצר ארוך יחסית (כ-5 דקות).</p>
+                    <p>20K תווים חינם בחודש. אין אופציה להורדת הסרטון לאחרונה, צריך לצלם בעזרת כלי הקלטת מסך.</p>
+                    <div class="button-wrapper">
+                        <a href="https://www.symvol.io/" target="_blank" class="styled-button" data-track-click>סימוול</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>סרטון הסבר בקנבה</h4>
+                    <p>לפעמים נרצה ליצור סרטון הסבר בעצמנו, בלי בינה.</p>
+                    <p>קנבה למשל מאפשרת להקליט את עצמנו, עם או בלי שיראו אותנו, על גבי מצגות ויצירות נוספות.</p>
+                    <p>איך? בהעלאות, נלחץ על "הקלט את עצמך" ונגיע לסטודיו. נבחר מסכים לשיתוף, נמקם את הוידאו ונתחיל להקליט.</p>
+                    <p>בסיום - שמירה ויציאה. קנבה מזהה מעברים בין שקפים, ומחלקת את הוידאו כך שיציג בכל שקף רק את הקטע המתאים.</p>
+                    <p>אפשר להוסיף כתוביות לסרטון שאנו מעלים אל קנבה, באופן אוטומטי יווצרו תיבות טקסט מתאימות לכל קטע בסרטון, שניתן לערוך.</p>
+
+                    <hr>
+                    
+                    <h4>סרטון סמן - סקריןפאל</h4>
+                    <p>כלי חמוד ללכידת מסך, אני משתמשת בו המון. מדגיש את סמן העכבר, מקליט אותי ואת המסך בצורה בהירה (פחות מוצלח כשצריך להקליט שמע מהמחשב). יתרון משמעותי - אפשר להשהות הקלטה, לחזור אחורנית ולדרוס קטעיםפקששו.</p>
+                    <p>חינם עד 15 דקות בכל פעם, מאפשר חיבור לערוץ יוטיוב והעלאה ישירה לשם, עריכה בסיסית</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/j8eljodcbLE" allowfullscreen data-track-video="tools_explanation"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://screenpal.com/" target="_blank" class="styled-button" data-track-click>סקריןפאל</a>
+                    </div>
+
+                    <hr>
+                    
+                    <h4>LOOM</h4>
+                    <p>עוד חלופה עם בונוס למורים - LOOM. היתרון - מעלה מיד לענן את הסרטון, אפשר לתת סרטון צפיה תוך דקות ספורות. אפשר לבקש חשבון חינוך.</p>
+                    <div class="button-wrapper">
+                        <a href="https://tikshuv.chepti.com/%D7%90%D7%99%D7%9A-%D7%A4%D7%AA%D7%97%D7%AA%D7%99-%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%95%D7%9D-loom-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A/" target="_blank" class="styled-button" data-track-click>LOOM - חשבון חינוך</a>
+                    </div>
+                </div>
+            `,
+            tools_video: `
+                <div class="content-section" data-track-section="tools_video">
+                    <h2>וידאו</h2>
+                    
+                    <hr>
+                    
+                    <h4>סורה 2</h4>
+                    <p>יצירה אוטומטית של סרטון קולנועי כולל קול, תסריט ועריכות יצירתיות. באורך 10-15 שניות, ניתן ליצור כמה סרטונים בכל יום.</p>
+                    <p>עדיף ליצור מטקסט ולא מתמונה, התוצר מוצלח יותר.</p>
+                    <p>מגבלות כניסה - דורש קוד הזמנה (מי שמקבל הזמנה יכול להוציא קוד הזמנה חדש ל-4 חברים נוספים) והפעלת VPN כדי לדמות שימוש בארה"ב (מודגם בסרטון)</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/w7QlS2CF91I" allowfullscreen data-track-video="tools_video"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://sora.chatgpt.com/profile" target="_blank" class="styled-button" data-track-click>סורה 2</a>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://chromewebstore.google.com/detail/urban-vpn-proxy/eppiocemhmnlbhjplcgkofciiegomcon" target="_blank" class="styled-button" data-track-click>קישור לתוסף VPN</a>
+                    </div>
+                </div>
+            `,
+            discussion: `
+                <div class="content-section" data-track-section="discussion">
+                    <h1>דיון</h1>
+                    <p><strong>חלופה 1: דילמה פדגוגית</strong></p>
+                    <p>חשבו על יחידת לימוד שאתם מלמדים. תארו נושא ספציפי שקשה להסביר בעל פה או בטקסט. איזה סוג תוכן מדיה (אודיו/הסבר/הנפשה/עלילתי/מונטאז') יכול לשדרג את ההוראה שלו? למה דווקא הסוג הזה? מה הערך המוסף שלו על פני הסבר מסורתי?</p>
+                    <p><strong>חלופה 2: תלמידים כיוצרים</strong></p>
+                    <p>אם הייתם נותנים לתלמידים שלכם משימה ליצור תוכן מדיה על נושא שלמדו - איזה סוג תוכן הייתם בוחרים? באיזו שכבת גיל? מה הלמידה העמוקה שתתרחש בתהליך היצירה עצמו (מעבר לידע על הנושא)?</p>
+                </div>
+            `,
+            task: `
+                <div class="content-section" data-track-section="task">
+                    <h1>משימה</h1>
+                    <p>צרו תוכן מדיה אחד שישרת מורים אחרים:</p>
+                    
+                    <h4>אפשרות 1: סרטון הסבר (2-4 דקות)</h4>
+                    <p>הסבר קצר על נושא לימודי ספציפי - מושג מתמטי, תהליך מדעי, אירוע היסטורי. בחרו נושא שמורים רבים מלמדים והכינו סרטון ברור ומסודר.</p>
+                    
+                    <h4>אפשרות 2: דמות מדברת</h4>
+                    <p>תמונה מונפשת של דמות רלוונטית (היסטורית/ספרותית/מדעית) שמספרת על עצמה או מסבירה מושג. הקפידו על דיוק תוכני ואותנטיות.</p>
+                    
+                    <h4>אפשרות 3: פודקאסט חינוכי</h4>
+                    <p>שיחה או הסבר מוקלט (3-5 דקות) על נושא מעניין. יכול להיות סקירה, ראיון מדומה, או הצגת נושא במבט חדש. (אם בחרתם פודקאסט אוטומטי - ציינו בפוסט כיצד התאמתם ובדקתם את איכות התוצר)</p>
+                    
+                    <h4>אפשרות 4: סרטון עלילתי קצר</h4>
+                    <p>סיפור או סצנה שממחישה רעיון לימודי - משל, אגדה, רגע היסטורי. הקפידו על איכות ויזואלית ועל קשר ברור לתוכן הלימודי.</p>
+                    
+                    <hr>
+                    
+                    <h4>מה להגיש:</h4>
+                    <ul>
+                        <li>קישור לתוצר הסופי (סרטון/אודיו) - לוודא שנגיש לצפיה.</li>
+                        <li>בפוסט פרטו:
+                            <ul>
+                                <li>איזה סוג תוכן בחרתם ולמה</li>
+                                <li>לאיזה נושא לימודי ושכבת גיל זה מתאים (בחרו קטגוריות ותגיות)</li>
+                                <li>באיזה כלי השתמשתם ("פלטפורמה")</li>
+                                <li>מה היה מאתגר ומה הפתיע אתכם</li>
+                                <li>הצעות שימוש פדגוגי - איך מורים יכולים לשלב את זה בשיעור</li>
+                            </ul>
+                        </li>
+                        <li>העלאה למאגר חומר פתוח - שתפו את התוצר שלכם כדי שמורים אחרים יוכלו להשתמש בו. לא לשכוח את התגית המיוחדת של הקורס!</li>
+                    </ul>
+                    
+                    <p><strong>טיפ:</strong> בחרו נושא שאתם מלמדים או שאתם מכירים היטב - איכות התוכן חשובה לא פחות מהטכנולוגיה.</p>
+                    
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>חומר פתוח</a>
+                    </div>
+                    
+                    <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid #E67E22; border-radius: 4px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
+                            <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
+                        </label>
+                    </div>
+                </div>
+            `
+        };
+        
+        let isMobileView = window.innerWidth <= 800;
+        const contentArea = container.querySelector('#content-area');
+        const progressIndicator = container.querySelector('.progress-indicator');
+
+        function updateProgress() {
+            const allItems = container.querySelectorAll('.main-item, .sub-item');
+            const completedItems = container.querySelectorAll('.nav-item.completed');
+            const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+            if (progressIndicator) progressIndicator.style.width = `${percentage}%`;
+        }
+
+        // Completion is handled by course-tracker.js
+
+        function handleMainItemClick(e) {
+            const mainItem = e.currentTarget;
+            const navItem = mainItem.closest('.nav-item');
+            const section = mainItem.dataset.section;
+            const subItemsContainer = navItem.querySelector('.sub-items');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            mainItem.classList.add('active');
+
+            if (subItemsContainer) {
+                subItemsContainer.classList.toggle('active');
+            }
+
+            if (content[section]) {
+                const contentHTML = content[section];
+                if (isMobileView) {
+                    let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    
+                    const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+                    
+                    container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+
+                    wrapper.innerHTML = contentHTML;
+                    
+                    if (shouldShow) {
+                        setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    if (contentArea) contentArea.innerHTML = contentHTML;
+                }
+            }
+
+            // Completion is handled by course-tracker.js
+        }
+        
+        function handleSubItemClick(e) {
+            e.stopPropagation();
+            const subItem = e.currentTarget;
+            const section = subItem.dataset.section;
+            const navItem = subItem.closest('.nav-item');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item and its parent main item
+            subItem.classList.add('active');
+            const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+            if (mainNavItem) {
+                const mainItem = mainNavItem.querySelector('.main-item');
+                if (mainItem) mainItem.classList.add('active');
+            }
+
+            const contentHTML = content[section];
+
+            if (isMobileView) {
+                const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+                let wrapper = mainNavItem.querySelector('.section-wrapper');
+                if (!wrapper) {
+                    wrapper = document.createElement('div');
+                    wrapper.className = 'section-wrapper';
+                    mainNavItem.appendChild(wrapper);
+                }
+                const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+
+                container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                    if (w !== wrapper) w.classList.remove('active');
+                });
+                
+                wrapper.innerHTML = contentHTML;
+
+                if (shouldShow) {
+                     setTimeout(() => wrapper.classList.add('active'), 10);
+                } else {
+                    wrapper.classList.remove('active');
+                }
+            } else {
+                if (contentArea) contentArea.innerHTML = contentHTML;
+            }
+            // Completion is handled by course-tracker.js
+        }
+        
+        function initializeView() {
+            container.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            container.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobileView) {
+                const overviewItem = container.querySelector('.main-item[data-section="overview"]');
+                if (overviewItem) overviewItem.click();
+            }
+        }
+
+        function handleResize() {
+            const newIsMobile = window.innerWidth <= 800;
+            if (newIsMobile !== isMobileView) {
+                isMobileView = newIsMobile;
+                container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
+                if (contentArea) contentArea.innerHTML = '';
+                initializeView();
+            }
+        }
+
+        initializeView();
+        window.addEventListener('resize', handleResize);
+    });
+})();
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,141 @@
+/* CPT Details Modal */
+#cpt-details-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cpt-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10001;
+}
+
+#cpt-modal-content {
+    background-color: #fff;
+    padding: 20px 30px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 10002;
+    position: relative;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    direction: rtl; /* For RTL content */
+}
+
+#cpt-modal-title {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+#cpt-modal-close {
+    position: absolute;
+    top: 10px;
+    left: 15px; /* Adjusted for RTL */
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    color: #888;
+}
+
+#cpt-modal-close:hover {
+    color: #000;
+}
+
+#cpt-modal-body ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#cpt-modal-body li {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+#cpt-modal-body li:last-child {
+    border-bottom: none;
+}
+
+.cpt-details-content {
+    direction: rtl;
+}
+
+.cpt-section-detail {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    border-right: 4px solid #ddd;
+}
+
+.cpt-section-detail.status-completed {
+    border-right-color: #27ae60;
+    background: #e8f8f5;
+}
+
+.cpt-section-detail.status-in-progress {
+    border-right-color: #f39c12;
+    background: #fef5e7;
+}
+
+.cpt-section-detail.status-not-started {
+    border-right-color: #e74c3c;
+    background: #fadbd8;
+}
+
+.cpt-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.cpt-section-icon {
+    font-size: 1.2em;
+    width: 30px;
+    text-align: center;
+}
+
+.cpt-section-name {
+    flex: 1;
+}
+
+.cpt-section-progress {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.cpt-activities-list {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+    font-size: 0.9em;
+}
+
+.cpt-activities-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+}
+
+.cpt-activities-list li {
+    padding: 5px 0;
+    color: #555;
+}

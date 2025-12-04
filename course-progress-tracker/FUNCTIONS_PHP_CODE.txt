@@ -1,0 +1,82 @@
+/*
+ * =====================================================================================
+ * קוד להוספה ל-functions.php של התבנית
+ * =====================================================================================
+ * 
+ * העתק את הקוד הבא וצרף אותו לקובץ functions.php של התבנית שלך
+ * (או תבנית בת אם אתה משתמש באחת).
+ * 
+ * מיקום הקובץ: wp-content/themes/שם-התבנית/functions.php
+ * 
+ * חשוב: שנה את התנאי בשורה עם is_page() כך שיתאים לעמודי הקורס שלך
+ */
+
+add_action('wp_enqueue_scripts', 'cpt_enqueue_course_scripts');
+function cpt_enqueue_course_scripts() {
+    // בדוק אם המשתמש מחובר
+    if (!is_user_logged_in()) {
+        return;
+    }
+    
+    // *** שנה את התנאי כאן כדי שיתאים לעמודי הקורס שלך ***
+    // דוגמאות לתנאים אפשריים:
+    // 
+    // אופציה 1: כל העמודים שהם ילדים של עמוד מסוים (מומלץ!)
+    // קבל את עמוד האב לפי slug
+    $parent_page = get_page_by_path('aia');
+    
+    // בדיקה: אם לא מצאנו את עמוד האב, נסה להדפיס הודעה (רק למנהלים)
+    if (!$parent_page && current_user_can('manage_options')) {
+        error_log('Course Progress Tracker: Parent page "aia" not found!');
+    }
+    
+    if ($parent_page && (is_page($parent_page->ID) || in_array($parent_page->ID, get_post_ancestors(get_the_ID())))) {
+        
+        // ודא ש-jQuery נטען
+        wp_enqueue_script('jquery');
+
+        // טען את סקריפט המעקב מהתוסף
+        // חשוב: לא להשתמש ב-__FILE__ כאן כי זה מצביע על התבנית, לא על התוסף!
+        wp_enqueue_script('cpt-course-tracker', 
+            plugins_url('course-progress-tracker/course-tracker.js'), 
+            ['jquery'], 
+            '2.0.0', 
+            true
+        );
+
+        // הזרק את הנתונים לסקריפט
+        wp_localize_script('cpt-course-tracker', 'progress_tracker_data', array(
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'post_id'  => get_the_ID(),
+            'nonce'    => wp_create_nonce('cpt_progress_nonce'),
+            'get_action' => 'cpt_get_progress',
+            'save_action' => 'cpt_save_progress',
+            'track_action' => 'cpt_track_activity',
+            'check_comment_action' => 'cpt_check_comment_status',
+            'manual_check_action' => 'cpt_save_manual_check',
+            'get_progress_action' => 'cpt_get_activity_progress',
+            'save_last_position_action' => 'cpt_save_last_position',
+            'get_last_position_action' => 'cpt_get_last_position',
+        ));
+    }
+    
+    /* 
+    // אופציה 2: אם יש לך slug ספציפי לעמוד:
+    // if (is_page('unit-1') || is_page('unit-2') || is_page('unit-3')) {
+    //
+    // אופציה 3: אם יש לך custom post type בשם 'course_unit':
+    // if (is_singular('course_unit')) {
+    //
+    // אופציה 4: אם כל העמודים עם קטגוריה מסוימת:
+    // if (is_page() && has_term('course', 'category')) {
+    //
+    // אופציה 5: אם יש לך template ספציפי:
+    // if (is_page_template('template-course.php')) {
+    //
+    // אופציה 6: אם כל העמודים עם meta field מסוים:
+    // if (is_page() && get_post_meta(get_the_ID(), 'is_course_unit', true)) {
+    //     // ... קוד זהה ...
+    // }
+    */
+}
+
