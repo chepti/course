@@ -441,6 +441,16 @@
                 <div class="content-section" data-track-section="tools">
                     <h1>כלים</h1>
                     <p>ביחידה זו נכיר כלים ליצירת תוכן מדיה ואודיו - מפודקאסטים אוטומטיים ועד סרטונים עלילתיים. כל כלי מתאים לסוג תוכן אחר ולצרכים שונים.</p>
+                    <h4>אודיו</h4>
+                    <p>כלים ליצירת תוכן אודיו - פודקאסטים, טקסט לדיבור ושירים.</p>
+                    <h4>דיבוב</h4>
+                    <p>כלים להנפשת דמויות ודיבוב - הדרה, וידנוז ועוד.</p>
+                    <h4>הנפשה</h4>
+                    <p>כלים להנפשת תמונות - גרוק, מינמקס ועוד.</p>
+                    <h4>סרטוני הסבר</h4>
+                    <p>כלים ליצירת סרטוני הסבר - נוטבוקLM, ואני, סימוול, קנבה, סקריןפאל ו-LOOM.</p>
+                    <h4>וידאו</h4>
+                    <p>כלים ליצירת סרטונים עלילתיים - סורה 2.</p>
                 </div>
             `,
             tools_audio: `
@@ -502,6 +512,9 @@
                     <h4>דיבוב עם HEDRA</h4>
                     <p>הדרה מאפשרת להעלות תמונה של דמות, לכתוב טקסט, ולקבל דמות מדובבת עם תמיכה טובה בעברית.</p>
                     <p>300 קרדיטים בחודש, סימן מים על התוצאה, סרטון מוגבל ל-20 שניות.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/ggBHhywt9BI" allowfullscreen data-track-video="tools_dubbing"></iframe>
+                    </div>
                     <div class="button-wrapper">
                         <a href="https://www.hedra.com/app" target="_blank" class="styled-button" data-track-click>הדרה</a>
                     </div>
@@ -522,6 +535,8 @@
                     <div class="button-wrapper">
                         <a href="https://youtu.be/Fct7r3m2FeE" target="_blank" class="styled-button" data-track-click>למון סלייס / אינפיניטי</a>
                     </div>
+                    
+                    <img src="https://i.imgur.com/gC1Vdgx.png" alt="איור דיבוב" class="illustration">
                 </div>
             `,
             tools_animation: `
@@ -643,6 +658,8 @@
                     <p>חשבו על יחידת לימוד שאתם מלמדים. תארו נושא ספציפי שקשה להסביר בעל פה או בטקסט. איזה סוג תוכן מדיה (אודיו/הסבר/הנפשה/עלילתי/מונטאז') יכול לשדרג את ההוראה שלו? למה דווקא הסוג הזה? מה הערך המוסף שלו על פני הסבר מסורתי?</p>
                     <p><strong>חלופה 2: תלמידים כיוצרים</strong></p>
                     <p>אם הייתם נותנים לתלמידים שלכם משימה ליצור תוכן מדיה על נושא שלמדו - איזה סוג תוכן הייתם בוחרים? באיזו שכבת גיל? מה הלמידה העמוקה שתתרחש בתהליך היצירה עצמו (מעבר לידע על הנושא)?</p>
+                    
+                    <img src="https://i.imgur.com/wI5ovIv.jpg" alt="איור דיון" class="illustration">
                 </div>
             `,
             task: `
@@ -724,6 +741,19 @@
 
             if (subItemsContainer) {
                 subItemsContainer.classList.toggle('active');
+                
+                // Special handling for "tools" section - open first sub-item instead of showing tools content
+                if (section === 'tools') {
+                    const firstSubItem = subItemsContainer.querySelector('.sub-item');
+                    if (firstSubItem && subItemsContainer.classList.contains('active')) {
+                        // Open sub-items container and show first sub-item content
+                        setTimeout(() => {
+                            const fakeEvent = { currentTarget: firstSubItem, stopPropagation: () => {} };
+                            handleSubItemClick(fakeEvent);
+                        }, 50);
+                        return; // Don't show tools content
+                    }
+                }
             }
 
             if (content[section]) {
