@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Course Progress Tracker
  * Description: A lightweight, custom plugin to track user progress through HTML-based course units.
- * Version: 2.6.1
+ * Version: 2.6.2
  * Author: Chepti
  */
 
@@ -1102,7 +1102,7 @@ function cpt_get_user_unit_details_callback() {
     
     // Filter out old/invalid sections - only keep valid main sections and their sub-sections
     // Note: intro is treated as overview (some units use 'intro' instead of 'overview')
-    $valid_section_prefixes = ['overview', 'intro', 'tools', 'discussion', 'task', 'assignment', 'help_tools', 'inspiration', 'tools_demo', 'tools_intermediaries', 'tools_intro', 'tools_oral', 'tools_ask_me', 'tools_learning_mode', 'tools_document_analysis', 'tools_screen_share', 'tools_presentations', 'tools_infographics', 'tools_diagrams', 'image-generators', 'image-editing', 'designs', '3d', 'help-tools'];
+    $valid_section_prefixes = ['overview', 'intro', 'tools', 'discussion', 'task', 'assignment', 'help_tools', 'inspiration', 'tools_demo', 'tools_intermediaries', 'tools_intro', 'tools_oral', 'tools_ask_me', 'tools_learning_mode', 'tools_document_analysis', 'tools_screen_share', 'tools_presentations', 'tools_infographics', 'tools_diagrams', 'tools_form', 'tools_one_way', 'tools_two_way', 'tools_advanced', 'image-generators', 'image-editing', 'designs', '3d', 'help-tools'];
     $all_sections = [];
     foreach ($all_sections_raw as $section_id) {
         // Check if section matches any valid prefix
