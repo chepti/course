@@ -274,6 +274,120 @@
         display: block;
     }
 
+    #interactive-unit-container .prompt-container {
+        background-color: #e8f4fd;
+        border-right: 4px solid var(--primary-color);
+        border-radius: 4px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+        font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1em;
+        line-height: 1.6;
+    }
+
+    #interactive-unit-container .prompt-container .copy-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: transparent;
+        color: var(--primary-color);
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        opacity: 0.6;
+        transition: opacity 0.3s, background-color 0.3s;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #interactive-unit-container .prompt-container .copy-button:hover {
+        opacity: 1;
+        background-color: rgba(0,0,0,0.08);
+    }
+
+    #interactive-unit-container .prompt-container pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+        padding-top: 20px;
+    }
+
+    /* Image Gallery Slider */
+    #interactive-unit-container .image-gallery {
+        position: relative;
+        max-width: 800px;
+        margin: 30px auto;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    #interactive-unit-container .gallery-container {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    #interactive-unit-container .gallery-container img {
+        min-width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    #interactive-unit-container .gallery-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        padding: 15px 10px;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--primary-color);
+        z-index: 10;
+        transition: background 0.3s;
+        border-radius: 5px;
+    }
+
+    #interactive-unit-container .gallery-nav:hover {
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    #interactive-unit-container .gallery-nav.prev {
+        right: 10px;
+    }
+
+    #interactive-unit-container .gallery-nav.next {
+        left: 10px;
+    }
+
+    #interactive-unit-container .gallery-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    #interactive-unit-container .gallery-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ccc;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    #interactive-unit-container .gallery-dot.active {
+        background: var(--primary-color);
+    }
+
     /* Active section - colored background, no side marker */
     #interactive-unit-container .main-item.active,
     #interactive-unit-container .sub-item.active {
@@ -437,7 +551,7 @@
                         <iframe src="https://www.youtube.com/embed/xcmpU7E34AQ" allowfullscreen data-track-video="overview"></iframe>
                     </div>
 
-                    <img src="https://i.imgur.com/jL6GOud.gifv" alt="גיף מחלום למוצר" class="illustration">
+                    <img src="https://i.imgur.com/jL6GOud.gif" alt="גיף מחלום למוצר" class="illustration">
 
                     <hr>
                     <h4>מושגים:</h4>
@@ -471,13 +585,15 @@
 
                     <hr>
                     <h4>מה נכיר?</h4>
-                    <p>נתנסה בבקשת קוד מבינה.</p>
-                    <p><strong>דגש</strong> - לא לשכוח לציין את השפה "אפפסקריפט".</p>
-                    <p><strong>דגש נוסף</strong> - לא משנה באיזו בינה נבחר! בהדגמה מוצג קלוד כי הוא היה הראשון, אבל אפשר לקבל קוד מצוין מג'מיני, גרוק, סטודיו, GPT ועוד.</p>
-                    <p>נפתח פרויקט אפפסקריפט ראשון באתר https://script.google.com/</p>
-                    <p>נחליף את הקוד בקוד שלנו. דגש- לא לשכוח למחוק את הקיים לפני שנדביק את הקוד החדש!</p>
-                    <p>נבצע שמירה והרצה. דגש - בפעם הראשונה נתבקש לתת הרשאת גישה, כדי שהפרויקט יוכל להעול בתוך הדרייב שלנו.</p>
-                    <p>נכיר את איזור הLOG שבו מוצגת הפעילות, ההצלחה או השגיאות.</p>
+                    <ul>
+                        <li>נתנסה בבקשת קוד מבינה.</li>
+                        <li><strong>דגש</strong> - לא לשכוח לציין את השפה "אפפסקריפט".</li>
+                        <li><strong>דגש נוסף</strong> - לא משנה באיזו בינה נבחר! בהדגמה מוצג קלוד כי הוא היה הראשון, אבל אפשר לקבל קוד מצוין מג'מיני, גרוק, סטודיו, GPT ועוד.</li>
+                        <li>נפתח פרויקט אפפסקריפט ראשון באתר https://script.google.com/</li>
+                        <li>נחליף את הקוד בקוד שלנו. דגש- לא לשכוח למחוק את הקיים לפני שנדביק את הקוד החדש!</li>
+                        <li>נבצע שמירה והרצה. דגש - בפעם הראשונה נתבקש לתת הרשאת גישה, כדי שהפרויקט יוכל להעול בתוך הדרייב שלנו.</li>
+                        <li>נכיר את איזור הLOG שבו מוצגת הפעילות, ההצלחה או השגיאות.</li>
+                    </ul>
 
                     <img src="https://i.imgur.com/Lpw2Bj8.png" alt="אילוסטרציה" class="illustration">
                 </div>
@@ -505,7 +621,10 @@
                     <hr>
                     <h4>הפרומפט</h4>
                     <p><strong>פתיח טכני:</strong></p>
-                    <p>"צור לי Web App רספונסיבית ב-Apps Script (מקושר לגליון שמהווה בסיס נתונים) עם Google Sheets. 2 קבצים: Code.gs + Index.html. כשפותחים את ה-URL, האפליקציה נפתחת ישירות. ללא העתקת IDs או קישורים". [להוסיף כפתור העתקה]</p>
+                    <div class="prompt-container">
+                        <button class="copy-button">📋</button>
+                        <pre>צור לי Web App רספונסיבית ב-Apps Script (מקושר לגליון שמהווה בסיס נתונים) עם Google Sheets. 2 קבצים: Code.gs + Index.html. כשפותחים את ה-URL, האפליקציה נפתחת ישירות. ללא העתקת IDs או קישורים.</pre>
+                    </div>
                     
                     <p><strong>מטרה:</strong></p>
                     <p>"האפליקציה תאסוף משובים ממשתתפים בסדנה. השאלות הן…"</p>
@@ -610,20 +729,25 @@
                     </ul>
 
                     <hr>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 20px 0;">
-                        <img src="https://i.imgur.com/5GfpVtY.png" alt="גלריית תמונות 1" class="illustration">
-                        <img src="https://i.imgur.com/zpkhwWI.png" alt="גלריית תמונות 2" class="illustration">
-                        <img src="https://i.imgur.com/VlHWVFM.png" alt="גלריית תמונות 3" class="illustration">
-                        <img src="https://i.imgur.com/uQGUjb9.png" alt="גלריית תמונות 4" class="illustration">
-                        <img src="https://i.imgur.com/Co6MzLE.png" alt="גלריית תמונות 5" class="illustration">
-                        <img src="https://i.imgur.com/MzPb71i.png" alt="גלריית תמונות 6" class="illustration">
-                        <img src="https://i.imgur.com/B1SDwaq.png" alt="גלריית תמונות 7" class="illustration">
-                        <img src="https://i.imgur.com/BnOgcjF.png" alt="גלריית תמונות 8" class="illustration">
-                        <img src="https://i.imgur.com/yYb5VKf.png" alt="גלריית תמונות 9" class="illustration">
-                        <img src="https://i.imgur.com/OoU9rkD.png" alt="גלריית תמונות 10" class="illustration">
-                        <img src="https://i.imgur.com/lQafXEE.png" alt="גלריית תמונות 11" class="illustration">
-                        <img src="https://i.imgur.com/684Yf1k.png" alt="גלריית תמונות 12" class="illustration">
-                        <img src="https://i.imgur.com/eDFDT9u.png" alt="גלריית תמונות 13" class="illustration">
+                    <div class="image-gallery" id="gallery-two-way">
+                        <button class="gallery-nav prev" onclick="moveGallery('gallery-two-way', -1)">‹</button>
+                        <button class="gallery-nav next" onclick="moveGallery('gallery-two-way', 1)">›</button>
+                        <div class="gallery-container">
+                            <img src="https://i.imgur.com/5GfpVtY.png" alt="גלריית תמונות 1">
+                            <img src="https://i.imgur.com/zpkhwWI.png" alt="גלריית תמונות 2">
+                            <img src="https://i.imgur.com/VlHWVFM.png" alt="גלריית תמונות 3">
+                            <img src="https://i.imgur.com/uQGUjb9.png" alt="גלריית תמונות 4">
+                            <img src="https://i.imgur.com/Co6MzLE.png" alt="גלריית תמונות 5">
+                            <img src="https://i.imgur.com/MzPb71i.png" alt="גלריית תמונות 6">
+                            <img src="https://i.imgur.com/B1SDwaq.png" alt="גלריית תמונות 7">
+                            <img src="https://i.imgur.com/BnOgcjF.png" alt="גלריית תמונות 8">
+                            <img src="https://i.imgur.com/yYb5VKf.png" alt="גלריית תמונות 9">
+                            <img src="https://i.imgur.com/OoU9rkD.png" alt="גלריית תמונות 10">
+                            <img src="https://i.imgur.com/lQafXEE.png" alt="גלריית תמונות 11">
+                            <img src="https://i.imgur.com/684Yf1k.png" alt="גלריית תמונות 12">
+                            <img src="https://i.imgur.com/eDFDT9u.png" alt="גלריית תמונות 13">
+                        </div>
+                        <div class="gallery-dots" id="gallery-two-way-dots"></div>
                     </div>
 
                     <hr>
@@ -644,11 +768,18 @@
 
                     <hr>
                     <h4>העתיקו, הדביקו וערכו:</h4>
-                    <p>"צור לי Web App רספונסיבית ב-Apps Script (מקושר לגליון שמהווה בסיס נתונים) עם Google Sheets. 2 קבצים: Code.gs + Index.html. כשפותחים את ה-URL, האפליקציה נפתחת ישירות. ללא העתקת IDs או קישורים". [להוסיף כפתור העתקה]</p>
-                    <p>האפליקציה תעשה... / היוזר יבצע....</p>
-                    <p>מבנה הנתונים שלי הוא... (כולל שמות הגליונות, כותרות)</p>
-                    <p>במסך הראשון יהיה…</p>
-                    <p>עיצוב ונראות …"</p>
+                    <div class="prompt-container">
+                        <button class="copy-button">📋</button>
+                        <pre>צור לי Web App רספונסיבית ב-Apps Script (מקושר לגליון שמהווה בסיס נתונים) עם Google Sheets. 2 קבצים: Code.gs + Index.html. כשפותחים את ה-URL, האפליקציה נפתחת ישירות. ללא העתקת IDs או קישורים.
+
+האפליקציה תעשה... / היוזר יבצע....
+
+מבנה הנתונים שלי הוא... (כולל שמות הגליונות, כותרות)
+
+במסך הראשון יהיה…
+
+עיצוב ונראות …</pre>
+                    </div>
                     <p>נשלח לבינה החביבה עלינו, נמתין, ובסוף - נעתיק את שני קטעי הקוד שקיבלנו.</p>
 
                     <img src="https://i.imgur.com/JLwGK89.png" alt="דוגמת קוד" class="illustration">
@@ -819,6 +950,8 @@
                     if (contentArea) contentArea.innerHTML = contentHTML;
                 }
             }
+            // Initialize galleries after content is loaded
+            setTimeout(initGalleries, 100);
 
             // Completion is handled by course-tracker.js
         }
@@ -868,6 +1001,8 @@
             } else {
                 if (contentArea) contentArea.innerHTML = contentHTML;
             }
+            // Initialize galleries after content is loaded
+            setTimeout(initGalleries, 100);
             // Completion is handled by course-tracker.js
         }
         
@@ -890,6 +1025,92 @@
                 initializeView();
             }
         }
+
+        // Copy button functionality
+        container.addEventListener('click', function(e) {
+            const copyButton = e.target.closest('.copy-button');
+            if (copyButton) {
+                const promptContainer = copyButton.closest('.prompt-container');
+                if (promptContainer) {
+                    const promptText = promptContainer.querySelector('pre').innerText;
+                    navigator.clipboard.writeText(promptText).then(() => {
+                        copyButton.innerHTML = '✓';
+                        setTimeout(() => {
+                            copyButton.innerHTML = '📋';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+                }
+            }
+        });
+
+        // Initialize galleries when content is loaded
+        function initGalleries() {
+            const galleries = container.querySelectorAll('.image-gallery');
+            galleries.forEach(gallery => {
+                const containerEl = gallery.querySelector('.gallery-container');
+                const dotsContainer = gallery.querySelector('.gallery-dots');
+                const images = containerEl.querySelectorAll('img');
+                const galleryId = gallery.id;
+                
+                // Create dots
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = '';
+                    images.forEach((img, index) => {
+                        const dot = document.createElement('button');
+                        dot.className = 'gallery-dot' + (index === 0 ? ' active' : '');
+                        dot.onclick = () => goToSlide(galleryId, index);
+                        dotsContainer.appendChild(dot);
+                    });
+                }
+                
+                // Set initial position
+                window[galleryId + '_current'] = 0;
+                updateGallery(galleryId);
+            });
+        }
+
+        // Gallery navigation functions
+        window.moveGallery = function(galleryId, direction) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+            
+            const images = gallery.querySelectorAll('.gallery-container img');
+            const current = window[galleryId + '_current'] || 0;
+            let newIndex = current + direction;
+            
+            if (newIndex < 0) newIndex = images.length - 1;
+            if (newIndex >= images.length) newIndex = 0;
+            
+            window[galleryId + '_current'] = newIndex;
+            updateGallery(galleryId);
+        };
+
+        window.goToSlide = function(galleryId, index) {
+            window[galleryId + '_current'] = index;
+            updateGallery(galleryId);
+        };
+
+        function updateGallery(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+            
+            const containerEl = gallery.querySelector('.gallery-container');
+            const dots = gallery.querySelectorAll('.gallery-dot');
+            const current = window[galleryId + '_current'] || 0;
+            
+            if (containerEl) {
+                containerEl.style.transform = `translateX(-${current * 100}%)`;
+            }
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === current);
+            });
+        }
+
+        // Initialize galleries after content is loaded
+        setTimeout(initGalleries, 100);
 
         initializeView();
         window.addEventListener('resize', handleResize);
