@@ -954,7 +954,9 @@
                 }
             }
             // Initialize galleries after content is loaded
-            setTimeout(initGalleries, 100);
+            setTimeout(() => {
+                initGalleries();
+            }, 200);
 
             // Completion is handled by course-tracker.js
         }
@@ -1005,7 +1007,9 @@
                 if (contentArea) contentArea.innerHTML = contentHTML;
             }
             // Initialize galleries after content is loaded
-            setTimeout(initGalleries, 100);
+            setTimeout(() => {
+                initGalleries();
+            }, 200);
             // Completion is handled by course-tracker.js
         }
         
@@ -1050,12 +1054,16 @@
 
         // Initialize galleries when content is loaded
         function initGalleries() {
-            const galleries = container.querySelectorAll('.image-gallery');
+            // Search in both container and contentArea
+            const searchArea = contentArea || container || document;
+            const galleries = searchArea.querySelectorAll('.image-gallery');
             galleries.forEach(gallery => {
                 const containerEl = gallery.querySelector('.gallery-container');
                 const dotsContainer = gallery.querySelector('.gallery-dots');
-                const images = containerEl.querySelectorAll('img');
+                const images = containerEl ? containerEl.querySelectorAll('img') : [];
                 const galleryId = gallery.id;
+                
+                if (images.length === 0) return; // Skip if no images found
                 
                 // Create dots
                 if (dotsContainer) {
