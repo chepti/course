@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>יחידה 9: הערכה</title>
+    <title>יחידה 8: הערכה</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         #interactive-unit-container {
             --primary-color: #F39C12; /* Gold */
             --secondary-color: #34495e;
             --nav-width: 300px;
             --header-height: 60px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Rubik', 'Segoe UI', Geneva, Verdana, sans-serif;
             display: flex;
             direction: rtl;
         }
@@ -46,9 +49,9 @@
         }
 
         #interactive-unit-container #content {
-            margin-right: var(--nav-width);
+            margin-right: 20px;
             padding: 40px;
-            width: calc(100% - var(--nav-width));
+            width: calc(100% - var(--nav-width) - 20px);
             margin-top: 0; /* Remove margin-top as progress bar is gone */
             max-width: 1200px;
             order: 2; /* Set content to be the second item */
@@ -121,27 +124,39 @@
             flex-shrink: 0;
         }
 
-        #interactive-unit-container .completed > .main-item,
-        #interactive-unit-container .nav-item.completed > .sub-item {
-            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+        /* Completed sections - circle gets checkmark with colored background */
+        #interactive-unit-container .nav-item.completed .completion-circle {
+            background: var(--primary-color);
             border-color: var(--primary-color);
-            color: white;
-        }
-        
-        #interactive-unit-container .nav-item.completed > .sub-item {
-           background: linear-gradient(45deg, #edf7f0, #d5f5e3);
-           border-color: var(--primary-color);
-           color: initial;
+            border-width: 2px;
         }
 
-        #interactive-unit-container .completed .completion-circle {
-            background: white;
-            border-color: white;
-        }
-
-        #interactive-unit-container .completed .completion-circle::after {
+        #interactive-unit-container .nav-item.completed .completion-circle::after {
             content: "✓";
-            color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Active section - colored background, no side marker */
+        #interactive-unit-container .main-item.active,
+        #interactive-unit-container .sub-item.active {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
+            border: 2px solid var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+            color: white !important;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #interactive-unit-container .main-item.active .completion-circle,
+        #interactive-unit-container .sub-item.active .completion-circle {
+            border-color: white !important;
+            background: white !important;
+        }
+
+        #interactive-unit-container .main-item.active .completion-circle::after,
+        #interactive-unit-container .sub-item.active .completion-circle::after {
+            content: "";
         }
 
         #interactive-unit-container .main-item:hover .completion-circle,
@@ -167,6 +182,29 @@
             padding: 20px;
             border-radius: 8px;
             max-width: 800px;
+        }
+
+        #interactive-unit-container .button-wrapper {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #interactive-unit-container .styled-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #interactive-unit-container .styled-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         #interactive-unit-container iframe {
@@ -229,6 +267,14 @@
             margin-bottom: 40px;
             line-height: 1.6;
         }
+
+        #interactive-unit-container h2 { margin-top: 30px; margin-bottom: 20px; }
+        #interactive-unit-container h4 { margin-top: 50px; }
+        #interactive-unit-container .content-section p:first-of-type {
+            font-size: 1.15em;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
         
         #interactive-unit-container .content-section ul, #interactive-unit-container .content-section ol {
             padding-right: 20px;
@@ -244,6 +290,74 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.07);
             font-size: 1.05em;
+        }
+
+        #interactive-unit-container .prompt-container {
+            background-color: #f0ebf5;
+            border-right: 4px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 22px 0;
+            position: relative;
+            font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+
+        #interactive-unit-container .prompt-container .copy-button {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: transparent;
+            color: var(--primary-color);
+            border: none;
+            padding: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.25em;
+            opacity: 0.9;
+            transition: opacity 0.2s, transform 0.2s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #interactive-unit-container .prompt-container .copy-button:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        #interactive-unit-container .prompt-container pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            text-align: right;
+            background: transparent;
+            border: none;
+            font-size: 1.02em;
+            line-height: 1.7;
+        }
+
+        #interactive-unit-container .prompt-container svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        #interactive-unit-container .content-section h4 {
+            margin-top: 50px;
+            position: relative;
+        }
+
+        #interactive-unit-container .content-section h4::before {
+            content: "";
+            display: block;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.15), rgba(0,0,0,0));
+            margin: 32px 0 18px 0;
         }
 
         @keyframes fadeIn-scoped {
@@ -292,7 +406,7 @@
     </div>
 
     <div id="nav">
-        <div class="sidebar-title">יחידה 9: הערכה 📝</div>
+        <div class="sidebar-title">יחידה 8: הערכה 📝</div>
         
         <div class="nav-item">
             <div class="main-item" data-section="overview">
@@ -301,15 +415,21 @@
             </div>
         </div>
         <div class="nav-item">
-            <div class="main-item" data-section="tools_intro">
+            <div class="main-item" data-section="tools">
                 <div class="completion-circle"></div>
                 <span>כלים</span>
             </div>
             <div class="sub-items">
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_preparation">
+                    <div class="sub-item" data-section="tools_practice">
                         <div class="completion-circle"></div>
-                        <span>הכנה</span>
+                        <span>תרגול וחזרה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_alt_assessment">
+                        <div class="completion-circle"></div>
+                        <span>הערכה חלופית</span>
                     </div>
                 </div>
                 <div class="nav-item">
@@ -319,9 +439,21 @@
                     </div>
                 </div>
                 <div class="nav-item">
+                    <div class="sub-item" data-section="tools_test_build">
+                        <div class="completion-circle"></div>
+                        <span>בניית מבחן</span>
+                    </div>
+                </div>
+                <div class="nav-item">
                     <div class="sub-item" data-section="tools_results_analysis">
                         <div class="completion-circle"></div>
                         <span>ניתוח התוצאות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_resources">
+                        <div class="completion-circle"></div>
+                        <span>כלי עזר</span>
                     </div>
                 </div>
             </div>
@@ -356,151 +488,393 @@
 
             const content = {
                 'overview': `
-                    <div class="content-section">
+                    <div class="content-section" data-track-section="overview">
                         <h1>מבט על</h1>
                         <p><strong>ברוכים הבאים למפגש העוסק בשילוב טכנולוגיות בינה מלאכותית בתהליכי הערכה. במפגש זה נלמד כיצד ניתן להיעזר בכלי AI כדי לייעל ולשפר את תהליכי ההערכה, תוך שמירה על האיכות הפדגוגית והמגע האישי שלנו כמורים.</strong></p>
-                        <p><strong>לפני שנצלול לכלים הספציפיים, חשוב להבין את התמונה הרחבה. נתחיל מבסיס תיאורטי והשראה. הסרטונים עוסקים ביסודות ההערכה הפדגוגית, בהבנת מודלי שפה, ומציגים חזון עתידני של שילוב AI בתהליכי הערכה.</strong></p>
+                        <p><strong>לפני שנצלול לכלים הספציפיים, חשוב להבין את התמונה הרחבה. נתחיל מבסיס תיאורטי והשראה. הסרטונים עוסקים ביסודות ההערכה הפדגוגית, בהבנת מודלי שפה, ומציגים צפי של שילוב AI בתהליכי הערכה.</strong></p>
                         <h3>סרטון במבט על - הערכה פדגוגית בעידן הדיגיטלי</h3>
                         <div class="video-container">
-                           <iframe src="https://www.youtube.com/embed/FiEcaKlEjHk" allowfullscreen></iframe>
+                           <iframe src="https://www.youtube.com/embed/FiEcaKlEjHk" allowfullscreen data-track-video="overview"></iframe>
                         </div>
+                        <p>ביחידה נכיר דרכים יעילות לשלב בינה בתהליכי הערכה:</p>
+                        <ul>
+                            <li>בתרגול - ליצור סיכומים ובנק שאלות, דפי חזרה ובוטים מתרגלים</li>
+                            <li>הערכה חלופית - מחוונים, רעיונות למשימות והנחיות מפורטות</li>
+                            <li>מיקרו הערכה - לפרק את המבחן לבחנים קטנים ומשחקיים</li>
+                            <li>בניית המבחן, בדיקה וניתוח המבחן והפקת תובנות והצעות להמשך</li>
+                        </ul>
                         <img src="https://i.imgur.com/Dq43X0q.jpg" alt="אילוסטרציה" class="illustration">
                     </div>`,
-                'tools_intro': `
-                    <div class="content-section">
+                'tools': `
+                    <div class="content-section" data-track-section="tools">
                         <h1>כלים</h1>
                         <p><strong>בחלק זה נכיר מגוון כלים מעשיים שיסייעו לנו ביצירת כלי הערכה. נתחיל בהיכרות עם הכלים הבסיסיים כמו Claude ו-ChatGPT, נמשיך למתווכי בינה שמקלים על העבודה, ונסיים בטריקים שימושיים ליצירת מבחנים ורובריקות באמצעות AI.</strong></p>
                         <img src="https://i.imgur.com/BJNJC5c.jpg" alt="אילוסטרציה" class="illustration">
                     </div>`,
-                'tools_preparation': `
-                    <div class="content-section">
-                        <h1>הכנה ובניית המבחן</h1>
-                        <h3>הכנה</h3>
-                        <h4>מג'יק סקול - בוט תרגול ללמידה למבחן</h4>
+                'tools_practice': `
+                    <div class="content-section" data-track-section="tools_practice">
+                        <h2>תרגול וחזרה למבחן</h2>
+                        <p><strong>יצירת סיכומים, בנק שאלות ובוטים מתרגלים כדי להכין את התלמידים למבחן בצורה מגוונת ומותאמת.</strong></p>
+                        <hr>
+                        <h4>סיכום</h4>
+                        <p>יצירת סיכום, יצירת בנק שאלות, דפי חזרה. נוכל להשתמש בכל אחד ממודלי השפה הגדולים; גרוק נותן תוצר נוח להעתקה ולהדפסה.</p>
+                        <p><strong>פרומפטים</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צור סיכום רציף ונוח לקריאה של [נושא X, ותתי הנושא…] לכיתה [X].</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>הכן דף חזרה למבחן על [נושא, תתי נושאים] לכיתה [X]. צרף רשימת מושגים מרכזיים, 20 שאלות (10 אמריקאיות, 5 נכון/לא נכון, 5 קצרות) וטיפים לזכירה.</pre>
+                        </div>
+                        <hr>
+                        <h4>ג'אם בוט תרגול</h4>
+                        <p>על בוטים למדנו - ותרגול לקראת המבחן הוא אחד השימושים הכי מוצלחים בו! ניתן לבוט את הנושאים ותתי הנושאים, הנחיות לליווי למידה מעודד, בחירה וסיכומי ביניים.</p>
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/rECV-0MKLgw" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/KCN47ZThFsI" allowfullscreen data-track-video="tools_practice"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://youtu.be/KCN47ZThFsI" target="_blank" class="styled-button" data-track-click>צפייה ביוטיוב</a>
+                            </div>
                         </div>
-                        <p>מאושר לשימוש מכיתה ה. המורה יוצר חדר עם כמה בוטים - למשל בוט "בחן אותי", בוט דמות עם מטרה לדון בנושא מסוים - והתלמיד נכנס ומתרגל, מקבל שאלות ומשוב על המענה שלו, עידוד,</p>
-                        
-                        <hr style="margin: 40px 0 30px; border: 0; border-top: 2px solid #f0f0f0;">
-
-                        <h3>בניית המבחן</h3>
-                        <p>שקף - מה אפשר לבקש מהבינה על מבחן?</p>
-                        <h4>טריק - יצירת טופס פורמס בעזרת קוד מהבינה</h4>
-						<p>אפשר לקבל קוד מקלוד, סטודיו, ג'מיני ועוד</p>
-                         <div class="video-container">
-                           <iframe src="https://www.youtube.com/embed/4TQ8xXBw3XY" allowfullscreen></iframe>
+                        <p><strong>פרומפטים לבוט תרגול</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צור בוט תרגול לכיתה [X] על [נושא]. הבוט יתנהל כך: 1. יציג את הנושאים: [רשימה] 2. יתן לתלמיד לבחור נושא 3. ישאל 3 שאלות, יתן משוב מיידי 4. יעודד ויסכם התקדמות, יכוון את התלמיד להשלים 20 שאלות/ 2 שאלות מכל תת-נושא. טון: מעודד, חם, מאמין בתלמיד.</pre>
                         </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>עזור לתלמיד להתכונן למבחן המצורף. אל תתן את השאלות מהמבחן, אלא שאלות דומות. הצע שאלה קלה יותר אם התלמיד מעדיף. תן רמזים, שבח את ההתמדה והמאמץ.</pre>
+                        </div>
+                        <hr>
+                        <h4>מג'יק סקול - בוט תרגול</h4>
+                        <p>מאושר לשימוש מכיתה ה'. המורה יוצר חדר עם כמה בוטים, התלמיד נכנס ומתרגל, מקבל שאלות, משוב, ועידוד כולל הקראת תשובות.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/rECV-0MKLgw" allowfullscreen data-track-video="tools_practice"></iframe>
+                        </div>
+                        <hr>
+                        <h4>ארגון החומר הלימודי בנוטבוקLM</h4>
+                        <p>אפשר לשתף מחברת נוטבוקLM עם החומר; התלמיד יכול לקבל בצ'אט מענה ומדריך למידה, ובסטודיו בצד לקבל מדיה מגוונת.</p>
+                    </div>`,
+                'tools_alt_assessment': `
+                    <div class="content-section" data-track-section="tools_alt_assessment">
+                        <h2>הערכה חלופית</h2>
+                        <p><strong>מגוון דרכים לביטוי ידע, מחוונים, UDL וצ'קליסטים שמקדמים למידה מותאמת.</strong></p>
+                        <hr>
+                        <h4>משימות בחירה - UDL</h4>
+                        <p>משימות יצירתיות שמאפשרות בחירה וגיוון. הבינה פורשת מגוון משימות שמודדות שליטה בידע בסגנונות שונים.</p>
+                        <p><strong>פרומפטים ל-UDL</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צור 9 משימות שונות להוכחת שליטה ב[נושא], מתאים לכיתה [X]. הדגש הוא על [שיתוף פעולה/ שימוש נכון במושגים/ הבנת התהליך  ] חלק ל-3 רמות קושי. כל משימה תתאים לסגנון למידה שונה (חזותי/מילולי/קינסתטי/דיגיטלי). כלול הוראות ברורות לכל משימה.</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>הצע 6 דרכים יצירתיות לתלמיד להציג את הידע שלו על [נושא]: - 2 משימות דיגיטליות - 2 משימות אמנותיות/יצירתיות - 2 משימות כתיבה/מצגת כל אחת תמדוד את אותו ידע בצורה שונה.</pre>
+                        </div>
+                        <hr>
+                        <h4>יצירת מחוון</h4>
+                        <p>הבינה מייצרת מחוון עם קריטריונים ומשקולות שקופים לתלמידים.</p>
+                        <p><strong>פרומפטים למחוון</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צור מחוון להערכת [סוג משימה] על [נושא]. 4 קריטריונים: [דגש על …]
 
-                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+4 רמות: מצטיין (100-90), עומד ביעדים (89-75), מתקדם (74-60), מתחיל (59-)
 
-                        <h4>העלאת מבחן קיים</h4>
-                        <p>כדי לשפר אותו או ליצור גרסאות, התאמות או לבנות מבחן חדש לגמרי.</p>
-                        <img src="https://i.imgur.com/59a8ZF0.png" alt="העלאת מבחן קיים" class="illustration">
+כלול תיאורים התנהגותיים ברורים, לא כלליים.</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>בנה מחוון אחיד ל-3 משימות שונות על [נושא]:
+
+קריטריונים: תוכן (40%), יצירתיות (25%), הבנה (25%), הגשה (10%)
+
+הגדר מה "מצוין" בכל קריטריון.</pre>
+                        </div>
+                        <hr>
+                        <h4>צ'קליסטים והערכת עמיתים</h4>
+                        <p>צ'קליסט עצמי ומשוב בסוף שיעור מחזקים למידה, במיוחד בחטיבת הביניים. אפשר גם הערכת עמיתים ומודל נבחרת.</p>
+                        <p><strong>פרומפטים</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צור טופס הערכה עצמית לתלמיד כיתה [X] לאחר [משימה/פרויקט].
+
+כלול:
+
+- 5 שאלות רפלקטיביות על התהליך
+
+- סקאלה 1-5 על מאמץ/הבנה/שיתוף פעולה
+
+- שאלה פתוחה: "מה הדבר הכי מעניין שלמדתי?"</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>הכן צ'קליסט "מודל הנבחרת" ל[נושא]:
+
+רשום 10 מיומנויות/נושאי משנה.
+
+ליד כל אחד 3 אפשרויות:
+
+🟢 אני שולט - מוכן ללמד אחרים
+
+🟡 אני מבין - צריך תרגול נוסף
+
+🔴 אני מתקשה - צריך עזרה</pre>
+                        </div>
                     </div>`,
                 'tools_micro_assessment': `
-                    <div class="content-section">
-                        <h1>מיקרו הערכה</h1>
-                        <p>חלוקה של ההערכה לחלקים קטנים שמפוזרים לאורך השנה ולא רק מבחן מסכם כבד מורידים מתח ומעודדים התנסות ואפילו לקבל באהבה כשלון מדי פעם.</p>
+                    <div class="content-section" data-track-section="tools_micro_assessment">
+                        <h2>מיקרו הערכה</h2>
+                        <p><strong>חלוקה של הערכה לחלקים קטנים לאורך השנה מפחיתה מתח ומעודדת התנסות.</strong></p>
+                        <hr>
                         <h4>פליקרס</h4>
+                        <p>כלי ללמידה אינטראקטיבית בלי אמצעי קצה לתלמידים. מקרן וטלפון מורה מספיקים.</p>
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/3Vg21D8HIgw" allowfullscreen></iframe>
+                            <iframe src="https://www.youtube.com/embed/3Vg21D8HIgw" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
                         </div>
-                        <p>כלי לקיום למידה אינטראקטיבית בלי אמצעי קצה לתלמידים. מקרן וטלפון מורה מספיקים כדי לתת נתונים בזמן אמת ומשוב מיידי, תיעוד התוצאות ועוד.</p>
-                        <p>המלצה חמה - תנו לבינה לנסח את השאלות.</p>
-                        <p>מתאים לכרטיס כניסה או יציאה מהשיעור, מבדקי ידע קטנים וגם סתם לכיף.</p>
-                        <a href="https://www.plickers.com/" target="_blank" class="chip">קישור לכלי: https://www.plickers.com/</a>
+                        <p>מתאים לכרטיס כניסה/יציאה, מבדקי ידע קטנים וגם לכיף. מומלץ לבקש מהבינה לנסח שאלות.</p>
+                        <div class="button-wrapper">
+                            <a href="https://www.plickers.com/" target="_blank" class="styled-button" data-track-click>קישור לכלי</a>
+                        </div>
+                        <hr>
+                        <h4>חידון אינטראקטיבי - בחן אותי</h4>
+                        <p>מצב זריז לייצור בוחן אינטראקטיבי בכל נושא. לפרומפט "בחן אותי".</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/3Hss39zdJv8" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>קוויזיז - וייגראונד</h4>
+                        <p>פלטפורמה ליצירת חידון אוטומטי מעמוד אינטרנט, מגוון מצבי הפעלה.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/rkAQTEG6sKc" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://wayground.com/admin" target="_blank" class="styled-button" data-track-click>Wayground</a>
+                            </div>
+                        </div>
+                    </div>`,
+                'tools_test_build': `
+                    <div class="content-section" data-track-section="tools_test_build">
+                        <h2>בניית מבחן</h2>
+                        <p><strong>כלים ופרומפטים לבניית מבחן חדש או לשיפור קיים.</strong></p>
+                        <hr>
+                        <h4>בניית המבחן</h4>
+                        <p><strong>פרומפטים</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צור מבחן על [נושא] לכיתה [X], 45 דקות. מבנה:- חלק א': 15 שאלות אמריקאיות (30 נקודות)
+
+- חלק ב': 5 שאלות קצרות (20 נקודות)- חלק ג': 2 שאלות מסה (50 נקודות)
+
+כלול ניקוד ותשובון נפרד.</pre>
+                        </div>
+                        <p>נוכל לקבל טופס פורמס אוטומטי, כמו ביחידה על אפליקציות.</p>
+                        <hr>
+                        <h4>העלאת מבחן קיים</h4>
+                        <p>כדי לשפר או ליצור גרסאות, התאמות או לבנות מבחן חדש לגמרי.</p>
+                        <p><strong>פרומפט לשיפור</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>[העלה כאן מבחן קיים]
+
+שפר מבחן זה:
+
+1. הוסף שאלות שמודדות הבנה עמוקה
+
+2. גוון רמות קושי לאורך המבחן, רמות חשיבה שונות.
+
+3. בדוק שכל שאלה ברורה וחד-משמעית, ואם לא - הצע שאלה טובה יותר
+
+4. הצע 2 גרסאות נוספות (A/B), וגרסה נוספת שמותאמת לתלמידים על ליקוי למידה [קושי בשליפה]</pre>
+                        </div>
+                        <img src="https://i.imgur.com/59a8ZF0.png" alt="העלאת מבחן קיים" class="illustration">
                     </div>`,
                 'tools_results_analysis': `
-                    <div class="content-section">
-                        <h1>ניתוח התוצאות</h1>
+                    <div class="content-section" data-track-section="tools_results_analysis">
+                        <h2>ניתוח התוצאות</h2>
+                        <p><strong>בדיקה, אנונימיזציה והפקת תובנות מהנתונים.</strong></p>
+                        <hr>
+                        <h4>בדיקת מבחן וניתוח עם נוטבוקLM</h4>
+                        <div class="video-container">
+                           <iframe src="https://www.youtube.com/embed/G71E5ik-8Qg" allowfullscreen data-track-video="tools_results_analysis"></iframe>
+                        </div>
+                        <p><strong>פרומפט</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>בדוק את המבחנים - תן ניקוד גם לשאלות הפתוחות.
+
+תן טבלה עם שמות התלמידים, ציון, והערת משוב אישית עם 2 פסקאות שמתייחסות לנקודות חוזק ושיפור, יחס למשוב ועידוד. נסח בצורה אנושית</pre>
+                        </div>
+                        <div class="button-wrapper">
+                            <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
+                        </div>
+                        <hr>
                         <h4>סטודיו - ניתוח נתונים</h4>
                         <div class="video-container">
-                           <iframe src="https://www.youtube.com/embed/PC7cJuqmKKg" allowfullscreen></iframe>
+                           <iframe src="https://www.youtube.com/embed/PC7cJuqmKKg" allowfullscreen data-track-video="tools_results_analysis"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" class="styled-button" data-track-click>סטודיו</a>
+                            </div>
                         </div>
-                        <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" class="chip">קישור לכלי</a>
-                        <p>חשוב מאוד להתמים את התוצאות של המבחן!! (למחוק שמות ולהחליף אותם בסימון שרק המורה יזהה)</p>
+                        <p>חשוב מאוד להתמים את התוצאות של המבחן (להסיר שמות ולהחליף בסימון מזוהה).</p>
+                        <hr>
+                        <h4>תוצרים בעקבות ניתוח המבחן</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.canva.com/design/DAG7RzS7qtE/rrN4E5U8ChozM7PsyOSngA/view?embed" allowfullscreen data-track-video="tools_results_analysis"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://www.canva.com/design/DAG7RzS7qtE/rrN4E5U8ChozM7PsyOSngA/view" target="_blank" class="styled-button" data-track-click>להפיק תובנות</a>
+                            </div>
+                        </div>
+                        <p><strong>פרומפטים</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>[העלה: מחוון + גליון תוצאות]
 
-                        <h4>משוב אישי לתלמיד</h4>
-                        <p>בסטודיו אפשר לבקש בעקבות המבחן ליצור הודעה מתאימה לכל תלמיד.</p>
+
+
+נתח את תוצאות המבחן:
+
+1. ממוצע ציונים + פיזור
+
+2. שאלות שרוב התלמידים נכשלו בהן - למה?
+
+3. תלמידים שצריכים תשומת לב מיוחדת
+
+4. המלצות: מה ללמד שוב? איך?</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>כתוב משוב לתלמיד כיתה [X] על [משימה/מבחן].
+
+ציון: [X], נקודות חזקות: [פרט], נקודות לשיפור: [פרט]
+
+
+
+המשוב יכלול:
+
+- פתיחה חיובית ומעודדת
+
+- 2-3 דברים שהתלמיד עשה מצוין
+
+- 2 דברים ללמוד/לשפר
+
+- 3 צעדים קונקרטיים הבאים
+
+- סגירה שמאמינה בתלמיד
+
+
+
+אורך: 120-150 מילים. טון: חם, אישי, מעצים, סגנון לא של בינה.</pre>
+                        </div>
+                        <img src="https://i.imgur.com/BJNJC5c.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'tools_resources': `
+                    <div class="content-section" data-track-section="tools_resources">
+                        <h2>כלי עזר</h2>
+                        <p><strong>מצגות מוכנות להשראה ולשיתוף.</strong></p>
+                        <hr>
+                        <h4>מצגת הערכה חלופית ומיקרו הערכה</h4>
+                        <div class="video-container">
+                            <iframe loading="lazy" src="https://www.canva.com/design/DAG3jfA_HuE/4mg3C33VlMy2n9-k1L5ofA/view?embed" allowfullscreen data-track-video="tools_resources"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://www.canva.com/design/DAG3jfA_HuE/4mg3C33VlMy2n9-k1L5ofA/view" target="_blank" class="styled-button" data-track-click>פתיחת המצגת</a>
+                            </div>
+                        </div>
+                        <hr>
+                        <h4>מצגת הערכה - חזרה, מבחן וניתוח</h4>
+                        <div class="video-container">
+                            <iframe loading="lazy" src="https://www.canva.com/design/DAG557SpAJQ/5F6dgQieyIg00L-U1qx4Aw/view?embed" allowfullscreen data-track-video="tools_resources"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://www.canva.com/design/DAG557SpAJQ/5F6dgQieyIg00L-U1qx4Aw/view" target="_blank" class="styled-button" data-track-click>פתיחת המצגת</a>
+                            </div>
+                        </div>
                     </div>`,
                 'discussion': `
-                    <div class="content-section">
+                    <div class="content-section" data-track-section="discussion">
                         <h1>דיון</h1>
-                        <p><strong>לאחר שנכיר את הכלים, נפתח דיון משמעותי על השפעת הטכנולוגיה על תפקידנו כמורים בתהליכי ההערכה. נחשוב יחד על האתגרים וההזדמנויות, ונדמיין כיצד ייראה ההערכה בעתיד הקרוב. זוהי הזדמנות לשתף תובנות ולשמוע מניסיונם של עמיתים.</strong></p>
-                        <h3>שאלות לדיון:</h3>
+                        <p><strong>שילוב בינה בתהליכי הערכה מעורר שאלות מכל הסוגים. בחרו שאלה אחת משמעותית לדעתכם.</strong></p>
                         <ul>
-                            <li>כיצד משתנה תפקידנו כמורים כשאנחנו משלבים בינה מלאכותית בתהליכי ההערכה?</li>
                             <li>איך נשמר את הייחודיות והמגע האישי שלנו בהערכה כשאנחנו משתמשים ב-AI?</li>
-                            <li>מה האתגרים האתיים בשימוש ב-AI בהערכה? (הוגנות, פרטיות, שקיפות)</li>
-                            <li>כיצד נבטיח שההערכה תישאר משמעותית ומותאמת לכל תלמיד?</li>
+                            <li>מתי ואיך נאפשר לתלמידים להיעזר בבינה במשימות? שתפו דוגמאות אמיתיות שעבדו לכם.</li>
                         </ul>
                         <h3>דמיינו את בית הספר בעוד שנתיים:</h3>
                         <ul>
-                           <li>איך ייראה תהליך ההערכה? מה אנחנו מודדים ועל מה מוותרים?</li>
-                           <li>מה התפקיד של המורה בתהליך? איך כדאי להכין את עצמנו?</li>
-                           <li>כיצד התלמידים יקבלו משוב על למידתם?</li>
+                           <li>איך ייראה תהליך ההערכה? מה מודדים ועל מה מוותרים?</li>
+                           <li>מה התפקיד של המורה? איך כדאי להכין את עצמנו?</li>
+                           <li>כיצד התלמידים יקבלו משוב על למידתם? האם צריך לדעת ששילבנו בינה?</li>
                            <li>הגיבו לחזון של עמית אחד.</li>
                         </ul>
                         <img src="https://i.imgur.com/wd3ivlG.jpg" alt="אילוסטרציה" class="illustration">
                     </div>`,
                 'assignment': `
-                    <div class="content-section">
+                    <div class="content-section" data-track-section="assignment">
                         <h1>משימה:</h1>
                         <p><strong>החלק המעשי של ההשתלמות מאפשר התנסות אישית ביצירת כלי הערכה בעזרת AI. המשימה כוללת יצירת מגוון רכיבי הערכה, החל ממבחנים ועד רובריקות, תוך שימוש בכלים שהכרנו. חשוב במיוחד לשתף את הפרומפטים ששימשו ליצירת החומרים, כך שכולם יוכלו ללמוד מהניסיון המשותף.</strong></p>
                         <h3>שתפו מערכת הערכה שבניתם בעזרת בינה:</h3>
-                        <p>צרו תיקייה ושתפו את הקישור לצפייה.</p>
-                        <p>בתוך התיקיה - הגישו לפחות 3 רכיבים, צרפו פרומפטים:</p>
+                        <p>צרו מסמך ושתפו את הקישור לצפייה.</p>
+                        <p><strong>בתוך המסמך - הגישו לפחות 3 רכיבים שבניתם בעזרת בינה, צרפו פרומפטים וציינו באיזה כלי:</strong></p>
                         <ul>
-                            <li><strong>מבחן או מבדק</strong> (כולל בקשת שיפור, או בקשת תוכן - שאלות מגוונות, הנחיות מפורשות, ניסוח למצגת...)</li>
-                            <li><strong>מחוון מפורט</strong> - למשימה או לפרויקט</li>
-                            <li><strong>כרטיסי יציאה</strong> (Exit Tickets) - שאלות מהירות לסיום השיעור</li>
-                            <li><strong>משימת הערכה חלופית</strong> - פורטפוליו, פרויקט, מצגת</li>
-                            <li><strong>טופס הערכה עצמית</strong> לתלמידים</li>
-                            <li><strong>מערכת משוב מותאמת אישית</strong> כולל בחירה UDL</li>
-                            <li><strong>בנק שאלות</strong> בדרגות קושי שונות</li>
-                            <li><strong>הנחיות להערכה מעצבת (צ'קליסט)</strong> בזמן השיעור</li>
+                            <li><strong>סט הערכה חלופית:</strong> כרטיסי יציאה, משימת הערכה חלופית, מחוון מפורט, טופס הערכה עצמית.</li>
+                            <li><strong>סט מבחן:</strong> בנק שאלות בדרגות קושי שונות, סיכום יחידת לימוד, מבחן/מבדק עם הנחיות, צ'קליסט מותאם אישית.</li>
                         </ul>
-                        <p>אפשר לרכז בקובץ דוקס אחד ולהשתמש בטאבים.</p>
-                        <h3>דוגמאות לפרומפטים שימושיים:</h3>
-                        <ul>
-                            <li>"צור רובריקה מפורטת להערכת מצגת בנושא X, עם 4 רמות ו-5 קריטריונים"</li>
-                            <li>"כתב 10 שאלות exit ticket לשיעור על Y, ברמות קושי שונות"</li>
-                            <li>"צור מבחן עם 20 שאלות על נושא Z, כולל שאלות פתוחות וסגורות"</li>
-                        </ul>
+                        <div class="video-container">
+                            <div class="button-wrapper">
+                                <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>מאגר חומר פתוח</a>
+                            </div>
+                        </div>
+                        <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid var(--primary-color); border-radius: 4px;">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
+                                <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
+                                <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
+                            </label>
+                        </div>
                         <img src="https://i.imgur.com/hPNkP6F.png" alt="אילוסטרציה" class="illustration">
                     </div>`
             };
 
             let isMobileView = window.innerWidth <= 800;
-            const timers = {};
             const contentArea = container.querySelector('#content-area');
-            const progressIndicator = container.querySelector('.progress-indicator');
-
-            function updateProgress() {
-                const allItems = container.querySelectorAll('.main-item, .sub-item');
-                const completedItems = container.querySelectorAll('.nav-item.completed');
-                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
-                if(progressIndicator) progressIndicator.style.width = `${percentage}%`;
+            
+            const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H6C4.9 1 4 1.9 4 3v12h2V3h10V1zm3 4H10c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h9c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H10V7h9v14z"/></svg>`;
+            const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+            
+            // Initialize copy buttons
+            function initializeCopyButtons() {
+                container.querySelectorAll('.copy-button').forEach(button => {
+                    if (!button.innerHTML.includes('svg')) {
+                        button.innerHTML = copyIcon;
+                    }
+                });
             }
-
-            function setItemCompleted(item) {
-                const navItem = item.closest('.nav-item');
-                const section = item.dataset.section;
-                if (!navItem.classList.contains('completed')) {
-                    clearTimeout(timers[section]);
-                    timers[section] = setTimeout(() => {
-                        navItem.classList.add('completed');
-                        updateProgress();
-                    }, 10000); 
+            
+            container.addEventListener('click', function(e) {
+                const copyButton = e.target.closest('.copy-button');
+                if (copyButton) {
+                    const promptContainer = copyButton.closest('.prompt-container');
+                    if (promptContainer) {
+                        const promptText = promptContainer.querySelector('pre').innerText;
+                        navigator.clipboard.writeText(promptText).then(() => {
+                            copyButton.innerHTML = checkIcon;
+                            setTimeout(() => {
+                                copyButton.innerHTML = copyIcon;
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                        });
+                    }
                 }
-            }
+            });
 
             function handleMainItemClick(e) {
                 const mainItem = e.currentTarget;
                 const navItem = mainItem.closest('.nav-item');
                 const section = mainItem.dataset.section;
                 const subItemsContainer = navItem.querySelector('.sub-items');
+
+                container.querySelectorAll('.main-item, .sub-item').forEach(item => item.classList.remove('active'));
+                mainItem.classList.add('active');
 
                 if (subItemsContainer) {
                     subItemsContainer.classList.toggle('active');
@@ -523,6 +897,7 @@
                         });
 
                         wrapper.innerHTML = contentHTML;
+                        initializeCopyButtons();
                         
                         if(shouldShow) {
                             setTimeout(() => wrapper.classList.add('active'), 10);
@@ -533,10 +908,6 @@
                         if(contentArea) contentArea.innerHTML = contentHTML;
                     }
                 }
-
-                if (content[section]) {
-                    setItemCompleted(mainItem);
-                }
             }
             
             function handleSubItemClick(e) {
@@ -545,6 +916,9 @@
                 const section = subItem.dataset.section;
                 const mainNavItem = subItem.closest('.sub-items').closest('.nav-item');
                 const contentHTML = content[section];
+
+                container.querySelectorAll('.main-item, .sub-item').forEach(item => item.classList.remove('active'));
+                subItem.classList.add('active');
 
                 if (isMobileView) {
                     let wrapper = mainNavItem.querySelector(':scope > .section-wrapper');
@@ -560,6 +934,7 @@
                     });
                     
                     wrapper.innerHTML = contentHTML;
+                    initializeCopyButtons();
 
                     if (shouldShow) {
                          setTimeout(() => wrapper.classList.add('active'), 10);
@@ -568,8 +943,8 @@
                     }
                 } else {
                     if(contentArea) contentArea.innerHTML = contentHTML;
+                    initializeCopyButtons();
                 }
-                setItemCompleted(subItem);
             }
             
             function initializeView() {
@@ -593,6 +968,7 @@
             }
 
             initializeView();
+            initializeCopyButtons();
             window.addEventListener('resize', handleResize);
         });
     })();
