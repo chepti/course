@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Course Progress Tracker
  * Description: A lightweight, custom plugin to track user progress through HTML-based course units.
- * Version: 2.8.0
+ * Version: 2.8.1
  * Author: Chepti
  */
 
@@ -2328,8 +2328,12 @@ function car_create_user_from_payment($email, $name) {
     
     // Send welcome email if enabled
     $send_email = get_option('car_send_email', true);
+    error_log('CAR: Email sending enabled: ' . ($send_email ? 'YES' : 'NO'));
     if ($send_email) {
+        error_log('CAR: Calling car_send_welcome_email for user: ' . $user_id . ', email: ' . $email);
         car_send_welcome_email($user_id, $email, $username, $password);
+    } else {
+        error_log('CAR: Email sending is disabled in settings');
     }
     
     return ['user' => get_userdata($user_id), 'is_new' => true];
@@ -2374,12 +2378,55 @@ function car_send_welcome_email($user_id, $email, $username, $password) {
         'From: ' . $site_name . ' <' . get_option('admin_email') . '>'
     ];
     
-    wp_mail($email, $subject, $message, $headers);
+    // Log email attempt
+    error_log('CAR: Attempting to send welcome email to: ' . $email);
+    error_log('CAR: Email subject: ' . $subject);
+    error_log('CAR: Message length: ' . strlen($message) . ' characters');
+    
+    // Send email and check result
+    $mail_result = wp_mail($email, $subject, $message, $headers);
+    
+    if ($mail_result) {
+        error_log('CAR: Email sent successfully to: ' . $email);
+    } else {
+        error_log('CAR: ERROR - Failed to send email to: ' . $email);
+        // Try sending a simple text email as fallback
+        $simple_message = "שלום " . $display_name . ",\n\n";
+        $simple_message .= "ברוכים הבאים לקורס!\n\n";
+        $simple_message .= "פרטי ההתחברות שלך:\n";
+        $simple_message .= "שם משתמש: " . $username . "\n";
+        $simple_message .= "סיסמה: " . $password . "\n\n";
+        $simple_message .= "כדי להתחבר, גשו ל: " . $login_url . "\n\n";
+        $simple_message .= "בברכה,\n" . $site_name;
+        
+        $simple_headers = [
+            'Content-Type: text/plain; charset=UTF-8',
+            'From: ' . $site_name . ' <' . get_option('admin_email') . '>'
+        ];
+        
+        $fallback_result = wp_mail($email, $subject, $simple_message, $simple_headers);
+        if ($fallback_result) {
+            error_log('CAR: Fallback text email sent successfully');
+        } else {
+            error_log('CAR: ERROR - Fallback email also failed');
+        }
+    }
 }
 
 // Get default HTML email template
 function car_get_default_email_html($display_name, $username, $password, $login_url, $site_name, $logo_url, $whatsapp_gold, $whatsapp_silver) {
-    return '
+    // Escape variables for use in HTML
+    $logo_url_esc = esc_url($logo_url);
+    $site_name_esc = esc_attr($site_name);
+    $display_name_esc = esc_html($display_name);
+    $site_name_html = esc_html($site_name);
+    $username_esc = esc_html($username);
+    $password_esc = esc_html($password);
+    $login_url_esc = esc_url($login_url);
+    $whatsapp_gold_esc = esc_url($whatsapp_gold);
+    $whatsapp_silver_esc = esc_url($whatsapp_silver);
+    
+    $html = <<<HTML
 <!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
@@ -2544,16 +2591,16 @@ function car_get_default_email_html($display_name, $username, $password, $login_
 <body>
     <div class="email-container">
         <div class="email-header">
-            <img src="' . esc_url($logo_url) . '" alt="' . esc_attr($site_name) . '" class="email-logo" />
+            <img src="{$logo_url_esc}" alt="{$site_name_esc}" class="email-logo" />
             <h1 class="email-title">ברוכים הבאים!</h1>
         </div>
         
         <div class="email-content">
-            <p class="greeting">שלום ' . esc_html($display_name) . ',</p>
+            <p class="greeting">שלום {$display_name_esc},</p>
             
             <div class="info-box">
                 <div class="info-box-title">🎉 חשבון נפתח עבורך בהצלחה!</div>
-                <p style="margin: 0; color: #333; line-height: 1.6;">אנו שמחים לראות אותך מצטרף/ת ל-' . esc_html($site_name) . '. עכשיו תוכל/י לגשת לכל התוכן וההסברים בקורס.</p>
+                <p style="margin: 0; color: #333; line-height: 1.6;">אנו שמחים לראות אותך מצטרף/ת ל-{$site_name_html}. עכשיו תוכל/י לגשת לכל התוכן וההסברים בקורס.</p>
             </div>
             
             <div class="info-box">
@@ -2561,17 +2608,17 @@ function car_get_default_email_html($display_name, $username, $password, $login_
                 <div class="credentials-box">
                     <div class="credential-row">
                         <span class="credential-label">שם משתמש:</span>
-                        <span class="credential-value">' . esc_html($username) . '</span>
+                        <span class="credential-value">{$username_esc}</span>
                     </div>
                     <div class="credential-row">
                         <span class="credential-label">סיסמה:</span>
-                        <span class="credential-value">' . esc_html($password) . '</span>
+                        <span class="credential-value">{$password_esc}</span>
                     </div>
                 </div>
             </div>
             
             <div class="button-container">
-                <a href="' . esc_url($login_url) . '" class="login-button">התחבר/י עכשיו</a>
+                <a href="{$login_url_esc}" class="login-button">התחבר/י עכשיו</a>
             </div>
             
             <div class="warning-box">
@@ -2581,14 +2628,14 @@ function car_get_default_email_html($display_name, $username, $password, $login_
             <div class="whatsapp-section">
                 <div class="whatsapp-title">📱 הצטרף/י לקבוצות הווטסאפ שלנו!</div>
                 <div class="whatsapp-buttons">
-                    <a href="' . esc_url($whatsapp_gold) . '" class="whatsapp-button whatsapp-gold" target="_blank">מסלול זהב</a>
-                    <a href="' . esc_url($whatsapp_silver) . '" class="whatsapp-button whatsapp-silver" target="_blank">מסלול כסף</a>
+                    <a href="{$whatsapp_gold_esc}" class="whatsapp-button whatsapp-gold" target="_blank">מסלול זהב</a>
+                    <a href="{$whatsapp_silver_esc}" class="whatsapp-button whatsapp-silver" target="_blank">מסלול כסף</a>
                 </div>
             </div>
         </div>
         
         <div class="footer">
-            <p style="margin: 0;">בברכה,<br><strong>צוות ' . esc_html($site_name) . '</strong></p>
+            <p style="margin: 0;">בברכה,<br><strong>צוות {$site_name_html}</strong></p>
         </div>
     </div>
 </body>
