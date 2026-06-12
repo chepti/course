@@ -1,0 +1,1140 @@
+<!-- course unit '7' - generated from ACODE7_WORDPRESS.HTML - edit in repo, not here -->
+<style>
+    :root { --primary-color: #3498DB; }
+    
+    #interactive-unit-container {
+      --primary-color: #3498DB; /* Blue */
+      --secondary-color: #34495e;
+      --nav-width: 300px;
+      --header-height: 60px;
+      font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    #interactive-unit-container #nav {
+      width: var(--nav-width);
+      height: 100vh;
+      background: #f8f9fa;
+      padding: 20px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      font-size: 1.1em;
+      border-left: 1px solid #dee2e6;
+      z-index: 1001;
+      order: 1;
+    }
+
+    #interactive-unit-container .sidebar-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--secondary-color);
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    #interactive-unit-container #content {
+      margin-right: var(--nav-width);
+      padding: 30px;
+      width: calc(100% - var(--nav-width));
+      margin-top: 50px;
+      max-width: 1000px;
+      order: 2;
+    }
+    
+    #interactive-unit-container .progress-bar {
+      position: fixed;
+      top: 0;
+      right: var(--nav-width);
+      left: 0;
+      height: 50px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container .progress-indicator {
+      height: 10px;
+      background: linear-gradient(to right, var(--primary-color), #27ae60);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+      width: 0;
+    }
+    
+    #interactive-unit-container .nav-item {
+      margin: 15px 0; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .main-item, #interactive-unit-container .sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    #interactive-unit-container .main-item {
+      font-weight: bold;
+      background: linear-gradient(45deg, #f3f4f6, #ffffff);
+    }
+
+    #interactive-unit-container .sub-item {
+      margin: 8px 0;
+      background: linear-gradient(45deg, #ffffff, #f8f9fa);
+      border-width: 1px;
+    }
+    
+    #interactive-unit-container .main-item:hover {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+    }
+    
+    #interactive-unit-container .sub-item:hover {
+      background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+    }
+
+    #interactive-unit-container .completion-circle {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: white;
+      flex-shrink: 0;
+    }
+    
+    /* Completed sections - circle gets checkmark with colored background */
+    #interactive-unit-container .nav-item.completed .completion-circle {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      border-width: 2px;
+    }
+    
+    #interactive-unit-container .nav-item.completed .completion-circle::after {
+      content: "✓";
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* Don't change background color for completed items - only active items get colored background */
+    
+    #interactive-unit-container .main-item:hover .completion-circle,
+    #interactive-unit-container .sub-item:hover .completion-circle {
+      border-color: white;
+      transform: scale(1.1);
+    }
+    
+    #interactive-unit-container .sub-items {
+      margin-right: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    #interactive-unit-container .sub-items.active {
+      max-height: 800px;
+    }
+    
+    #interactive-unit-container .video-container {
+      margin: 30px 0;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+    }
+    
+    #interactive-unit-container .video-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+        
+    #interactive-unit-container iframe {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+        
+    #interactive-unit-container .content-section {
+      animation: fadeIn-scoped 0.5s ease-out;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    #interactive-unit-container .content-section h1 {
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h2 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h4 {
+      font-size: 1.4em;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+    
+    #interactive-unit-container .content-section p:first-of-type {
+      font-size: 1.15em;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+    
+    #interactive-unit-container .content-section ul {
+      padding-right: 20px;
+      margin-bottom: 15px;
+    }
+    
+    #interactive-unit-container .styled-button {
+        display: inline-block;
+        background: linear-gradient(45deg, var(--primary-color), #27ae60);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    #interactive-unit-container .styled-button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .button-wrapper {
+        margin-top: 15px;
+        text-align: left;
+    }
+    
+    .content-section hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+        margin: 40px 0;
+    }
+    
+    #interactive-unit-container .illustration {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+    
+    #interactive-unit-container .full-width-image {
+        width: 100%;
+        max-width: 800px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+
+    #interactive-unit-container .prompt-container {
+        background-color: #e8f4fd;
+        border-right: 4px solid var(--primary-color);
+        border-radius: 4px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+        font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1em;
+        line-height: 1.6;
+    }
+
+    #interactive-unit-container .prompt-container .copy-button {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: transparent;
+        color: var(--primary-color);
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        opacity: 0.6;
+        transition: opacity 0.3s, background-color 0.3s;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #interactive-unit-container .prompt-container .copy-button:hover {
+        opacity: 1;
+        background-color: rgba(0,0,0,0.08);
+    }
+
+    #interactive-unit-container .prompt-container pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+        padding-top: 20px;
+    }
+
+    /* Image Gallery Slider */
+    #interactive-unit-container .image-gallery {
+        position: relative;
+        max-width: 500px;
+        margin: 20px auto;
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    #interactive-unit-container .gallery-container {
+        display: flex;
+        transition: transform 0.5s ease;
+        width: 100%;
+    }
+
+    #interactive-unit-container .gallery-container img {
+        width: 100%;
+        flex-shrink: 0;
+        height: auto;
+        display: block;
+        object-fit: contain;
+    }
+
+    #interactive-unit-container .gallery-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        padding: 15px 10px;
+        cursor: pointer;
+        font-size: 24px;
+        color: var(--primary-color);
+        z-index: 10;
+        transition: background 0.3s;
+        border-radius: 5px;
+    }
+
+    #interactive-unit-container .gallery-nav:hover {
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    #interactive-unit-container .gallery-nav.prev {
+        right: 10px;
+    }
+
+    #interactive-unit-container .gallery-nav.next {
+        left: 10px;
+    }
+
+    #interactive-unit-container .gallery-dots {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    #interactive-unit-container .gallery-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ccc;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    #interactive-unit-container .gallery-dot.active {
+        background: var(--primary-color);
+    }
+
+    /* Active section - colored background, no side marker */
+    #interactive-unit-container .main-item.active,
+    #interactive-unit-container .sub-item.active {
+        background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
+        border: 2px solid var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: white !important;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle,
+    #interactive-unit-container .sub-item.active .completion-circle {
+        border-color: white !important;
+        background: white !important;
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle::after,
+    #interactive-unit-container .sub-item.active .completion-circle::after {
+        content: "";
+    }
+
+    @keyframes fadeIn-scoped {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 800px) {
+        #interactive-unit-container { display: block; }
+        #interactive-unit-container #content { display: none; }
+        #interactive-unit-container #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+        #interactive-unit-container .main-content { margin: 0; width: 100%; padding: 10px; }
+        #interactive-unit-container .progress-bar { right: 0; left: 0; width: 100%; }
+        #interactive-unit-container .sub-items { margin-right: 0; }
+        #interactive-unit-container .sub-item { padding-right: 8px; padding-left: 8px; }
+
+        #interactive-unit-container .section-wrapper {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        
+        #interactive-unit-container .section-wrapper.active {
+            max-height: 5000px;
+        }
+        
+        #interactive-unit-container .sub-items.active {
+            max-height: 5000px;
+        }
+
+        #interactive-unit-container .content-section {
+            animation: none;
+        }
+    }
+    </style>
+
+<div id="interactive-unit-container">
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+    
+    <div id="nav">
+        <div class="sidebar-title">יחידה 7 - פיתוח אפליקציה 📱</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>מבט על</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_form">
+                        <div class="completion-circle"></div>
+                        <span>טופס אוטומטי</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_one_way">
+                        <div class="completion-circle"></div>
+                        <span>אפליקציה חד כיוונית</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_two_way">
+                        <div class="completion-circle"></div>
+                        <span>אפליקציה דו כיוונית</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_advanced">
+                        <div class="completion-circle"></div>
+                        <span>כלי קוד מתקדמים</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="help_tools">
+                        <div class="completion-circle"></div>
+                        <span>כלי עזר</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="task">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    function onReady(callback) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', callback);
+        } else {
+            callback();
+        }
+    }
+
+    onReady(() => {
+        const container = document.querySelector('#interactive-unit-container');
+        if (!container) { return; }
+
+        const content = {
+            overview: `
+                <div class="content-section" data-track-section="overview">
+                    <h1>מבט על</h1>
+                    <p>כולנו משתמשים כמורים באפליקציות שאחרים יצרו. למעקב אחרי משימות, לעבודה משותפת, לתיאום ולעידוד התלמידים.</p>
+                    <p>אבל לפעמים חסר משהו באפליקציות המוכנות! אנחנו מגלים צורך ספציפי שאין לו מענה קיים, מענה לא מותאם לצרכינו, או - עלות גבוהה.</p>
+                    <p>היכולת לקבל יישומונים קטנים מכלי בינה, מאפשרת לנו להגדיר *ולאפיין* את המוצר הרצוי, ולבנות אותו בשיחה עם הבינה, ולקיים סבבי שיפור קטנים עד שהמוצר מכיל את כל התכונות שנרצה.</p>
+                    <p>יש כמה כלים שמאפשרים לקבל קוד מהבינה. ביחידה על אינטראקטיביות בלמידה כבר נגענו בקוד דרך קנבס וארטיפקטים במודלי השפה הגדולים. אבל כדי לבנות אפליקציה שכוללת גם מסד נתונים נוח, שמכילה פיצ'רים מגוונים ויש לה יכולת להציג מידע בצורה חכמה, לבצע מניפולציה על מסד הנתונים - נצטרך לעבוד עם כלים נוספים.</p>
+                    <p>לאבבל או בייס44 הם כלים שמאפשרים לבנות אפליקציות נחמדות עם בינה, אני לא ממליצה בגלל שהם "גן סגור" ובסוף מגבילים את יכולת היצירה בחינם.</p>
+                    <p>לעומתם, השפה שמצאתי שנותנת מענה להמון צרכים וגם מרחב פעילות וגמישות - היא אפפסקריפט. זו שפה מבית גוגל, שניתן לפתוח מתוך גליון Google Sheets. כך הגליון משמש כבסיס הנתונים, נוח לעריכה ידנית כשצריך מעבר לעבודה דרך הממשק של האפליקציה שנוצרה, שהיא בעצם מסוג HTML. אין הגבלה על כמות הפרויקטים, המשתמשים וכן הלאה.</p>
+                    
+                    <div class="video-container">
+                        <div class="video-title">מבט על - פיתוח אפליקציה (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/xcmpU7E34AQ" allowfullscreen data-track-video="overview"></iframe>
+                    </div>
+
+                    <img src="https://i.imgur.com/jL6GOud.gif" alt="גיף מחלום למוצר" class="illustration">
+
+                    <hr>
+                    <h4>מושגים:</h4>
+                    <p><strong>פרויקט אפפסקריפט</strong> - הקובץ בו נשמר הקוד. לכל פרויקט כתובת ייחודית.</p>
+                    <p><strong>IDE</strong> - כלי כתיבת קוד למתכנתים. כיום משלבים בינה בפנים, כך שהקוד נבנה ע"י הבינה, אבל יש לאדם יכולת שליטה וכיוונון גבוהים יותר, וגם - אין צורך לכתוב מחדש קבצים שלמים. השינויים נערכים בקבצי הקוד רק איפה שנדרש. משמש לשפות קוד רבות.</p>
+                    <p><strong>גיטהאב</strong> - פלטפורמה לשמירת פרויקטי הקוד שלנו, ניהול היסטוריית גרסאות, ושיתוף קל עם קהילת המתכנתים.</p>
+                    <p><strong>אבטחה</strong> - הרשאות וסיסמאות - תמיד נעדיף לקבוע סיסמא שמאוחסנת בגליון ("בתא A2") ולא לתת אותה בקוד, שלא תיחשף.</p>
+                    <p><strong>איטרציות</strong> - חזרות, פינג פונג של שיפורים כדי להגיע למוצר שלם עם התכונות שרצינו, פועלות טוב ונראות טוב.</p>
+                    <p><strong>API</strong> - גישה ישירה אל יכולות של כלי בינה, בד"כ בתשלום לפי שימוש. כדי לשלב באפליקציה יכולת יצירה של תמונות למשל, נוכל לשלם לגוגל על גישה למודל ננו בננה, וכך המשתמשים שלנו יוכלו ליצור תמונות כחלק מהמסע שלהם בתוך האפליקציה שלנו (על חשבוננו).</p>
+                    <p><strong>קונסול</strong> - איזור בדפדפן שמציג שגיאות - כדי להציג לוחצים על F12 במקלדת, ומחפשים ברצועה העליונה סימין של X אדום, או סימן קריאה כתום. לוחצים ומקבלים פירוט שגיאות, שכדאי להעתיק לבינה.</p>
+                    
+                    <hr>
+                </div>
+            `,
+            tools: `
+                <div class="content-section" data-track-section="tools">
+                    <h1>כלים</h1>
+                    <p>ביחידה זו נכיר את כלי אפפסקריפט לבניית אפליקציות - מטופסים אוטומטיים ועד אפליקציות דו-כיווניות מורכבות. כל כלי מתאים לסוג צורך אחר ולשלב אחר בתהליך הלמידה.</p>
+                </div>
+            `,
+            tools_form: `
+                <div class="content-section" data-track-section="tools_form">
+                    <h2>טופס אוטומטי</h2>
+                    <p>טופס אוטומטי באפפסקריפט - כדי להכיר קצת מה אפפסקריפט יכול לעשות, נתחיל ממשימה שלא קשורה בכלל למטרה העיקרית שלנו.</p>
+                    <p>נכתוב שאלות לבוחן או שאלון עם בינה, ואז נבקש קוד שיכול ליצור בבת אחת את הטופס בGoogle Forms (כולל ניקוד אם נרצה!). את הקוד הזה נדביק בפרויקט אפפסקריפט ונקבל את הטופס.</p>
+                    
+                    <div class="video-container">
+                        <div class="video-title">יצירת טופס אוטומטי (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/4TQ8xXBw3XY" allowfullscreen data-track-video="tools_form"></iframe>
+                    </div>
+
+                    <hr>
+                    <h4>מה נכיר?</h4>
+                    <ul>
+                        <li>נתנסה בבקשת קוד מבינה.</li>
+                        <li><strong>דגש</strong> - לא לשכוח לציין את השפה "אפפסקריפט".</li>
+                        <li><strong>דגש נוסף</strong> - לא משנה באיזו בינה נבחר! בהדגמה מוצג קלוד כי הוא היה הראשון, אבל אפשר לקבל קוד מצוין מג'מיני, גרוק, סטודיו, GPT ועוד.</li>
+                        <li>נפתח פרויקט אפפסקריפט ראשון באתר https://script.google.com/</li>
+                        <li>נחליף את הקוד בקוד שלנו. דגש- לא לשכוח למחוק את הקיים לפני שנדביק את הקוד החדש!</li>
+                        <li>נבצע שמירה והרצה. דגש - בפעם הראשונה נתבקש לתת הרשאת גישה, כדי שהפרויקט יוכל להעול בתוך הדרייב שלנו.</li>
+                        <li>נכיר את איזור הLOG שבו מוצגת הפעילות, ההצלחה או השגיאות.</li>
+                    </ul>
+
+                    <img src="https://i.imgur.com/Lpw2Bj8.png" alt="אילוסטרציה" class="illustration">
+                </div>
+            `,
+            tools_one_way: `
+                <div class="content-section" data-track-section="tools_one_way">
+                    <h2>אפליקציה חד כיוונית</h2>
+                    <p>כעת נתקדם ליצירת אפליקציית אינטרנט פשוטה, שתהיה מעוצבת בצורה חופשית, גמישה, ותאפשר חוויית מילוי מוצלחת יותר מגוגל פורם. מאחורי הקלעים - המידע שהמשתמש ימלא פשוט יישלח אל הגליון שלנו בתור שורה נפרדת, כלומר מבחינת איסוף הנתונים זה זהה לFORMS המוכר.</p>
+                    
+                    <hr>
+                    <h4>מה אנחנו מרוויחים?</h4>
+                    <ul>
+                        <li>עיצוב, אנימציה</li>
+                        <li>הצגה מדורגת, חוויית מילוי נעימה ופחות עמוסה</li>
+                        <li>סוגי שאלה מגוונים</li>
+                    </ul>
+
+                    <div class="video-container">
+                        <div class="video-title">אפליקציה חד כיוונית (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/RobIxL2jhuY" allowfullscreen data-track-video="tools_one_way"></iframe>
+                    </div>
+
+                    <img src="https://i.imgur.com/Bxpy95i.png" alt="למה דווקא אפפסקריפט?" class="illustration">
+
+                    <hr>
+                    <h4>הפרומפט</h4>
+                    <p><strong>פתיח טכני:</strong></p>
+                    <div class="prompt-container">
+                        <button class="copy-button">📋</button>
+                        <pre>צור לי Web App רספונסיבית ב-Apps Script (מקושר לגליון שמהווה בסיס נתונים) עם Google Sheets. 2 קבצים: Code.gs + Index.html. כשפותחים את ה-URL, האפליקציה נפתחת ישירות. ללא העתקת IDs או קישורים.</pre>
+                    </div>
+                    
+                    <p><strong>מטרה:</strong></p>
+                    <p>"האפליקציה תאסוף משובים ממשתתפים בסדנה. השאלות הן…"</p>
+                    
+                    <p><strong>עיצוב והתנהגות:</strong></p>
+                    <p>"תעצב מהמם, עם אנימציות עדינות. הצג את השאלות בהדרגה, בכל פעם מחליקה פנימה השאלה הבאה. השתמש בגופן VARELA, גווני פסטל ופינות מעוגלות. רק אם המשתמש בוחר "כן" בשאלה השלישית, פתח איזור מקופל עם 2 השאלות הנוספות. בשאלה הרביעית אפשר מתיחת קו בין המושגים להגדרות. בשליחה הצג ברכה יפה ואפקט קונפטי"</p>
+
+                    <hr>
+                    <h4>הטכניקה</h4>
+                    <p>השלב הטכני נראה מבלבל בפעם- פעמיים הראשונות, הכנתי גם בתרשים וגם הסרטנו וגם ברשימה. הבינה גם ששה בכל פעם מחדש לפרט את כל השלבים. אחרי התנסות או שתיים התהליך כבר יעבוד חלק</p>
+
+                    <div class="video-container">
+                        <div class="video-title">הטכניקה - שלבי העבודה (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/fhjHSSU0_Xs" allowfullscreen data-track-video="tools_one_way"></iframe>
+                    </div>
+
+                    <img src="https://i.imgur.com/QBu6U6q.png" alt="תרשים שלבי העבודה" class="illustration">
+
+                    <hr>
+                    <h4>עריכת הגליון בSHEETS</h4>
+                    <p>נבנה את הנתונים בהתאם לתכנון: כותרות, שמות לגליון, נכניס קצת מידע לדוגמא</p>
+                    <p>נפתח בסרגל את 'תוספים' ונבחר אפפסקריפט.</p>
+                    <p>בפרויקט שנפתח, נדביק את הקוד של CODE GS בעמוד הראשי (במקום מה שיש שם)</p>
+                    <p>נלחץ על פלוס, נוסיף קובץ HTML. ניתן שם: index או Index ונדביק בו את הקוד המתאים.</p>
+                    <p>ניתן שם לפרויקט, נבצע שמירה, ונריץ את אחת הפונקציות. ניתן הרשאה.</p>
+
+                    <hr>
+                    <h4>פריסה</h4>
+                    <p>נלחץ על כפתור הפריסה. נבחר פריסה חדשה</p>
+                    <p>נגדיר בגלגל - אפליקציית WEB.</p>
+                    <p>נבחר גישה - לכולם.</p>
+                    <p>ניתן הרשאה, ואם יש אזהרה - נלחץ על "מתקדם" ונמשיך בכל זאת.</p>
+                    <p>נאשר בכפתור 'לפריסה' - ותוך כמה שניות נקבל קישור.</p>
+                    <div class="video-container">
+                        <div class="video-title">סמן - פריסה של אפליקציה של אפפסקריפט</div>
+                        <iframe src="https://www.youtube.com/embed/WKmcGBLEeqI" allowfullscreen data-track-video="tools_one_way"></iframe>
+                    </div>
+                    <p>ואפשר גם לפרסם את האפליקציה בתוך אתר גוגל סייטס:</p>
+                    <div class="video-container">
+                        <div class="video-title">פרסום מאפפסקריפט לאתר סייטס</div>
+                        <iframe src="https://www.youtube.com/embed/_-hZ2TORAlY" allowfullscreen data-track-video="tools_one_way"></iframe>
+                    </div>
+
+                    <hr>
+                    <h4>בדיקה ותיקונים</h4>
+                    <p>נבדוק איך יצא! נבחן אם הפעולות אכן מפעילות מה שצריך וכותבות לקובץ המקושר. שימו לב, לפעמים התוצאות נשמרות בגליון חדש ונצטרך לבדוק בלשוניות למטה.</p>
+                    <p>מה לא עובד? מה צריך לשפר? נחזור לבינה ונבקש בפירוט את כל התיקונים הנדרשים</p>
+                    <p>כאשר אנחנו מעדכנים תיקונים קטנים - במקום ליצור פריסה חדשה, נעדיף ללחוץ "ניהול פריסות", ללחוץ על העיפרון, ושם לבחור גרסה חדשה. היתרון - לא נצטרך להחליף את הקישור לאפליקציה שלנו.</p>
+                    <p>יש באפפסקריפט היסטוריה (כפתור שעון בצד), כך שנוכל לחזור אל גרסה קודמת אם צריך.</p>
+
+                    <hr>
+                    <h4>דוגמאות</h4>
+                    <p>טופס משוב לסדנה: <a href="http://did.li/feedbackw" target="_blank" data-track-click>http://did.li/feedbackw</a></p>
+                    <p>שימו לב לאיזורים שמתקפלים, להנפשה, לשאלות מסוג בחירה באימוג'ים.</p>
+                    <p>טופס לגיל הרך - שימו לב לשילוב התמונה, להדרגה בהצגת השאלות: <a href="https://script.google.com/a/macros/jerschools.org.il/s/AKfycbxVCLJjSHzDXUdgQvS70htVT90_AcyVCXNqQk8bFLonPTVt8VyNGVUjGmXF1IyghKbbgA/exec" target="_blank" data-track-click>קישור</a></p>
+                    <p>הזמנה ליום הולדת: <a href="https://script.google.com/macros/s/AKfycbxFH2Xl635U5fNzoPAu1Fp_9-MsEsrvMtnRiBwQy6wEUuObta1nFxZzXOMQ8LSUYwUD7A/exec" target="_blank" data-track-click>קישור</a></p>
+
+                    <hr>
+                    <h4>שילוב תמונות</h4>
+                    <p>כיף לשדרג את הנראות של הטפסים והאפליקציות, וזה גם לא מסובך.</p>
+                    <p>נעתיק כתובת של תמונה מהרשת ("העתק כתובת תמונה")</p>
+                    <p>ואם נרצה לשלב דווקא תמונה משלנו - נצטרך לאחסן אותה ברשת, במיקום שיאפשר לנו גישה אל קישור ישיר (סיומת JPG, PNG וכדומה. בדרייב לא יעבוד בד"כ).</p>
+                    <p>אימגור - כלי נחמד שמאפשר להעלות תמונות ונותן קישור ישיר שנוכל להדביק לבינה, והיא תשלב במקום שנבקש.</p>
+
+                    <div class="video-container">
+                        <div class="video-title">שילוב תמונות (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/EFSWC5MKajU" allowfullscreen data-track-video="tools_one_way"></iframe>
+                    </div>
+
+                    <p>אפשר כמובן להטמיע גם סרטונים! הדביקו לבינה את הקישור מיוטיוב.</p>
+                    <p>אודיו צריך להטמיע ברשת, אפשר להשתמש בהקלטה לתוך VOCAROO, ולתת לבינה את הקישור לשיתוף. חיסרון - הקישור לא נשמר לנצח, כמה חודשים ללא שימוש והוא יימחק.</p>
+
+                    <hr>
+                    <h4>באגים</h4>
+                    <p>לפעמים צריך להחליף את שם הקובץ index ל Index.</p>
+                    <p>ככלל - אנחנו ננסה לבקש מהבינה לפתור כל באג שיצוף, היא יודעת להתמודד, להסביר ולהחליף.</p>
+                    <p>חלק מהשגיאות נוכל למצוא אם נלחץ F12, ונפתח את ה"קונסול" של הדפדפן. למעלה תוכלו לראות אייקון של משולש אדום, ושם יש פירוט שגיאות שהבינה יכולה להבין.</p>
+
+                    <img src="https://i.imgur.com/8Qz6pl4.png" alt="קונסול שגיאות" class="illustration">
+
+                    <p>יש תצוגות מסוימות שנתקעות (לשוניות למשל) ואחרות שעובדות היטב (אקורדיון למשל). לומדים מטעויות…</p>
+                    <p>לפעמים הקובץ נחסם לצפיה מבחינת אבטחה. הקפידו לעבוד מאותו חשבון ולא לעבור דפדפנים ששייכים לפרופיל אחר. אם זה תקוע - צרו עותק מהגליון ופרסו מחדש.</p>
+
+                    <img src="https://i.imgur.com/J2YYOfn.png" alt="בעיית אבטחה" class="illustration">
+                    <img src="https://i.imgur.com/9t3SopA.png" alt="פתרון בעיית אבטחה" class="illustration">
+                </div>
+            `,
+            tools_two_way: `
+                <div class="content-section" data-track-section="tools_two_way">
+                    <h2>אפליקציה דו כיוונית</h2>
+                    <p>כעת שכבר התנסינו בפרויקט ראשון ואפילו בנינו אפליקציה פשוטה - אפשר להתקדם אל הדבר אמיתי!</p>
+                    <p>אפליקציה שגם כותבת וגם קוראת לגליון הנתונים, ומאפשרת פונקציות ומניפולציות מתקדמות.</p>
+
+                    <img src="https://i.imgur.com/tm4rz1l.png" alt="אפליקציה דו כיוונית" class="illustration">
+
+                    <hr>
+                    <h4>מה למשל?</h4>
+                    <ul>
+                        <li>פרויקט בית ספרי</li>
+                        <li>קיוסק לתיעוד נקודות טובות וחלוקת פרסים, צ'קליסט לתכניות התערבות אישיות</li>
+                        <li>אוסף משותף: מתכונים, מסלולי טיול, פעילויות לסניף…</li>
+                        <li>השתבצות לאסיפת הורים, חלוקת כיבוד</li>
+                        <li>חלוקת עבודה לפרוייקטים, ניהול משימות, תמיכה בתהליכים של למידת עמיתים.</li>
+                    </ul>
+
+                    <p>נוכל לשלב תכונות מתקדמות:</p>
+                    <ul>
+                        <li>שליחת מיילים מותאמים אישית ומעוצבים, לפי תנאים שנקבע.</li>
+                        <li>הרשאות גישה לפי סיסמה (חשוב לשמור את הסיסמאות בבסיס הנתונים ולא בקוד! לציין לבינה באיזה איזור הסיסמאות נשמרות והיא תשווה מול הגליון)</li>
+                        <li>תצוגת גרפים ודוחות - כמה בכל שכבה? כמה אנחנו מתקדמים לעומת היעד?</li>
+                    </ul>
+
+                    <hr>
+                    <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                        <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;" src="https://www.canva.com/design/DAG62EjW4j8/dy6XBbH43KTimqWB0W6PPg/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+                    </div>
+                    <p><a href="https://www.canva.com/design/DAG62EjW4j8/dy6XBbH43KTimqWB0W6PPg/view?utm_content=DAG62EjW4j8&utm_campaign=designshare&utm_medium=embeds&utm_source=link" target="_blank" rel="noopener" data-track-click>פתח במצגת מלאה</a></p>
+
+                    <hr>
+                    <h4>כתיבת הפרומפט</h4>
+                    <p>כאן נצטרך לדייק יותר בכתיבת הפרומפט, ולוודא שקיימים בו כל הרכיבים החשובים.</p>
+
+                    <hr>
+                    <h4>נתכנן:</h4>
+                    <ul>
+                        <li>הגדרה ברורה של הצורך, מה הבעיה, מה חסר לנו.</li>
+                        <li>הגדרה של הפתרון - מה המוצר שלנו יעשה. מה היוזר יבצע במוצר.</li>
+                        <li>חלוקה לשלבים - מסע לקוח. לכתוב פעלים: ילחץ, יבחר, יתקשר.</li>
+                        <li>תכנון מסכים - טקסט, כפתור, חלוקת המסך. ניווט</li>
+                        <li>תכנון מבנה נתונים - אילו פריטי אינפורמציה יש? מה צריך להיות פתוח לשינוי? מה נעדכן רק בגליון? אילו גליונות נחלק? מה הכותרות?</li>
+                    </ul>
+
+                    <img src="https://i.imgur.com/hKFIIqA.png" alt="חלקי הפרומפט" class="illustration">
+
+                    <hr>
+                    <h4>העתיקו, הדביקו וערכו:</h4>
+                    <div class="prompt-container">
+                        <button class="copy-button">📋</button>
+                        <pre>צור לי Web App רספונסיבית ב-Apps Script (מקושר לגליון שמהווה בסיס נתונים) עם Google Sheets. 2 קבצים: Code.gs + Index.html. כשפותחים את ה-URL, האפליקציה נפתחת ישירות. ללא העתקת IDs או קישורים.
+
+האפליקציה תעשה... / היוזר יבצע....
+
+מבנה הנתונים שלי הוא... (כולל שמות הגליונות, כותרות)
+
+במסך הראשון יהיה…
+
+עיצוב ונראות …</pre>
+                    </div>
+                    <p>נשלח לבינה החביבה עלינו, נמתין, ובסוף - נעתיק את שני קטעי הקוד שקיבלנו.</p>
+
+                    <img src="https://i.imgur.com/JLwGK89.png" alt="דוגמת קוד" class="illustration">
+
+                    <div class="video-container">
+                        <div class="video-title">אפליקציה דו כיוונית - הדגמה על אפליקציית המגוייסות (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/MgV66l72XXc" allowfullscreen data-track-video="tools_two_way"></iframe>
+                    </div>
+
+                    <img src="https://i.imgur.com/9wwCuRw.png" alt="אילוסטרציה" class="illustration">
+
+                    <hr>
+                    <h4>דוגמאות:</h4>
+                    <p>פוסט סקירה - תוכלו לקרוא על דוגמאות שונות, לראות ואפילו ליצור עותק מהגליונות ולחקור בעצמכם: <a href="https://tikshuv.chepti.com/apps/" target="_blank" data-track-click>https://tikshuv.chepti.com/apps/</a></p>
+                    
+                    <hr>
+                    <h4>סיפורי אפליקציות</h4>
+                    <p>מגוייסות: <a href="https://youtu.be/DpI9m5CbBlo" target="_blank" data-track-click>סרטון</a></p>
+                    <p>מתכונים לשכפול: <a href="https://youtu.be/SAkxNXFPWDc" target="_blank" data-track-click>סרטון</a></p>
+                    <p>כלי לבניית תכנית עבודה: <a href="https://youtu.be/-ns-tkuKtqI" target="_blank" data-track-click>סרטון</a></p>
+                    <p>תוסף לדפדפן: <a href="https://youtu.be/RM02h8HidNQ" target="_blank" data-track-click>סרטון</a></p>
+                    <p>אתר מקבוצת ווטסאפ: <a href="https://youtu.be/oivHpYpQr9g" target="_blank" data-track-click>סרטון</a></p>
+                </div>
+            `,
+            tools_advanced: `
+                <div class="content-section" data-track-section="tools_advanced">
+                    <h2>כלי קוד מתקדמים</h2>
+                    
+                    <hr>
+                    <h4>קרסר</h4>
+                    <p>אתם כבר מתקדמים עם יצירת אפליקציות?</p>
+                    <p>רוצים לשדרג את צורת העבודה בפרויקטים קצת יותר מורכבים?</p>
+                    <p>תכירו את קרסר. כלי לעריכת קוד, סביבת עבודה לתכנות (נקרא IDE). מחובר לבינה, כך שגם כאשר מדובר בפרויקט מתקדם, שחורג ממגבלות השיחה הרגילות, הוא מאפשר לעבוד עם הקוד בצורה יעילה. לפעמים בשלבי התיקונים, נרצה להדביק קטעי קוד במקום חלקים שלא עובדים בצורה טובה. לפעמים ישלחו אותנו להחליף קטעים בכמה מיקומים, וזה גם גוזל זמן - וגם עלול להסתיים בהדבקה לא נכונה שתשבור חלקים אחרים בקוד. קרסר יודע להדביק את הקוד בדיוק במקום הנכון, ולהראות לנו בצבעים איפה הוא מחק דברים ואיפה הוסיף קטעים נוספים.</p>
+                    <p>שבועי ראשון נסיון חינם, וניתן לעבוד באופן מינימלי. לרוב נדרש מנוי של 20$.</p>
+
+                    <div class="video-container">
+                        <div class="video-title">קרסר - כלי קוד מתקדם (סרטון)</div>
+                        <iframe src="https://www.youtube.com/embed/GblWdZFKbPM" allowfullscreen data-track-video="tools_advanced"></iframe>
+                    </div>
+
+                    <div class="button-wrapper">
+                        <a href="https://www.cursor.com/" target="_blank" class="styled-button" data-track-click>קרסר</a>
+                    </div>
+
+                    <hr>
+                    <h4>אנטיגרביטי</h4>
+                    <p>כלי למתכנתים IDE חדש מבית גוגל. בקבצים ארוכים של אפפסקריפט הבחנתי שהוא עדיין לא מצטיין בעריכה (משבש את חלקי הקוד - העיצוב, הפונקציות), ויותר טוב בפרויקטים שמרכבים מהרבה קבצים קצרים דווקא.</p>
+                    <p>מתאים לייצא מ-AI STUDIO ולהמשיך בו עבודה.</p>
+                    <div class="button-wrapper">
+                        <a href="https://antigravity.google/" target="_blank" class="styled-button" data-track-click>אנטיגרביטי</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>Stitch</h4>
+                    <p>סטיטץ' (Stitch) הוא כלי דמוי פיגמה לתכנון מסכים באפליקציות.</p>
+                    <p>מאפשר ליצור מסכים מעוצבים בקליק, לבנות אב טיפוס אינטראקטיבי, ולייצא את התוצר להמשך פיתוח – כולל יצוא אל AI STUDIO.</p>
+                    <div class="video-container">
+                        <div class="video-title">Stitch - תכנון מסכים ואבי טיפוס</div>
+                        <iframe src="https://www.youtube.com/embed/Dt8vsvAZLFQ" allowfullscreen data-track-video="tools_advanced"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://stitch.withgoogle.com/" target="_blank" class="styled-button" data-track-click>Stitch</a>
+                    </div>
+
+                    <hr>
+
+                    <h4>למתקדמים - וייב קודינג עם וורדפרס</h4>
+                    <p>מי שרוצה לצעוד צעד גדול קדימה: בניית אתר אמיתי והתאמתו בעזרת בינה. לא חלק מהמסלול - הצעה למיטיבי לכת.</p>
+                    <div class="button-wrapper">
+                        <a href="https://www.youtube.com/watch?v=GusbmpNLc6s" target="_blank" class="styled-button" data-track-click>סרטון: איך בונים אתר אמיתי? וייב קודינג עם וורדפרס</a>
+                    </div>
+                </div>
+            `,
+            help_tools: `
+                <div class="content-section" data-track-section="help_tools">
+                    <h2>כלי עזר</h2>
+                    
+                    <hr>
+                    <h4>מצגת שלבי העבודה</h4>
+                    <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                        <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;" src="https://www.canva.com/design/DAGyAD-HdQA/JXwFtExJkfyy5wM4ZsE_Gw/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+                    </div>
+                    <p><a href="https://www.canva.com/design/DAGyAD-HdQA/JXwFtExJkfyy5wM4ZsE_Gw/view?utm_content=DAGyAD-HdQA&utm_campaign=designshare&utm_medium=embeds&utm_source=link" target="_blank" data-track-click>יצירת אפליקציות</a></p>
+                </div>
+            `,
+            discussion: `
+                <div class="content-section" data-track-section="discussion">
+                    <h1>דיון</h1>
+                    <p><strong>חלופה א:</strong> תנו קישור לאפליקציית וייב קודינג מוצלחת שראיתם בתחום החינוך.</p>
+                    <p><strong>חלופה ב:</strong> כתבו מושג חדש שלמדתם תוך כדי התהליך - עדיף לא מושגים שהוסברו פה, כי לא כיסינו פה הכל. באג ואיך הוא נפתר, מילה או שיטה חדשה.</p>
+                    <img src="https://i.imgur.com/KIwlbjQ.png" alt="איור דיון" class="illustration">
+                </div>
+            `,
+            task: `
+                <div class="content-section" data-track-section="task">
+                    <h1>משימה</h1>
+                    <p><strong>חלופה א:</strong> צרו אפליקציית HTML חינוכית בעזרת בינה בשפת אפפסקריפט. </p>
+                    <p>בפוסט הדביקו את הפרומפט, כולל הפעולות שעיקריות שהיוזר יבצע, מבנה נתונים של הגליון (מה הכותרות), ומבנה המסך הראשי.</p>
+                    <p>תנו קישור לתוצר, גם אינו מושלם. </p>
+                    <p>בדקו - האם אפשר לשדרג את האפליקציה כך שתהיה דו-כיוונית? למשל להציג תוצאות מצטברות, ענן מילים, לוח מובילים או ניקוד כיתתי מצטבר?</p>
+                    <p><strong>בונוס</strong> - תוכלו לתת גם קישור להעתקה* של הגליון, כדי שאחרים יוכלו לבצע רמיקס (זהירות מנתונים רגישים).</p>
+                    <p>העלו למאגר חומר פתוח את התוצר.</p>
+                    <p>לא לשכוח את התגית המיוחדת!</p>
+                    
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>חומר פתוח</a>
+                    </div>
+                    
+                    <p>*איך נותנים קישור להעתקה? נשתף את הגליון לצפיה בלבד לכולם, ונשנה את המילה EDIT למילה COPY. מי שילחץ על הקישור יוזמן ליצור עותק, ויקבל גם את הקוד מובנה בפרויקט מקושר</p>
+                    
+                    <div class="button-wrapper">
+                      <a href="https://openstuff.co.il/upload/" target="_blank" class="styled-button" data-track-click>איך מעלים לחומר פתוח? מדריך, סרטון ושאלות נפוצות</a>
+                    </div>
+                    <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid #3498DB; border-radius: 4px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
+                            <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
+                        </label>
+                    </div>
+                </div>
+            `
+        };
+        
+        let isMobileView = window.innerWidth <= 800;
+        const contentArea = container.querySelector('#content-area');
+        const progressIndicator = container.querySelector('.progress-indicator');
+
+        function updateProgress() {
+            const allItems = container.querySelectorAll('.main-item, .sub-item');
+            const completedItems = container.querySelectorAll('.nav-item.completed');
+            const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+            if (progressIndicator) progressIndicator.style.width = `${percentage}%`;
+        }
+
+        // Completion is handled by course-tracker.js
+
+        function handleMainItemClick(e) {
+            const mainItem = e.currentTarget;
+            const navItem = mainItem.closest('.nav-item');
+            const section = mainItem.dataset.section;
+            const subItemsContainer = navItem.querySelector('.sub-items');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            mainItem.classList.add('active');
+
+            if (subItemsContainer) {
+                subItemsContainer.classList.toggle('active');
+                
+                // Special handling for "tools" section - open first sub-item instead of showing tools content
+                if (section === 'tools') {
+                    const firstSubItem = subItemsContainer.querySelector('.sub-item');
+                    if (firstSubItem && subItemsContainer.classList.contains('active')) {
+                        // Open sub-items container and show first sub-item content
+                        setTimeout(() => {
+                            const fakeEvent = { currentTarget: firstSubItem, stopPropagation: () => {} };
+                            handleSubItemClick(fakeEvent);
+                        }, 50);
+                        return; // Don't show tools content
+                    }
+                }
+            }
+
+            if (content[section]) {
+                const contentHTML = content[section];
+                if (isMobileView) {
+                    let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    
+                    const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+                    
+                    container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+
+                    wrapper.innerHTML = contentHTML;
+                    
+                    if (shouldShow) {
+                        setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    if (contentArea) contentArea.innerHTML = contentHTML;
+                }
+            }
+            // Initialize galleries after content is loaded
+            setTimeout(() => {
+                initGalleries();
+            }, 200);
+
+            // Completion is handled by course-tracker.js
+        }
+        
+        function handleSubItemClick(e) {
+            e.stopPropagation();
+            const subItem = e.currentTarget;
+            const section = subItem.dataset.section;
+            const navItem = subItem.closest('.nav-item');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item and its parent main item
+            subItem.classList.add('active');
+            const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+            if (mainNavItem) {
+                const mainItem = mainNavItem.querySelector('.main-item');
+                if (mainItem) mainItem.classList.add('active');
+            }
+
+            const contentHTML = content[section];
+
+            if (isMobileView) {
+                const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+                let wrapper = mainNavItem.querySelector('.section-wrapper');
+                if (!wrapper) {
+                    wrapper = document.createElement('div');
+                    wrapper.className = 'section-wrapper';
+                    mainNavItem.appendChild(wrapper);
+                }
+                const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+
+                container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                    if (w !== wrapper) w.classList.remove('active');
+                });
+                
+                wrapper.innerHTML = contentHTML;
+
+                if (shouldShow) {
+                     setTimeout(() => wrapper.classList.add('active'), 10);
+                } else {
+                    wrapper.classList.remove('active');
+                }
+            } else {
+                if (contentArea) contentArea.innerHTML = contentHTML;
+            }
+            // Initialize galleries after content is loaded
+            setTimeout(() => {
+                initGalleries();
+            }, 200);
+            // Completion is handled by course-tracker.js
+        }
+        
+        function initializeView() {
+            container.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            container.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobileView) {
+                const overviewItem = container.querySelector('.main-item[data-section="overview"]');
+                if (overviewItem) overviewItem.click();
+            }
+        }
+
+        function handleResize() {
+            const newIsMobile = window.innerWidth <= 800;
+            if (newIsMobile !== isMobileView) {
+                isMobileView = newIsMobile;
+                container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
+                if (contentArea) contentArea.innerHTML = '';
+                initializeView();
+            }
+        }
+
+        // Copy button functionality
+        container.addEventListener('click', function(e) {
+            const copyButton = e.target.closest('.copy-button');
+            if (copyButton) {
+                const promptContainer = copyButton.closest('.prompt-container');
+                if (promptContainer) {
+                    const promptText = promptContainer.querySelector('pre').innerText;
+                    navigator.clipboard.writeText(promptText).then(() => {
+                        copyButton.innerHTML = '✓';
+                        setTimeout(() => {
+                            copyButton.innerHTML = '📋';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                    });
+                }
+            }
+        });
+
+        // Initialize galleries when content is loaded
+        function initGalleries() {
+            // Search in both container and contentArea
+            const searchArea = contentArea || container || document;
+            const galleries = searchArea.querySelectorAll('.image-gallery');
+            galleries.forEach(gallery => {
+                const containerEl = gallery.querySelector('.gallery-container');
+                const dotsContainer = gallery.querySelector('.gallery-dots');
+                const images = containerEl ? containerEl.querySelectorAll('img') : [];
+                const galleryId = gallery.id;
+                
+                if (images.length === 0) return; // Skip if no images found
+                
+                // Create dots
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = '';
+                    images.forEach((img, index) => {
+                        const dot = document.createElement('button');
+                        dot.className = 'gallery-dot' + (index === 0 ? ' active' : '');
+                        dot.onclick = () => goToSlide(galleryId, index);
+                        dotsContainer.appendChild(dot);
+                    });
+                }
+                
+                // Set initial position
+                window[galleryId + '_current'] = 0;
+                updateGallery(galleryId);
+            });
+        }
+
+        // Gallery navigation functions
+        window.moveGallery = function(galleryId, direction) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+            
+            const images = gallery.querySelectorAll('.gallery-container img');
+            const current = window[galleryId + '_current'] || 0;
+            let newIndex = current + direction;
+            
+            if (newIndex < 0) newIndex = images.length - 1;
+            if (newIndex >= images.length) newIndex = 0;
+            
+            window[galleryId + '_current'] = newIndex;
+            updateGallery(galleryId);
+        };
+
+        window.goToSlide = function(galleryId, index) {
+            window[galleryId + '_current'] = index;
+            updateGallery(galleryId);
+        };
+
+        function updateGallery(galleryId) {
+            const gallery = document.getElementById(galleryId);
+            if (!gallery) return;
+            
+            const containerEl = gallery.querySelector('.gallery-container');
+            const dots = gallery.querySelectorAll('.gallery-dot');
+            const current = window[galleryId + '_current'] || 0;
+            
+            if (containerEl) {
+                containerEl.style.transform = `translateX(-${current * 100}%)`;
+            }
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === current);
+            });
+        }
+
+        // Initialize galleries after content is loaded
+        setTimeout(initGalleries, 100);
+
+        initializeView();
+        window.addEventListener('resize', handleResize);
+    });
+})();
+</script>
+

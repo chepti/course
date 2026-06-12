@@ -1,0 +1,444 @@
+<!-- course unit '4-map' - generated from ACODE4_MAP_WORDPRESS.HTML - edit in repo, not here -->
+<style>
+    :root {
+        --primary: #E74C3C;
+        --primary-dark: #c0392b;
+        --secondary: #34495e;
+        --success: #27ae60;
+        --bg: #f8f9fa;
+        --card-bg: #fff;
+        --border: #dee2e6;
+        --shadow: 0 2px 12px rgba(0,0,0,0.08);
+        --shadow-hover: 0 6px 24px rgba(231, 76, 60, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        min-height: 100vh;
+        padding: 24px;
+        direction: rtl;
+    }
+
+    .map-header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+    .map-header h1 {
+        color: var(--secondary);
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+    }
+    .map-header p {
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    .map-flow {
+        max-width: 960px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+    }
+
+    /* Arrow connector between cards */
+    .map-arrow {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 28px;
+        color: var(--primary);
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+    .map-arrow svg {
+        width: 32px;
+        height: 24px;
+    }
+
+    /* Single card (section) */
+    .map-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        border: 2px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition: box-shadow 0.25s, border-color 0.25s, transform 0.2s;
+    }
+    .map-card:hover {
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary);
+    }
+    .map-card.expanded {
+        border-color: var(--primary);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .map-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        cursor: pointer;
+        user-select: none;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .map-card-header:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    .map-card-title {
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .map-card-title .icon {
+        font-size: 1.3rem;
+    }
+    .map-card-badge {
+        background: linear-gradient(135deg, var(--primary), var(--success));
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 20px;
+        min-width: 28px;
+        text-align: center;
+    }
+    .map-card-toggle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: var(--secondary);
+        transition: transform 0.3s, background 0.2s;
+        flex-shrink: 0;
+    }
+    .map-card.expanded .map-card-toggle {
+        transform: rotate(180deg);
+        background: var(--primary);
+        border-color: var(--primary);
+        color: white;
+    }
+
+    .map-card-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-out;
+    }
+    .map-card-body-inner {
+        padding: 0 20px 20px;
+        border-top: 1px solid var(--border);
+    }
+    .map-card.expanded .map-card-body {
+        max-height: 2200px;
+    }
+
+    .map-card-desc {
+        color: #495057;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 12px 0 16px;
+    }
+
+    /* Sub-items (for "כלים" section) */
+    .map-sub-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 12px;
+    }
+    .map-sub-card {
+        background: var(--bg);
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+    .map-sub-card-header {
+        padding: 10px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: 600;
+        color: var(--secondary);
+        font-size: 0.98rem;
+    }
+    .map-sub-card-header:hover {
+        background: rgba(231, 76, 60, 0.06);
+    }
+    .map-sub-card .video-count {
+        font-size: 0.8rem;
+        color: #6c757d;
+        font-weight: 400;
+    }
+    .map-sub-card-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease-out;
+    }
+    .map-sub-card.expanded .map-sub-card-body {
+        max-height: 1200px;
+    }
+    .map-sub-card-body-inner {
+        padding: 12px 16px 16px;
+        border-top: 1px solid var(--border);
+    }
+
+    /* Mini videos grid */
+    .map-videos {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+    }
+    .map-video-item {
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+        aspect-ratio: 16/9;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .map-video-item iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    .map-video-item .video-label {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        color: white;
+        font-size: 0.7rem;
+        padding: 20px 6px 6px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    .map-video-item:hover .video-label {
+        opacity: 1;
+    }
+
+    /* Single section (no sub-items) - optional short description + one video */
+    .map-single-videos {
+        margin-top: 12px;
+    }
+
+    .map-card[data-items="0"] .map-card-badge {
+        display: none;
+    }
+
+    @media (max-width: 640px) {
+        .map-videos {
+            grid-template-columns: 1fr;
+        }
+        .map-header h1 { font-size: 1.4rem; }
+        body { padding: 12px; }
+    }
+    </style>
+
+    <header class="map-header">
+        <h1>מפת כלים – תפיסה חזותית</h1>
+        <p>סדר לוגי בין יחידות ופרקים. לחצו על כרטיס כדי לפתוח ולצפות בסרטונים.</p>
+        <p style="margin-top: 10px;"><a href="ACODE4_WORDPRESS.HTML" style="color: var(--primary); font-weight: 600;">← חזרה ליחידה המלאה</a></p>
+    </header>
+
+    <div class="map-flow">
+        <!-- 1. במבט על -->
+        <div class="map-card" data-section="overview" data-items="0">
+            <div class="map-card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-overview" id="head-overview">
+                <span class="map-card-title"><span class="icon">📊</span> במבט על</span>
+                <span class="map-card-toggle" aria-hidden="true">▼</span>
+            </div>
+            <div class="map-card-body" id="body-overview" role="region" aria-labelledby="head-overview">
+                <div class="map-card-body-inner">
+                    <p class="map-card-desc">המוח מעבד מידע חזותי מהר ויעיל יותר. סרטון מבוא.</p>
+                    <div class="map-single-videos map-videos">
+                        <div class="map-video-item">
+                            <iframe src="https://www.youtube.com/embed/n_KpDJg-MX8" allowfullscreen loading="lazy" title="במבט על"></iframe>
+                            <span class="video-label">במבט על</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+
+        <!-- 2. כלים (מתקפל + 3 תת־פרקים) -->
+        <div class="map-card" data-section="tools" data-items="3">
+            <div class="map-card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-tools" id="head-tools">
+                <span class="map-card-title"><span class="icon">🛠</span> כלים</span>
+                <span class="map-card-badge" id="badge-tools">3 פרקים</span>
+                <span class="map-card-toggle" aria-hidden="true">▼</span>
+            </div>
+            <div class="map-card-body" id="body-tools" role="region" aria-labelledby="head-tools">
+                <div class="map-card-body-inner">
+                    <p class="map-card-desc">כלים ליצירת תרשימים, מצגות ואינפוגרפיקות. פתחו כל תת־פרק לסרטונים.</p>
+                    <div class="map-sub-list">
+                        <div class="map-sub-card" data-sub="presentations">
+                            <div class="map-sub-card-header" role="button" tabindex="0">
+                                <span>מצגות</span>
+                                <span class="video-count">3 סרטונים</span>
+                            </div>
+                            <div class="map-sub-card-body">
+                                <div class="map-sub-card-body-inner map-videos">
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/XMUVxgwVvOw" allowfullscreen loading="lazy" title="נוטבוקLM"></iframe><span class="video-label">נוטבוקLM</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/--WaCeeWMrs" allowfullscreen loading="lazy" title="קנבה"></iframe><span class="video-label">קנבה</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/Ar_OQUCsm0M" allowfullscreen loading="lazy" title="גאמה"></iframe><span class="video-label">גאמה</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="map-sub-card" data-sub="infographics">
+                            <div class="map-sub-card-header" role="button" tabindex="0">
+                                <span>אינפוגרפיקה</span>
+                                <span class="video-count">3 סרטונים</span>
+                            </div>
+                            <div class="map-sub-card-body">
+                                <div class="map-sub-card-body-inner map-videos">
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/nUDJ6wQQYmw" allowfullscreen loading="lazy" title="ננו בננה"></iframe><span class="video-label">ננו בננה</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/Tyd7us8HzJI" allowfullscreen loading="lazy" title="ג'מיני מחקר"></iframe><span class="video-label">ג'מיני</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/FTw5DhIuJek" allowfullscreen loading="lazy" title="נוטבוקLM"></iframe><span class="video-label">נוטבוקLM</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="map-sub-card" data-sub="diagrams">
+                            <div class="map-sub-card-header" role="button" tabindex="0">
+                                <span>תרשימים ומפות חשיבה</span>
+                                <span class="video-count">4 סרטונים</span>
+                            </div>
+                            <div class="map-sub-card-body">
+                                <div class="map-sub-card-body-inner map-videos">
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/FaL9tlsYDUw" allowfullscreen loading="lazy" title="נאפקין"></iframe><span class="video-label">נאפקין 1</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/GV0KFR2G75s" allowfullscreen loading="lazy" title="נאפקין"></iframe><span class="video-label">נאפקין 2</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/oJCzH_wTG5A" allowfullscreen loading="lazy" title="מרמייד"></iframe><span class="video-label">מרמייד</span></div>
+                                    <div class="map-video-item"><iframe src="https://www.youtube.com/embed/w7KG2AuUV10" allowfullscreen loading="lazy" title="קנבה"></iframe><span class="video-label">קנבה</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+
+        <!-- 3. כלי עזר -->
+        <div class="map-card" data-section="help_tools" data-items="0">
+            <div class="map-card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-help" id="head-help">
+                <span class="map-card-title"><span class="icon">🔧</span> כלי עזר</span>
+                <span class="map-card-toggle" aria-hidden="true">▼</span>
+            </div>
+            <div class="map-card-body" id="body-help" role="region" aria-labelledby="head-help">
+                <div class="map-card-body-inner">
+                    <p class="map-card-desc">מצגת מלווה, נוטבוק, ג'ם וסרטון סקירה.</p>
+                    <div class="map-single-videos map-videos">
+                        <div class="map-video-item">
+                            <iframe src="https://www.youtube.com/embed/KVdqXtRk-D8" allowfullscreen loading="lazy" title="סרטון סקירה"></iframe>
+                            <span class="video-label">סרטון סקירה</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+
+        <!-- 4. דיון -->
+        <div class="map-card" data-section="discussion" data-items="0">
+            <div class="map-card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-discussion" id="head-discussion">
+                <span class="map-card-title"><span class="icon">💬</span> דיון</span>
+                <span class="map-card-toggle" aria-hidden="true">▼</span>
+            </div>
+            <div class="map-card-body" id="body-discussion" role="region" aria-labelledby="head-discussion">
+                <div class="map-card-body-inner">
+                    <p class="map-card-desc">איך יודעים אם תרשים או מצגת מחזקים הבנה ולא סתם מוסיפים עומס ויזואלי?</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+
+        <!-- 5. משימה -->
+        <div class="map-card" data-section="task" data-items="0">
+            <div class="map-card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="body-task" id="head-task">
+                <span class="map-card-title"><span class="icon">✅</span> משימה</span>
+                <span class="map-card-toggle" aria-hidden="true">▼</span>
+            </div>
+            <div class="map-card-body" id="body-task" role="region" aria-labelledby="head-task">
+                <div class="map-card-body-inner">
+                    <p class="map-card-desc">בחרו נושא לימודי מאתגר והשיגו ייצוג מוצלח בעזרת אחד הכלים. העלו למאגר חומר פתוח עם התגית המתאימה.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        function ready(fn) {
+            if (document.readyState !== 'loading') fn();
+            else document.addEventListener('DOMContentLoaded', fn);
+        }
+
+        ready(function() {
+            var flow = document.querySelector('.map-flow');
+            if (!flow) return;
+
+            // Main cards toggle
+            flow.querySelectorAll('.map-card-header').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var card = this.closest('.map-card');
+                    var expanded = card.classList.toggle('expanded');
+                    btn.setAttribute('aria-expanded', expanded);
+                });
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // Sub-cards toggle (inside "כלים")
+            flow.querySelectorAll('.map-sub-card-header').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var sub = this.closest('.map-sub-card');
+                    sub.classList.toggle('expanded');
+                });
+                btn.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        });
+    })();
+    </script>

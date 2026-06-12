@@ -1,0 +1,785 @@
+<!-- course unit '4' - generated from ACODE4_WORDPRESS.HTML - edit in repo, not here -->
+<style>
+    :root { --primary-color: #E74C3C; }
+    
+    #interactive-unit-container {
+      --primary-color: #E74C3C; /* Red */
+      --secondary-color: #34495e;
+      --nav-width: 300px;
+      --header-height: 60px;
+      font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    #interactive-unit-container #nav {
+      width: var(--nav-width);
+      height: 100vh;
+      background: #f8f9fa;
+      padding: 30px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      font-size: 1.1em;
+      border-left: 1px solid #dee2e6;
+      z-index: 1001;
+      order: 1;
+    }
+
+    #interactive-unit-container .sidebar-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--secondary-color);
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--primary-color);
+    }
+    
+    #interactive-unit-container #content {
+      margin-right: var(--nav-width);
+      padding: 40px;
+      width: calc(100% - var(--nav-width));
+      margin-top: 50px;
+      max-width: 1000px;
+      order: 2;
+    }
+    
+    #interactive-unit-container .progress-bar {
+      position: fixed;
+      top: 0;
+      right: var(--nav-width);
+      left: 0;
+      height: 50px;
+      background: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 1000;
+      direction: rtl;
+    }
+    
+    #interactive-unit-container .progress-indicator {
+      height: 10px;
+      background: linear-gradient(to right, var(--primary-color), #27ae60);
+      border-radius: 5px;
+      transition: width 0.3s ease;
+      width: 0;
+    }
+    
+    #interactive-unit-container .nav-item {
+      margin: 15px 0; 
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #interactive-unit-container .main-item, #interactive-unit-container .sub-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 25px;
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+
+    #interactive-unit-container .main-item {
+      font-weight: bold;
+      background: linear-gradient(45deg, #f3f4f6, #ffffff);
+    }
+
+    #interactive-unit-container .sub-item {
+      margin: 8px 0;
+      background: linear-gradient(45deg, #ffffff, #f8f9fa);
+      border-width: 1px;
+    }
+    
+    #interactive-unit-container .main-item:hover {
+      background: linear-gradient(45deg, var(--primary-color), #27ae60);
+      border-color: var(--primary-color);
+      color: white;
+      transform: translateX(-5px);
+      box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+    }
+    
+    #interactive-unit-container .sub-item:hover {
+      background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+      border-color: var(--primary-color);
+      transform: translateX(-5px);
+      box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+    }
+
+    #interactive-unit-container .completion-circle {
+      width: 24px;
+      height: 24px;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      background: white;
+      flex-shrink: 0;
+    }
+    
+    /* Completed sections - circle gets checkmark with colored background */
+    #interactive-unit-container .nav-item.completed .completion-circle {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+      border-width: 2px;
+    }
+    
+    #interactive-unit-container .nav-item.completed .completion-circle::after {
+      content: "✓";
+      color: white;
+      font-weight: bold;
+    }
+    
+    /* Don't change background color for completed items - only active items get colored background */
+    
+    #interactive-unit-container .main-item:hover .completion-circle,
+    #interactive-unit-container .sub-item:hover .completion-circle {
+      border-color: white;
+      transform: scale(1.1);
+    }
+    
+    #interactive-unit-container .sub-items {
+      margin-right: 34px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+    
+    #interactive-unit-container .sub-items.active {
+      max-height: 500px;
+    }
+    
+    #interactive-unit-container .video-container {
+      margin: 30px 0;
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+    }
+    
+    #interactive-unit-container .video-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+        
+    #interactive-unit-container iframe {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 4px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+        
+    #interactive-unit-container .content-section {
+      animation: fadeIn-scoped 0.5s ease-out;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    #interactive-unit-container .content-section h1 {
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h2 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    
+    #interactive-unit-container .content-section h4 {
+      font-size: 1.4em;
+      margin-top: 50px;
+      margin-bottom: 10px;
+      color: var(--secondary-color);
+    }
+    
+    #interactive-unit-container .content-section p:first-of-type {
+      font-size: 1.15em;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+    
+    #interactive-unit-container .content-section ul {
+      padding-right: 20px;
+      margin-bottom: 15px;
+    }
+    
+    #interactive-unit-container .styled-button {
+        display: inline-block;
+        background: linear-gradient(45deg, var(--primary-color), #27ae60);
+        color: white !important;
+        padding: 10px 20px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+        margin: 10px 0;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    #interactive-unit-container .styled-button:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .button-wrapper {
+        margin-top: 15px;
+        text-align: left;
+    }
+    
+    .content-section hr {
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+        margin: 40px 0;
+    }
+    
+    #interactive-unit-container .illustration {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+    
+    #interactive-unit-container .full-width-image {
+        width: 100%;
+        max-width: 800px;
+        margin: 30px auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        display: block;
+    }
+
+    /* Active section - colored background, no side marker */
+    #interactive-unit-container .main-item.active,
+    #interactive-unit-container .sub-item.active {
+        background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
+        border: 2px solid var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: white !important;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle,
+    #interactive-unit-container .sub-item.active .completion-circle {
+        border-color: white !important;
+        background: white !important;
+    }
+
+    #interactive-unit-container .main-item.active .completion-circle::after,
+    #interactive-unit-container .sub-item.active .completion-circle::after {
+        content: "";
+    }
+
+    @keyframes fadeIn-scoped {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 800px) {
+        #interactive-unit-container { display: block; }
+        #interactive-unit-container #content { display: none; }
+        #interactive-unit-container #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+        #interactive-unit-container .main-content { margin: 0; width: 100%; padding: 10px; }
+        #interactive-unit-container .progress-bar { right: 0; left: 0; width: 100%; }
+        #interactive-unit-container .sub-items { margin-right: 0; }
+        #interactive-unit-container .sub-item { padding-right: 8px; padding-left: 8px; }
+
+        #interactive-unit-container .section-wrapper {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        
+        #interactive-unit-container .section-wrapper.active {
+            max-height: 5000px;
+        }
+        
+        #interactive-unit-container .sub-items.active {
+            max-height: 5000px;
+        }
+
+        #interactive-unit-container .content-section {
+            animation: none;
+        }
+    }
+    </style>
+
+<div id="interactive-unit-container">
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+    
+    <div id="nav">
+        <div class="sidebar-title">תרשימים - תפיסה חזותית 📊</div>
+        <div style="margin-bottom: 16px; text-align: center;">
+            <a href="TOOLS_MAP_WORDPRESS.HTML" target="_blank" class="styled-button" style="display: inline-block; font-size: 0.95rem; padding: 8px 16px;">מפת כלים דיגיטליים 🗺</a>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>במבט על</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_presentations">
+                        <div class="completion-circle"></div>
+                        <span>מצגות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_infographics">
+                        <div class="completion-circle"></div>
+                        <span>אינפוגרפיקה</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_diagrams">
+                        <div class="completion-circle"></div>
+                        <span>תרשימים ומפות חשיבה</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <div class="main-item" data-section="help_tools">
+                <div class="completion-circle"></div>
+                <span>כלי עזר</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="task">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    function onReady(callback) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', callback);
+        } else {
+            callback();
+        }
+    }
+
+    onReady(() => {
+        const container = document.querySelector('#interactive-unit-container');
+        if (!container) { return; }
+
+        const content = {
+            overview: `
+                <div class="content-section" data-track-section="overview">
+                    <h1>במבט על</h1>
+                    <p>מחקרים מראים שהמוח יכול לעבד מידע חזותי מהר וביעילות רבה יותר, מה שמאפשר לו לזכור מידע חזותי בצורה טובה יותר מטקסטואלי.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/n_KpDJg-MX8" allowfullscreen data-track-video="overview"></iframe>
+                    </div>
+                    <h4>מתי?</h4>
+                    <ul>
+                        <li>כדי להמחיש מושגים מורכבים: כאשר אתה עוסק בנושאים שקשה להבין אותם במילים בלבד, כמו מערכות מורכבות, תהליכים ביולוגיים או פיזיקליים.</li>
+                        <li>למידה של אנשים בעלי סגנונות למידה שונים: אנשים לומדים באופנים שונים, וויזואליזציה יכולה לעזור לאלו שמגיבים טוב יותר למידע חזותי.</li>
+                        <li>במצבי הוראה והדרכה: בהרצאות, בכיתה או בחומרי הדרכה, ייצוג חזותי יכול להפוך את ההסבר לברור וממוקד יותר.</li>
+                        <li>כשמדובר במידע כמותי: גרפים, תרשימים ומפות יכולים להציג נתונים בצורה מובנת ומאורגנת, מה שמקל על ניתוח ופירוש המידע.</li>
+                    </ul>
+                </div>
+            `,
+            tools: `
+                <div class="content-section" data-track-section="tools">
+                    <h1>כלים</h1>
+                    <p>בחלק זה נכיר כלים שונים ליצירת תרשימים, מצגות ואינפוגרפיקות שיעזרו לנו להציג מידע בצורה חזותית וברורה.</p>
+                </div>
+            `,
+            tools_presentations: `
+                <div class="content-section" data-track-section="tools_presentations">
+                    <h1>מצגות</h1>
+                    <p>מצגות הן כלי נפוץ מאוד להעברת תוכן לימודי והבהרת רעיונות ומושגים מורכבים. שימוש במצגת מקובל במיוחד כאשר מרצה מעביר חומר בפני קהל חדש, הזקוק להתמצאות והבנה כיצד נושאים שונים מתחברים זה לזה. המטרה הפדגוגית היא לנצל את היכולות הוויזואליות כדי להקל על קליטת החומר. מצגת אפקטיבית אינה יכולה להיות מלאה בטקסט צפוף, שכן בכך היא לא מרוויחה את היתרון הוויזואלי. במקום זאת, היא צריכה להכיל פחות טקסט ויותר ייצוגים ויזואליים, כותרות קצרות, ותרשימים שמבהירים את היחסים בין המונחים. מומלץ למורים לחלק את המידע על המסך באמצעות מבנה ויזואלי, למשל על ידי שימוש במלבנים במקום רשימות, כדי ליצור מבנה ויזואלי שעוזר לקלוט, להבין ולזכור את החומר. בנוסף, יש להקפיד על קביעות ועקביות בגופנים ובצבעים לאורך המצגת, כדי לאפשר ללומד לזכור את השקפים בסדר, ולא כמשהו "לגמרי מנותק".</p>
+                    <p>תפקיד חשוב של המורה, גם בעבודה עם מצגות מתוצרת הבינה - לבדק איך ניתן להעביר את הידע המסוים הזה באופן מיטבי.</p>
+                    
+                    <hr>
+                    
+                    <h4>מצגת דרך נוטבוקLM</h4>
+                    <p>חדש - בתוך הסטודיו של נוטבוקLM אפשר ליצור, מלבד הפודקאסט ומפת החשיבה עוד מגוון תוצרים, עם יכולות העיצוב של ננו בננה.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/XMUVxgwVvOw" allowfullscreen data-track-video="tools_presentations"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>מצגת AI בקנבה</h4>
+                    <p>סוף סוף - קנבה עשתה את זה!</p>
+                    <p>מצגות AI שעובדות, בעברית, שכוללות תמונות ומבני שקף מגוונים.</p>
+                    <p>איך ליצור מצגות בינה מעוצבות, מאורגנות נכון - בעזרת AI בכל התהליך. תהליך היצירה מפורק - הגדרת קהל יעד ואורך, בניית מתווה שאפשר לתקן ולערוך, בחירת עיצוב כללי וצבעים בפירוט - והחלק המובן מאליו - עריכה נוחה בקנבה של התוצר השלם.</p>
+                    <p>בדגש על עברית!</p>
+                    <p>מורים - זה יכול לחסוך לכם הרבה עבודה, ובלי הגבלות בכלים כמו גאמה. יופי!</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/--WaCeeWMrs" allowfullscreen data-track-video="tools_presentations"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.canva.com/" target="_blank" class="styled-button" data-track-click>קנבה</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>מצגת AI בג'מיני</h4>
+                    <p>בג'מיני אין פירוק לשלבים, ולכן ההמלצה היא לתת לו את הפירוט והמתווה מראש, בשיחה אחרת, ורק אז להפעיל את הקנבס ולבקש מצגת עם התוכן שגיבשנו.</p>
+                    <p>ג'מיני מייצר מצגות אינטליגנטיות ובהירות, אבל העיצוב מינימלי כרגע.</p>
+                    <p>ייצוא - ניתן לייצא ולערוך בסליידס, אבל היישור לימין נפגע; ייצוא לPDF יוצא יפה, אבל אין אפשרות לערוך לאחר מכן בקנבה למשל - הPDF יוצא משוטח ולא 'חי'.</p>
+                    <img src="https://i.imgur.com/LbPsJo4.png" alt="דוגמה למצגת בג'מיני" class="illustration">
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>מצגת בגאמה</h4>
+                    <p>עד לא מזמן זו היתה האופציה היחידה שלנו, גאמה כבר זמן מאפשרת לקבל מצגת שלמה מפרומפט או מסמך. שלבי העבודה מפורקים ונותנים שליטה, וגם את התוצר הסופי ניתן לערוך.</p>
+                    <p><strong>חסרון מרכזי</strong> - גאמה מוגבלת והקרדיטים לא מתחדשים, אלא אם תצרפו חברים בעזרת קישור ההזמנה שלכם, מה שיוסיף קרדיטים לכם ולהם.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/Ar_OQUCsm0M" allowfullscreen data-track-video="tools_presentations"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://gamma.app/signup?r=oszipoc7fjyif7w" target="_blank" class="styled-button" data-track-click>גאמה</a>
+                    </div>
+                    <p>זה קישור חבר שייתן לכם ולי עוד נקודות, מוזמנים לשתף בקבוצות מורים כדי להרוויח אחד מהשני.</p>
+                    <p>בגאמה זה חשוב בגלל שהקרדיטים לא מתחדשים, ולכן עד שהם קצת הגדילו את כמות הבסיס לא המלצתי עליהם בכלל.</p>
+                    
+                </div>
+            `,
+            tools_infographics: `
+                <div class="content-section" data-track-section="tools_infographics">
+                    <h1>אינפוגרפיקה</h1>
+                    <p>אינפוגרפיקה היא כלי חזותי המשמש להצגת נתונים ועובדות. מטרתה המרכזית היא לחבר את המשמעות לנתונים אלה, כך שהם אינם מוצגים רק כרצף של "מספרים-מילים-מספרים". האינפוגרפיקה משיגה זאת על ידי שימוש באלמנטים ויזואליים כגון הצגת גודל ליד הנתונים, ושילוב אייקונים, המבהירים את הקשר, הפשר ואת מה שהגודל או הנתון מייצגים. ככלל, השימוש בתרשימים (כמו אינפוגרפיקות) מאפשר לצמצם ולרכז הרבה מידע בתוך תמונה אחת ולעזור לזהות מגמות ותובנות.</p>
+                    
+                    <hr>
+                    
+                    <h4>אינפוגרפיקה בתמונה בננו בננה פרו</h4>
+                    <p>חדש - ננו בננה החדש מאפשר שילוב טקסט עברי בתמונה, ומצליח להציג קשר מורכב בין נושאים, תוך שמירה על עיצוב מעולה. התוצר- תמונה, לא דינמי.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/nUDJ6wQQYmw" allowfullscreen data-track-video="tools_infographics"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/9325/" target="_blank" class="styled-button" data-track-click>ג'אם לתכנון אינפוגרפיקות מוצלחות – נעם רוזנברג</a>
+                    </div>
+                    <img src="https://i.imgur.com/Ma6nRRW.png" alt="דוגמה לאינפוגרפיקה בננו בננה" class="illustration">
+                    
+                    <hr>
+                    
+                    <h4>אינפוגרפיקה אחרי מחקר מעמיק בג'מיני</h4>
+                    <p>נפעיל מצב מחקר עמוק Deep Research בג'מיני - כרגע ניתן להפעיל רק במצב Flash או זריז. על נושא שמעניין אותנו. אחרי שנאשר את תכנית המחקר נמתין כ20 דקות, וכאשר המחקר מוכן - נוכל ללחוץ על יצירה ולקבל אינפוגרפיקה דינמית, שניתן ללחוץ עליה.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/Tyd7us8HzJI" allowfullscreen data-track-video="tools_infographics"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                    </div>
+                    <img src="https://i.imgur.com/vwtr6eR.png" alt="דוגמה לאינפוגרפיקה בג'מיני" class="illustration">
+                    
+                    <hr>
+                    
+                    <h4>אינפוגרפיקה בנוטבוקLM</h4>
+                    <p>בתוך נוטבוקLM ניתן להעלות מקורות, וליצור אינפוגרפיקה בלחיצת כפתור, המבוססת על המידע הקיים במקורות שסיפקנו.</p>
+                    <img src="https://i.imgur.com/mlrJFO3.jpg" alt="דוגמה לאינפוגרפיקה בנוטבוקLM" class="illustration">
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/FTw5DhIuJek" allowfullscreen data-track-video="tools_infographics"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
+                    </div>
+                    <img src="https://i.imgur.com/FBWhWJA.jpg" alt="דוגמה נוספת לאינפוגרפיקה בנוטבוקLM" class="illustration">
+                </div>
+            `,
+            tools_diagrams: `
+                <div class="content-section" data-track-section="tools_diagrams">
+                    <h1>תרשימים ומפות חשיבה</h1>
+                    
+                    <hr>
+                    
+                    <h4>נאפקין</h4>
+                    <p>מחולל תרשימים חכם - מקבל את הטקסט, מבין את המבנה ומציע מספר תרשימים לבחירה, שניתן לשלב במצגת.</p>
+                    <p><strong>טיפ</strong> - כדאי להוריד את התרשים מתוך נאפקין בפורמט SVG, עם רקע שקוף. כך תוכלו לערוך את התוצר ולשלב אותו טוב יותר בתוך מצגות אחרות. אפשר להוסיף SVG לתוך מצגת פאוארפוינט, לפרק אותו לרכיבים (תבנית גרפיקה > קבץ > פרק קבוצה), וכך ניתן לערוך כל חלק בנפרד. מצגת PPT כזו ניתן לייבא אל תוך קנבה למשל, ולהמשיך לערוך שם גופנים. זה מסורבל קצת, אבל יאפשר קצת יותר התאמה לעיצוב שלכם.</p>
+                    <p>תהליך ההרשמה קצת מייגע.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/FaL9tlsYDUw" allowfullscreen data-track-video="tools_diagrams"></iframe>
+                    </div>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/GV0KFR2G75s" allowfullscreen data-track-video="tools_diagrams"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://app.napkin.ai/" target="_blank" class="styled-button" data-track-click>נאפקין</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>מפת חשיבה בנוטבוקLM</h4>
+                    <p>אחד התוצרים בסטודיו בנוטבוקLM הוא מפת מושגים דינמית. מארגנת את המידע באופן הירארכי, ממושג ראשי אל מושגים משניים והלאה. מאפשרת פתיחה של ענפים נוספים, ובלחיצה על פריט במפה - נפתח הצ'אט ומפרט לעומק על אותו חלק. כרגע אין דרך לייצא אותה 'חיה', אלא רק כתמונה (וגם כך מופיעים בה שיבושים).</p>
+                    <img src="https://i.imgur.com/nYvGWMx.png" alt="דוגמה למפת חשיבה בנוטבוקLM" class="illustration">
+                    
+                    <hr>
+                    
+                    <h4>מרמייד</h4>
+                    <p>שפה שמיועדת ליצירת תרשימי זרימה פשוטים. ניתן לשלב בשיחה עם קלוד ולקבל תרשים חי, לא מעוצב אבל מאפשר להציג תהליך בדרך אחרת.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/oJCzH_wTG5A" allowfullscreen data-track-video="tools_diagrams"></iframe>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>תרשימים דינמיים בקנבה</h4>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/w7KG2AuUV10" allowfullscreen data-track-video="tools_diagrams"></iframe>
+                    </div>
+                </div>
+            `,
+            help_tools: `
+                <div class="content-section" data-track-section="help_tools">
+                    <h1>כלי עזר</h1>
+                    
+                    <hr>
+                    
+                    <h4>מצגת מלווה</h4>
+                    <div style="position: relative; width: 100%; height: 0; padding-top: 56.2500%; padding-bottom: 0; box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); margin-top: 1.6em; margin-bottom: 0.9em; overflow: hidden; border-radius: 8px; will-change: transform;">
+                        <iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0;margin: 0;" src="https://www.canva.com/design/DAG4SMDfrY0/Yr1cCxNRKXlJtiqn5uAXmQ/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+                    </div>
+                    <div class="button-wrapper">
+                        <a href="https://www.canva.com/design/DAG4SMDfrY0/Yr1cCxNRKXlJtiqn5uAXmQ/view" target="_blank" class="styled-button" data-track-click>מצגות תרשימים</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>נוטבוק על תוכן היחידה</h4>
+                    <div class="button-wrapper">
+                        <a href="https://notebooklm.google.com/notebook/05e917af-147e-4ecb-a7f0-44f8a54833a7" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>ג'ם</h4>
+                    <p>בוט שמקבל צילומסך ממצגת או אינפוגרפיקה שלך ונותן משוב</p>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/gem/1bmf2zxXmqb-nxulBPUtaWkAwigWKzYQk?usp=sharing" target="_blank" class="styled-button" data-track-click>ג'ם</a>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h4>סרטון סקירה</h4>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/KVdqXtRk-D8" allowfullscreen data-track-video="help_tools"></iframe>
+                    </div>
+                </div>
+            `,
+            discussion: `
+                <div class="content-section" data-track-section="discussion">
+                    <h1>דיון</h1>
+                    <p>איך יודעים אם תרשים או מצגת הם טובים - מחזקים הבנה, ולא סתם מוסיפים עומס ויזואלי?</p>
+                    <img src="https://i.imgur.com/HNpPNej.jpg" alt="אילוסטרציה לדיון" class="illustration">
+                </div>
+            `,
+            task: `
+                <div class="content-section" data-track-section="task">
+                    <h1>משימה</h1>
+                    <p>בחרו נושא לימודי מאתגר, רעיון שקשה לתפוס אותו או שדורש הבנה וקישור של מושגים רבים. נסו להשיג ייצוג מוצלח ומבהיר שלו - בעזרת אחד הכלים האחרים שלמדנו.</p>
+                    <p><strong>חלופה</strong> - צרו בעזרת AI מצגת איכותית על נושא לימודי מהתחום שלכם. הגישו אחרי שעברתם על התכנים, תיקנתם והוספתם לפי הצורך - שימו לב לדגשים לגבי עיצוב נכון של מצגות.</p>
+                    <p>העלו למאגר חומר פתוח את התוצר.</p>
+                    <p>לא לשכוח את התגית המיוחדת!</p>
+                    <div class="button-wrapper">
+                        <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>חומר פתוח</a>
+                    </div>
+                    <img src="https://i.imgur.com/9Mohu0m.png" alt="אילוסטרציה למשימה" class="illustration">
+                    <div class="button-wrapper">
+                      <a href="https://openstuff.co.il/upload/" target="_blank" class="styled-button" data-track-click>איך מעלים לחומר פתוח? מדריך, סרטון ושאלות נפוצות</a>
+                    </div>
+                    <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid #E74C3C; border-radius: 4px;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
+                            <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
+                            <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
+                        </label>
+                    </div>
+                </div>
+            `
+        };
+        
+        let isMobileView = window.innerWidth <= 800;
+        const contentArea = container.querySelector('#content-area');
+        const progressIndicator = container.querySelector('.progress-indicator');
+
+        function updateProgress() {
+            const allItems = container.querySelectorAll('.main-item, .sub-item');
+            const completedItems = container.querySelectorAll('.nav-item.completed');
+            const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
+            if(progressIndicator) progressIndicator.style.width = `${percentage}%`;
+        }
+
+        // Completion is handled by course-tracker.js
+
+        function handleMainItemClick(e) {
+            const mainItem = e.currentTarget;
+            const navItem = mainItem.closest('.nav-item');
+            const section = mainItem.dataset.section;
+            const subItemsContainer = navItem.querySelector('.sub-items');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item
+            mainItem.classList.add('active');
+
+            if (subItemsContainer) {
+                subItemsContainer.classList.toggle('active');
+            }
+
+            if (content[section]) {
+                const contentHTML = content[section];
+                if (isMobileView) {
+                    let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        navItem.appendChild(wrapper);
+                    }
+                    
+                    const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+                    
+                    container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+
+                    wrapper.innerHTML = contentHTML;
+                    
+                    if(shouldShow) {
+                        setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    if(contentArea) contentArea.innerHTML = contentHTML;
+                }
+            }
+
+            // Completion is handled by course-tracker.js
+        }
+        
+        function handleSubItemClick(e) {
+            e.stopPropagation();
+            const subItem = e.currentTarget;
+            const section = subItem.dataset.section;
+            const navItem = subItem.closest('.nav-item');
+
+            // Remove active class from all items
+            container.querySelectorAll('.main-item, .sub-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Add active class to clicked item and its parent main item
+            subItem.classList.add('active');
+            const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+            if (mainNavItem) {
+                const mainItem = mainNavItem.querySelector('.main-item');
+                if (mainItem) mainItem.classList.add('active');
+            }
+
+            const contentHTML = content[section];
+
+            if (isMobileView) {
+                const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
+                let wrapper = mainNavItem.querySelector('.section-wrapper');
+                if (!wrapper) {
+                    wrapper = document.createElement('div');
+                    wrapper.className = 'section-wrapper';
+                    mainNavItem.appendChild(wrapper);
+                }
+                const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
+
+                container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                    if (w !== wrapper) w.classList.remove('active');
+                });
+                
+                wrapper.innerHTML = contentHTML;
+
+                if (shouldShow) {
+                     setTimeout(() => wrapper.classList.add('active'), 10);
+                } else {
+                    wrapper.classList.remove('active');
+                }
+            } else {
+                if(contentArea) contentArea.innerHTML = contentHTML;
+            }
+            // Completion is handled by course-tracker.js
+        }
+        
+        function initializeView() {
+            container.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+            container.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+            if (!isMobileView) {
+                const overviewItem = container.querySelector('.main-item[data-section="overview"]');
+                if (overviewItem) overviewItem.click();
+            }
+        }
+
+        function handleResize() {
+            const newIsMobile = window.innerWidth <= 800;
+            if(newIsMobile !== isMobileView) {
+                isMobileView = newIsMobile;
+                container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
+                if(contentArea) contentArea.innerHTML = '';
+                initializeView();
+            }
+        }
+
+        initializeView();
+        window.addEventListener('resize', handleResize);
+    });
+})();
+</script>
+

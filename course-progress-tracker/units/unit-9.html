@@ -1,0 +1,922 @@
+<!-- course unit '9' - generated from ACODE9_WORDPRESS.HTML - edit in repo, not here -->
+<style>
+        #interactive-unit-container {
+            --primary-color: #3498db; /* Blue */
+            --secondary-color: #34495e;
+            --nav-width: 300px;
+            --header-height: 60px;
+            font-family: 'Rubik', 'Segoe UI', Geneva, Verdana, sans-serif;
+            display: flex;
+            direction: rtl;
+        }
+
+        #interactive-unit-container * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #interactive-unit-container #nav {
+            width: var(--nav-width);
+            height: 100vh;
+            background: #f8f9fa;
+            padding: 30px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            font-size: 1.1em;
+            border-left: 1px solid #dee2e6;
+            z-index: 1001;
+            order: 1;
+        }
+
+        #interactive-unit-container .sidebar-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--secondary-color);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        #interactive-unit-container #content {
+            margin-right: 20px;
+            padding: 40px;
+            width: calc(100% - var(--nav-width) - 20px);
+            margin-top: 0;
+            max-width: 1200px;
+            order: 2;
+        }
+
+        #interactive-unit-container .progress-bar {
+            display: none;
+        }
+
+        #interactive-unit-container .progress-indicator {
+            height: 10px;
+            background: linear-gradient(to right, var(--primary-color), #27ae60);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+            width: 0;
+        }
+
+        #interactive-unit-container .nav-item {
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #interactive-unit-container .main-item, #interactive-unit-container .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        #interactive-unit-container .main-item {
+            font-weight: bold;
+            background: linear-gradient(45deg, #f3f4f6, #ffffff);
+        }
+
+        #interactive-unit-container .sub-item {
+            margin: 8px 0;
+            background: linear-gradient(45deg, #ffffff, #f8f9fa);
+            border-width: 1px;
+        }
+
+        #interactive-unit-container .main-item:hover {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            border-color: var(--primary-color);
+            color: white;
+            transform: translateX(-5px);
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
+        }
+
+        #interactive-unit-container .sub-item:hover {
+            background: linear-gradient(45deg, #edf7f0, #d5f5e3);
+            border-color: var(--primary-color);
+            transform: translateX(-5px);
+            box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+        }
+
+        #interactive-unit-container .completion-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        #interactive-unit-container .nav-item.completed .completion-circle {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            border-width: 2px;
+        }
+
+        #interactive-unit-container .nav-item.completed .completion-circle::after {
+            content: "✓";
+            color: white;
+            font-weight: bold;
+        }
+
+        #interactive-unit-container .main-item.active,
+        #interactive-unit-container .sub-item.active {
+            background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
+            border: 2px solid var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+            color: white !important;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        #interactive-unit-container .main-item.active .completion-circle,
+        #interactive-unit-container .sub-item.active .completion-circle {
+            border-color: white !important;
+            background: white !important;
+        }
+
+        #interactive-unit-container .main-item.active .completion-circle::after,
+        #interactive-unit-container .sub-item.active .completion-circle::after {
+            content: "";
+        }
+
+        #interactive-unit-container .main-item:hover .completion-circle,
+        #interactive-unit-container .sub-item:hover .completion-circle {
+            border-color: white;
+            transform: scale(1.1);
+        }
+
+        #interactive-unit-container .sub-items {
+            margin-right: 34px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        #interactive-unit-container .sub-items.active {
+            max-height: 1000px;
+        }
+
+        #interactive-unit-container .video-container {
+            margin: 30px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+        }
+
+        #interactive-unit-container .button-wrapper {
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        #interactive-unit-container .styled-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, var(--primary-color), #27ae60);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #interactive-unit-container .styled-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        #interactive-unit-container iframe {
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        #interactive-unit-container .illustration {
+            width: 100%;
+            max-width: 600px;
+            margin: 30px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+        
+        #interactive-unit-container .chip {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            color: white !important;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #interactive-unit-container .chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #2980b9, #7d3c98);
+        }
+        
+        #interactive-unit-container .embedded-page {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        #interactive-unit-container pre {
+            background-color: #eee;
+            border: 1px solid #999;
+            display: block;
+            padding: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            text-align: left;
+            direction: ltr;
+        }
+
+        #interactive-unit-container .content-section {
+            animation: fadeIn-scoped 0.5s ease-out;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        #interactive-unit-container h2 { margin-top: 30px; margin-bottom: 20px; }
+        #interactive-unit-container h4 { margin-top: 50px; }
+        #interactive-unit-container .content-section p:first-of-type {
+            font-size: 1.15em;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+        
+        #interactive-unit-container .content-section ul, #interactive-unit-container .content-section ol {
+            padding-right: 20px;
+            margin-bottom: 15px;
+        }
+
+        #interactive-unit-container .bug-card {
+            background: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+            font-size: 1.05em;
+        }
+
+        #interactive-unit-container .prompt-container {
+            background-color: #f0ebf5;
+            border-right: 4px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 22px 0;
+            position: relative;
+            font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+
+        #interactive-unit-container .prompt-container .copy-button {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: transparent;
+            color: var(--primary-color);
+            border: none;
+            padding: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.25em;
+            opacity: 0.9;
+            transition: opacity 0.2s, transform 0.2s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #interactive-unit-container .prompt-container .copy-button:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        #interactive-unit-container .prompt-container pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            text-align: right;
+            background: transparent;
+            border: none;
+            font-size: 1.02em;
+            line-height: 1.7;
+        }
+
+        #interactive-unit-container .prompt-container svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        #interactive-unit-container .content-section h4 {
+            margin-top: 50px;
+            position: relative;
+        }
+
+        #interactive-unit-container .content-section h4::before {
+            content: "";
+            display: block;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.15), rgba(0,0,0,0));
+            margin: 32px 0 18px 0;
+        }
+
+        @keyframes fadeIn-scoped {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 800px) {
+            #interactive-unit-container { display: block; }
+            #interactive-unit-container #content { display: none; }
+            #interactive-unit-container #nav { position: static; width: 100%; height: auto; padding: 10px; border-left: none; }
+            #interactive-unit-container .progress-bar { right: 0; width: 100%; }
+            #interactive-unit-container .sub-items { margin-right: 0; }
+            #interactive-unit-container .sub-item { padding-right: 8px; padding-left: 8px; }
+
+            #interactive-unit-container .section-wrapper {
+                padding: 15px;
+                background: #ffffff;
+                border-top: 1px solid #e5e7eb;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+            }
+
+            #interactive-unit-container .section-wrapper.active {
+                max-height: 5000px;
+            }
+
+            #interactive-unit-container .sub-items.active {
+                max-height: 5000px;
+            }
+
+            #interactive-unit-container .content-section {
+                animation: none;
+            }
+        }
+    </style>
+
+<div id="interactive-unit-container">
+    <div id="content">
+        <div class="progress-bar">
+            <div class="progress-indicator"></div>
+        </div>
+        <div id="content-area"></div>
+    </div>
+
+    <div id="nav">
+        <div class="sidebar-title">יחידה 9: ניהול וארגון 📊</div>
+        
+        <div class="nav-item">
+            <div class="main-item" data-section="overview">
+                <div class="completion-circle"></div>
+                <span>מבט על</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="tools">
+                <div class="completion-circle"></div>
+                <span>כלים</span>
+            </div>
+            <div class="sub-items">
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_meetings">
+                        <div class="completion-circle"></div>
+                        <span>ניהול פגישות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_tasks">
+                        <div class="completion-circle"></div>
+                        <span>ניהול משימות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_documents">
+                        <div class="completion-circle"></div>
+                        <span>מסמכים ויומן</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_analysis">
+                        <div class="completion-circle"></div>
+                        <span>ניתוח ותובנות</span>
+                    </div>
+                </div>
+                <div class="nav-item">
+                    <div class="sub-item" data-section="tools_dashboard">
+                        <div class="completion-circle"></div>
+                        <span>דשבורד</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="discussion">
+                <div class="completion-circle"></div>
+                <span>דיון</span>
+            </div>
+        </div>
+        <div class="nav-item">
+            <div class="main-item" data-section="assignment">
+                <div class="completion-circle"></div>
+                <span>משימה</span>
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+    (function() {
+        function onReady(callback) {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', callback);
+            } else {
+                callback();
+            }
+        }
+
+        onReady(() => {
+            const container = document.querySelector('#interactive-unit-container');
+            if (!container) { return; }
+
+            const content = {
+                'overview': `
+                    <div class="content-section" data-track-section="overview">
+                        <h1>מבט על</h1>
+                        <h3>במבט על</h3>
+                        <p><strong>בבית הספר, יש משמעות גם למבט מערכתי ושותפות לתהליכים שמתרחשים בבית הספר. במיוחד כבעלי תפקידים אנחנו מארגנים הרבה מידע, מסנכרנים בין משימות ובין אנשים. אחת המשימות - לייעל את הצורה בה נאספים נתונים, מנותחים, ומיושמים פרויקטים. נשתמש בפרק הזה בטכנולוגיה מכל מיני סוגים, לא דווקא בינה מלאכותית - כי לפעמים נוכל להפיק תועלת מבינה רק אחרי שנקיים לפניה תהליך נכון.</strong></p>
+                        <p><strong>הניסוח פה הוא לרכז תקשוב, אבל מיועד לכלל המורים שפועלים ברמה קצת יותר רחבה, ורוצים לנצל את יכולות הטכנולוגיה כדי להיות אפקטיביים יותר.</strong></p>
+                        <div class="video-container">
+                           <iframe src="https://www.youtube.com/embed/ZBefCHysbJU" allowfullscreen data-track-video="overview"></iframe>
+                        </div>
+                        <div class="bug-card">
+                            <p><strong>חשוב להבהיר - הבינה המלאכותית היא כלי עזר, לא תחליף:</strong></p>
+                            <ul>
+                                <li>היא לא מחליטה בשבילכם החלטות פדגוגיות או ניהוליות</li>
+                                <li>היא לא יודעת את ההקשר הספציפי של בית הספר שלכם</li>
+                                <li>היא צריכה בדיקה ואימות - במיוחד בנתונים רגישים</li>
+                                <li>היא לא פותרת בעיות של תהליכים לא ברורים או תקשורת לקויה</li>
+                            </ul>
+                        </div>
+                    </div>`,
+                'tools': `
+                    <div class="content-section" data-track-section="tools">
+                        <h1>כלים</h1>
+                        <p><strong>ניהול זמן ומשימות הוא אומנות המחייבת כלים טכנולוגיים יעילים. בפרק זה נכיר מספר פלטפורמות דיגיטליות שיסייעו לנו לארגן, לתעדף ולבצע משימות בצורה אופטימלית.</strong></p>
+                    </div>`,
+                'tools_meetings': `
+                    <div class="content-section" data-track-section="tools_meetings">
+                        <h2>ניהול פגישות</h2>
+                        <p><strong>ניהול זמן ומשימות הוא אומנות המחייבת כלים טכנולוגיים יעילים. בפרק זה נכיר מספר פלטפורמות דיגיטליות שיסייעו לנו לארגן, לתעדף ולבצע משימות בצורה אופטימלית.</strong></p>
+                        <h4>הכנה לפגישה</h4>
+                        <p>לקראת פגישה, כדאי להכין את המידע הדרוש - מחקר על הנושא, סיכום תמציתי של דוח ארוך, וסיעור מוחות - לכתוב שאלות לדיון, לתכנן סדר יום לפגישה. תנו לבינה להצטרף אליכם.</p>
+                        <p><strong>פרומפטים:</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צרף את הדוח המצורף. סכם אותו ב-5 נקודות עיקריות, והדגש ממצאים שדורשים תשומת לב מיידית</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>אני מתכנן פגישת [נושא] עם [משתתפים]. המטרה: [מטרה]. צור סדר יום ל-45 דקות שכולל: פתיחה, דיון, והחלטות. הצע גם שאלות לדיון</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>אני צריך להיערך לפגישה על [נושא]. תן לי סקירה של 3 דקות קריאה: מה חשוב לדעת, מה המגמות האחרונות, ומה השאלות הקריטיות לשאול</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>הפגישה תעסוק ב-[נושא]. הצע 10 זוויות שונות לבחון את הנושא, כולל היבטים שאולי לא חשבתי עליהם</pre>
+                        </div>
+                        <h4>כתיבת תל"א</h4>
+                        <p>שני הכלים להלן נוצרו ע"י מרי גרבי המעולה:</p>
+                        <p>מחולל תל"א - <a href="https://share.google/YxFpKMJYgbZ7jLeCA" target="_blank" class="styled-button" data-track-click>קישור למחולל תל"א</a></p>
+                        <p>בודק תלאות - <a href="https://openstuff.co.il/3989/" target="_blank" class="styled-button" data-track-click>קישור לבודק תלאות</a></p>
+                        <h4>ניתוח תיק אישי</h4>
+                        <p>נוכל להעלות לבינה מידע מבולגן לגבי תלמיד (כמובן כמובן להתמים! ועדיף לעבוד בג'מיני בחשבון ארגוני): אקסלים שהוצאנו מהתל"פ, דיווחי מורים כתובים, סיכומי פגישות עבר או דוחות מקצועיים. ולקבל תמונה מצב מאורגנת, הצעות להתערבות - תמיד נבקש כמה הצעות ונבחר יחד עם הצוות את ההצעות ששוות משהו ביחס לילד האמיתי שאנחנו מכירים.</p>
+                        <h4>תימלול</h4>
+                        <p>אפשר להקליט פגישות (אפילו דרך האפליקציה של נוטבוקLM), בתחילת ההקלטה חשוב להציג את הדוברים "אני יוסי", "אני זיוה". להעלות אל נוטבוקLM את הקובץ ולקבל מיידית (מתחת למקור) את התימלול המדוייק.</p>
+                        <p>הטקסט הזה יכול להוות בסיס לעיבוד תובנות בהמשך; כתיבת מייל סיכום למשתתפים עם רשימת משימות לביצוע; ולהצטבר יחד עם שאר סיכומי הפגישות למאגר ידע מתהווה.</p>
+                        <p><strong>פרומפט:</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>נתח את התימלול הזה והפק:
+
+1. סיכום של 3 משפטים
+
+2. רשימת משימות עם אחראים
+
+3. נושאים שנדחו להמשך
+
+4. שאלות שנשארו פתוחות</pre>
+                        </div>
+                        <h4>סוניוקס - תמלול פגישות והקלדה קולית</h4>
+                        <p>סוניוקס מתמלל פגישות ומחשבות בזמן אמת, ומאפשר גם הקלדה קולית שוטפת - נוח במיוחד לתיעוד ישיבות ולכתיבה מהירה.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/sa1iaPTDyuk" allowfullscreen data-track-video="tools_meetings"></iframe>
+                        </div>
+                        <div class="button-wrapper">
+                            <a href="https://soniox.com/" target="_blank" class="styled-button" data-track-click>סוניוקס</a>
+                        </div>
+                        <h4>אליעזר - ממיר הקלטות בווטסאפ לטקסט</h4>
+                        <p>אם כבר דיברנו על תימלול, לרובנו פחות נוח לקבל הקלטות בווטסאפ, ולא תמיד מתאים לנו להשמיע. 'אליעזר' הוא בוט ווטסאפ נהדר שמעבירים אליו את ההקלטה, ומקבלים תמלול חכם ומדוייק.</p>
+                        <div class="button-wrapper">
+                            <a href="https://wa.me/972559571223" target="_blank" class="styled-button" data-track-click>לשיחה עם אליעזר</a>
+                        </div>
+                        <h4>הנגשה</h4>
+                        <p>תרגום והתאמת סגנון - כתיבת מיילים שונים לקהלי יעד שונים (הורים, מורים, הנהלה), תרגום תכנים לדוברי שפות זרות. קנבה יכולה לתרגם בקליק פליירים.</p>
+                        <p>הנגשת מידע - הפיכת דוח מקצועי למצגת פשוטה, או להיפך.</p>
+                    </div>`,
+                'tools_tasks': `
+                    <div class="content-section" data-track-section="tools_tasks">
+                        <h2>ניהול משימות</h2>
+                        <p><strong>פירוק משימות מורכבות - יש לכם פרויקט גדול? הבינה עוזרת לפרק אותו לשלבים ברורים.</strong></p>
+                        <h4>שליחת מיילים מרובים עם Apps Script</h4>
+                        <p>איך נקבל קוד קטן מבינה, שיודע לשלוח מייל מעוצב אל כל תלמיד בהתאמה מושלמת לביצועים שלו, בצבעים שונים, עם מידע מתוך טבלת Google Sheets פשוטה.</p>
+                        <p>בסרטון אני מראה כל צעד – זה כלי פשוט להפעלה, לא דורש סבבים רבים, ומדגימה גם יצירה של כפתור לשליחת טסט ועוד.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/32tPe5Bd9Dc" allowfullscreen data-track-video="tools_tasks"></iframe>
+                        </div>
+                        <hr>
+                        <h4>אוטומציה עם סטודיו WS</h4>
+                        <p>בניית אוטומציות פשוטות ויעילות בסביבת Workspace - תהליכים שרצים לבד וחוסכים עבודה שחוזרת על עצמה.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/eMEiS-5xaxk" allowfullscreen data-track-video="tools_tasks"></iframe>
+                        </div>
+                        <hr>
+                        <h4>goblin.tools - מפרק מטלות</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/lF2SWH5PM0g" allowfullscreen data-track-video="tools_tasks"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://goblin.tools/" target="_blank" class="styled-button" data-track-click>goblin.tools</a>
+                            </div>
+                        </div>
+                        <h4>צ'יפים, TASKS חלוקת משימות</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/A4lIW_TH8s0" allowfullscreen data-track-video="tools_tasks"></iframe>
+                        </div>
+                        <p>ונושאים שהכרנו בפרק על "התייעצות עם בינה" -</p>
+                        <p>זיהוי נקודות עיוורות - "מה שכחתי לתכנן?" - הבינה יכולה להציע היבטים שלא חשבתם עליהם.</p>
+                        <p>סיעור מוחות מהיר - צריכים רעיונות לפעילות, לפתרון בעיה, או לגישה חדשה? הבינה מציעה אפשרויות.</p>
+                    </div>`,
+                'tools_documents': `
+                    <div class="content-section" data-track-section="tools_documents">
+                        <h2>מסמכים ויומן</h2>
+                        <p><strong>חלק שקצת פחות מתקד בכלי בינה, ויותר בכלים יומיומיים - ומציע כיצד להשתמש בהם טוב יותר.</strong></p>
+                        <h4>אבני בנין בגוגל דוקס</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/ISQhtXPR0f8" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>טאבים - איגום כמה מסמכים ששייכים למשימה גדולה אחת</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/E0NyR4N1X7k" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>ניהול יומנים</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/NMbwB4MExCw" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>קביעת פגישות ביומן?</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/d71diqdV0_c" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>מזין אירועים ליומן</h4>
+                        <p>מאפשר העלאה של קובץ, הדבקת תמונה או טקסט - ומחלץ מתוכם את האירועים. בלחיצת כפתור תוכלו להוסיף את האירועים ליומן, אפשר גם להוסיף הקשר או להדביק קישור לזום ב'מיקום'.</p>
+                        <p>יצרתי בכמה דקות בAI STUDIO, כיוון שהכלי עליו המלצתי בעבר הוגבל מאוד.</p>
+                        <div class="button-wrapper">
+                            <a href="https://ai.studio/apps/drive/1DBiE2kdVs6hOFczCf6jsb3qJ5r9f_USe?fullscreenApplet=true" target="_blank" class="styled-button" data-track-click>מחולל אירועי יומן</a>
+                        </div>
+                    </div>`,
+                'tools_analysis': `
+                    <div class="content-section" data-track-section="tools_analysis">
+                        <h2>ניתוח ותובנות</h2>
+                        <p><strong>הבינה המלאכותית מהווה כיום כלי עוצמתי לניתוח נתונים. נחשף לפלטפורמות מובילות כמו קלוד, GPT וכלים נוספים המאפשרים ניתוח מתקדם של מידע.</strong></p>
+                        <p><strong>בעידן של שפע מידע, היכולת להפיק תובנות משמעותיות היא מפתח להצלחה. נלמד כיצד להשתמש בכלי AI מתקדמים לאיגום מידע, חילוץ תובנות וניתוח יעיל של נתונים.</strong></p>
+                        <h4>כתיבת שאלון משוב, ניתוח משובים</h4>
+                        <p>בינה מיטיבה לחלץ תובנות גם מתשובות פתוחות, נוכל לקבל מידע עשיר הרבה יותר מאשר מטופס "דרג מ1-5". היעזרו בבינה כדי לכתוב את השאלון, ואחרי שאספתם את התשובות - היא תסייע בזיהוי מגמות, הצפת ציטוטים משמעותיים, הסקת מסקנות והצעת פעולות להמשך.</p>
+                        <p><strong>פרומפטים:</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צרף את תשובות המשוב (Excel/טקסט). זהה את 5 המגמות המרכזיות, הדגש הפתעות, והצע 3 פעולות אפשריות</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>מצא 5 ציטוטים משמעותיים מהמשובים - 2 חיוביים, 2 שליליים, ו-1 שמציע רעיון חדש</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צרף משובים משנה שעברה ומשנה זו. זהה שינויים, מה שיפרנו , והיכן יש הזדמנות לשיפור</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>חלק את המשיבים לקבוצות לפי דפוסי תשובות. מה מאפיין כל קבוצה ומה צריכה כל קבוצה?</pre>
+                        </div>
+                        <h4>איגום כל הקבצים סביב משימה - למקום אחד. הפקת תובנות - נוטבוקLM</h4>
+                        <p>נאגד במיקום אחד את כל הקבצים המבולגנים, תכנונים אפויים למחצה, היסטוריה של מה שנעשה בבית הספר בעבר בנושא - ולקבל מהבינה רעיונות חדשים.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/hlNVruYpAXk?t=185" allowfullscreen data-track-video="tools_analysis"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
+                            </div>
+                        </div>
+                        <h4>פרויקטים במודלי השפה</h4>
+                        <p>רוב מודלי השפה הגדולים מאפשרים לרכז שיחות שונות בתוך "פרויקט" אחד. כך הבינה מזהה את ההקשר ולא צריך בכל פעם להסביר את המאפיינים, המטרות והסגנון - כל שיחה שקשורה לאותו נושא מתקשרת וצריך לתת הנחיה רק על מה שצריך.</p>
+                        <p>GPT, גרוק - אין הגבלה</p>
+                        <p>קלוד - מוגבל בחינמי לפרויקט אחד</p>
+                        <p>ג'מיני - בקרוב יאפשר.</p>
+                        <h4>מחקר מעמיק</h4>
+                        <p>עם פרפלקסיטי, ג'מיני, גרוק וGPT</p>
+                        <p>"אני זוכרת ששמעתי על…, תמצא את המאמר שמדבר על זה"</p>
+                        <h4>אינפוגרפיקה אחרי מחקר עמוק</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/Tyd7us8HzJI" allowfullscreen data-track-video="tools_analysis"></iframe>
+                        </div>
+                        <h4>AI STUDIO</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/PC7cJuqmKKg" allowfullscreen data-track-video="tools_analysis"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://aistudio.google.com/" target="_blank" class="styled-button" data-track-click>AI STUDIO</a>
+                            </div>
+                        </div>
+                        <h4>ניתוח נתונים כמותני</h4>
+                        <p>ערכה לרכז הערכה - אריאל קלפנר - <a href="https://view.genial.ly/65ff4ce170bf98001328c2f8" target="_blank" class="styled-button" data-track-click>אוסף פרומפטים לניתוח נתונים מתקדם</a></p>
+                    </div>`,
+                'tools_dashboard': `
+                    <div class="content-section" data-track-section="tools_dashboard">
+                        <h2>דשבורד</h2>
+                        <p><strong>יצירת דשבורדים - הצגה ויזואלית של נתונים שעוזרת לקבל החלטות מושכלות.</strong></p>
+                        <p>מידע מצטבר במערכות בית הספר - סביבת הענן, תוכנת הניהול הפדגוגי (תל"פ), משובים ועוד. כדי לקבל תמונה מובנת מתוך כל הנתונים, נוכל להיעזר בכלי בינה לניתוח, וביצירת דשבורד - לוח בקרה ויזואלי עם גרפים מתאימים.</p>
+                        <p>דשבורד איננו רק לוח מידע, אלא חלון הצצה דינמי לעולם הנתונים הבית-ספרי. נלמד כיצד להפוך נתונים גולמיים להצגה ויזואלית ברורה ומשמעותית.</p>
+                        <h4>יצירת דשבורד חכם עם קלוד</h4>
+                        <p><strong>פרומפט:</strong></p>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צרף את הנתונים שלי [טבלת Excel/CSV]. 
+
+צור דשבורד אינטראקטיבי שכולל:
+
+1. סקירת מצב כללית (KPIs מרכזיים)
+
+2. 3-4 גרפים שמציגים מגמות
+
+3. אפשרות לסנן לפי [פרמטר]
+
+4. הדגשת נקודות שדורשות תשומת לב
+
+השתמש בצבעים ברורים ובעיצוב נקי</pre>
+                        </div>
+                        <h4>נוסחת XLOOKUP לטיוב נתונים</h4>
+                        <p>נכיר את הנוסחה שעוזרת להשלים נתונים חסרים בגליונות שייצאנו מתוך המערכות שמשמשות את בית הספר.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/v86WrqKPnqM" allowfullscreen data-track-video="tools_dashboard"></iframe>
+                        </div>
+                        <h4>הצגת נתונים ויזואלית - לוקר</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/QHrz5x1Q9Us" allowfullscreen data-track-video="tools_dashboard"></iframe>
+                        </div>
+                    </div>`,
+                'discussion': `
+                    <div class="content-section" data-track-section="discussion">
+                        <h1>דיון</h1>
+                        <p><strong>כיצד הופכים אצלכם נתונים לפעולות מעשיות?</strong></p>
+                        <p><strong>מה החלק המאתגר לגבי התנהלות אצלכם - והאם יש משהו שלמדתם ביחידה שיכול לעזור?</strong></p>
+                        <img src="https://i.imgur.com/QiaQy92.jpg" alt="אילוסטרציה" class="illustration">
+                    </div>`,
+                'assignment': `
+                    <div class="content-section" data-track-section="assignment">
+                        <h1>משימה:</h1>
+                        <p><strong>אפשרות 1: "מעבדת תהליך" - תיעוד תהליך עבודה אמיתי</strong></p>
+                        <p>קחו תהליך ארגוני אחד שחוזר על עצמו אצלכם:</p>
+                        <ul>
+                            <li>ארגון ועדת קבלה</li>
+                            <li>הכנת דוח תקופתי</li>
+                            <li>תכנון יום פדגוגי</li>
+                            <li>ניתוח נתונים שכבתיים</li>
+                        </ul>
+                        <p><strong>מה תעשו:</strong></p>
+                        <ul>
+                            <li>תעבדו עליו בפועל עם הכלים מהיחידה (תימלול, בינה, דשבורד...)</li>
+                            <li>תתעדו: "מה עשיתי בכל שלב + איזה כלי + הפרומפט המדויק"</li>
+                            <li>תצרפו את התוצרים (מטושטשים) - סיכום, דשבורד, מסמך מסודר</li>
+                        </ul>
+                        <p><strong>התוצר:</strong> "מתכון" מפורט שמישהו אחר יכול לעשות בדיוק את אותו דבר בבית הספר שלו</p>
+                        <hr>
+                        <p><strong>אפשרות 2: כלי אוטומטי מוכן לשימוש</strong></p>
+                        <p>בנו אפליקציה/כלי עם AI שפותר בעיה ספציפית:</p>
+                        <p><strong>רעיונות:</strong></p>
+                        <ul>
+                            <li>מנתח משובים אוטומטי - מעלים CSV ומקבלים תובנות + גרפים</li>
+                            <li>מחולל סיכום פגישה - מעלים תימלול ומקבלים: סיכום + משימות + תזכורות</li>
+                            <li>בודק תלאות 2.0 - כמו של מרי גרבי, אבל למשהו אחר (בדיקת תכנית עבודה שנתית?)</li>
+                            <li>מחשבון הקצאת משאבים - לפי נתוני בית הספר</li>
+                        </ul>
+                        <p><strong>התוצר:</strong> קישור לכלי פעיל + הוראות שימוש</p>
+                        <hr>
+                        <p><strong>אפשרות 3: ערכה מלאה לתהליך ספציפי</strong></p>
+                        <p>בחרו תפקיד/תהליך ספציפי ובנו "ערכה שלמה":</p>
+                        <p>לדוגמה - "ערכת רכז חברתי לניהול משבר":</p>
+                        <ul>
+                            <li>📋 תבנית פגישת צוות חירום (סדר יום + תימלול)</li>
+                            <li>🤖 פרומפטים לניתוח המצב</li>
+                            <li>📊 דשבורד מעקב פעולות</li>
+                            <li>✉️ תבניות מיילים להורים/מורים</li>
+                            <li>📝 רשימת משימות לביצוע</li>
+                        </ul>
+                        <p><strong>התוצר:</strong> תיקיית גוגל דרייב עם הכל מוכן - אפשר להעתיק ולהשתמש</p>
+                        <hr>
+                        <p><strong>אפשרות 4: "פתרון בעיה אמיתית"</strong></p>
+                        <p>תארו בעיה שהייתה לכם ואיך פתרתם אותה:</p>
+                        <p>דוגמה: "היה לנו בלגן עם מעקב אחר החלטות מפגישות - דברים התחילו ולא נגמרו. בניתי מערכת פשוטה עם: גוגל פורמס לתיעוד החלטות + גליון מעקב + תזכורות אוטומטיות + דשבורד התקדמות"</p>
+                        <p><strong>התוצר:</strong></p>
+                        <ul>
+                            <li>תיאור הבעיה והפתרון</li>
+                            <li>כל הקבצים להעתקה</li>
+                            <li>הוראות הטמעה</li>
+                        </ul>
+                        <p>העלו למאגר חומר פתוח את התוצר.</p>
+                        <p>לא לשכוח את התגית המיוחדת!</p>
+                        <div class="video-container">
+                            <div class="button-wrapper">
+                                <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>מאגר חומר פתוח</a>
+                            </div>
+                        </div>
+                        <div class="button-wrapper">
+                          <a href="https://openstuff.co.il/upload/" target="_blank" class="styled-button" data-track-click>איך מעלים לחומר פתוח? מדריך, סרטון ושאלות נפוצות</a>
+                        </div>
+                        <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid var(--primary-color); border-radius: 4px;">
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
+                                <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
+                                <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
+                            </label>
+                        </div>
+                    </div>`
+            };
+
+            let isMobileView = window.innerWidth <= 800;
+            const contentArea = container.querySelector('#content-area');
+            
+            const copyIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H6C4.9 1 4 1.9 4 3v12h2V3h10V1zm3 4H10c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h9c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H10V7h9v14z"/></svg>`;
+            const checkIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
+            
+            // Initialize copy buttons
+            function initializeCopyButtons() {
+                container.querySelectorAll('.copy-button').forEach(button => {
+                    if (!button.innerHTML.includes('svg')) {
+                        button.innerHTML = copyIcon;
+                    }
+                });
+            }
+            
+            container.addEventListener('click', function(e) {
+                const copyButton = e.target.closest('.copy-button');
+                if (copyButton) {
+                    const promptContainer = copyButton.closest('.prompt-container');
+                    if (promptContainer) {
+                        const promptText = promptContainer.querySelector('pre').innerText;
+                        navigator.clipboard.writeText(promptText).then(() => {
+                            copyButton.innerHTML = checkIcon;
+                            setTimeout(() => {
+                                copyButton.innerHTML = copyIcon;
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy text: ', err);
+                        });
+                    }
+                }
+            });
+
+            function handleMainItemClick(e) {
+                const mainItem = e.currentTarget;
+                const navItem = mainItem.closest('.nav-item');
+                const section = mainItem.dataset.section;
+                const subItemsContainer = navItem.querySelector('.sub-items');
+
+                container.querySelectorAll('.main-item, .sub-item').forEach(item => item.classList.remove('active'));
+                mainItem.classList.add('active');
+
+                if (subItemsContainer) {
+                    subItemsContainer.classList.toggle('active');
+                }
+
+                if (content[section]) {
+                    const contentHTML = content[section];
+                    if (isMobileView) {
+                        let wrapper = navItem.querySelector(':scope > .section-wrapper');
+                        if (!wrapper) {
+                            wrapper = document.createElement('div');
+                            wrapper.className = 'section-wrapper';
+                            navItem.appendChild(wrapper);
+                        }
+                        
+                        const shouldShow = !wrapper.classList.contains('active');
+                        
+                        container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                            if (w !== wrapper) w.classList.remove('active');
+                        });
+
+                        wrapper.innerHTML = contentHTML;
+                        initializeCopyButtons();
+                        
+                        if(shouldShow) {
+                            setTimeout(() => wrapper.classList.add('active'), 10);
+                        } else {
+                            wrapper.classList.remove('active');
+                        }
+                    } else {
+                        if(contentArea) contentArea.innerHTML = contentHTML;
+                        initializeCopyButtons();
+                    }
+                }
+            }
+            
+            function handleSubItemClick(e) {
+                e.stopPropagation();
+                const subItem = e.currentTarget;
+                const section = subItem.dataset.section;
+                const mainNavItem = subItem.closest('.sub-items').closest('.nav-item');
+                const contentHTML = content[section];
+
+                container.querySelectorAll('.main-item, .sub-item').forEach(item => item.classList.remove('active'));
+                subItem.classList.add('active');
+
+                if (isMobileView) {
+                    let wrapper = mainNavItem.querySelector(':scope > .section-wrapper');
+                    if (!wrapper) {
+                        wrapper = document.createElement('div');
+                        wrapper.className = 'section-wrapper';
+                        mainNavItem.appendChild(wrapper);
+                    }
+                    const shouldShow = !wrapper.classList.contains('active');
+
+                    container.querySelectorAll('.section-wrapper.active').forEach(w => {
+                        if (w !== wrapper) w.classList.remove('active');
+                    });
+                    
+                    wrapper.innerHTML = contentHTML;
+                    initializeCopyButtons();
+
+                    if (shouldShow) {
+                         setTimeout(() => wrapper.classList.add('active'), 10);
+                    } else {
+                        wrapper.classList.remove('active');
+                    }
+                } else {
+                    if(contentArea) contentArea.innerHTML = contentHTML;
+                    initializeCopyButtons();
+                }
+            }
+            
+            function initializeView() {
+                container.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
+                container.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
+
+                if (!isMobileView) {
+                    const overviewItem = container.querySelector('.main-item[data-section="overview"]');
+                    if(overviewItem) overviewItem.click();
+                }
+            }
+
+            function handleResize() {
+                const newIsMobile = window.innerWidth <= 800;
+                if(newIsMobile !== isMobileView) {
+                    isMobileView = newIsMobile;
+                    container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
+                    if(contentArea) contentArea.innerHTML = '';
+                    initializeView();
+                }
+            }
+
+            initializeView();
+            initializeCopyButtons();
+            window.addEventListener('resize', handleResize);
+        });
+    })();
+    </script>
