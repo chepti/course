@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מפת כלים דיגיטליים – כל ההשתלמות</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --bg-dark: #0b1020;
+        --bg-mid: #151b2f;
+        --accent-1: #f06292;
+        --accent-2: #ffb74d;
+        --accent-3: #64b5f6;
+        --accent-4: #ba68c8;
+        --text-main: #ffffff;
+        --text-muted: rgba(255,255,255,0.78);
+        --chip-bg: rgba(255,255,255,0.06);
+        --border-soft: rgba(255,255,255,0.16);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top left, #283593 0, var(--bg-dark) 35%) fixed;
+        color: var(--text-main);
+        min-height: 100vh;
+        padding: 24px 12px 48px;
+    }
+
+    .page {
+        max-width: 1120px;
+        margin: 0 auto;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    .header h1 {
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+    }
+    .header p {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+    }
+
+    .legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 18px;
+        margin: 18px 0 8px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+    .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .legend-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        background: var(--accent-3);
+    }
+    .legend-dot.freq-3 { background: var(--accent-1); }
+    .legend-dot.freq-2 { background: var(--accent-3); }
+    .legend-dot.freq-1 { background: var(--accent-4); }
+
+    .categories {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        margin-top: 8px;
+    }
+
+    .category {
+        background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.35));
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.12);
+        padding: 14px 18px 16px;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .category::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        border: 1px solid rgba(255,255,255,0.08);
+        pointer-events: none;
+    }
+
+    .category-header {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    .category-title {
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+    .category-sub {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+
+    .tools-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 14px;
+        margin-top: 10px;
+    }
+
+    .tool-card {
+        position: relative;
+        background: radial-gradient(circle at top, rgba(255,255,255,0.14), rgba(15,16,32,0.9));
+        border-radius: 16px;
+        padding: 10px 10px 9px;
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+        overflow: hidden;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .tool-card::after {
+        content: attr(data-tags);
+        position: absolute;
+        bottom: 6px;
+        left: 10px;
+        right: 10px;
+        font-size: 0.7rem;
+        color: rgba(255,255,255,0.7);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        opacity: 0;
+        transform: translateY(4px);
+        transition: opacity 0.15s, transform 0.15s;
+    }
+    .tool-card:hover::after {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .tool-card:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 28px rgba(0,0,0,0.6);
+        border-color: rgba(255,255,255,0.32);
+    }
+
+    /* גודל לפי שכיחות בנתוני היחידות */
+    .tool-card.size-3 { transform: scale(1.09); }
+    .tool-card.size-2 { transform: scale(1.03); }
+    .tool-card.size-1 { transform: scale(0.97); opacity: 0.9; }
+    .tool-card.size-3:hover,
+    .tool-card.size-2:hover,
+    .tool-card.size-1:hover { transform: translateY(-3px) scale(1.06); }
+
+    .tool-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 6px;
+    }
+    .tool-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    .tool-badge {
+        font-size: 0.7rem;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.45);
+        border: 1px solid rgba(255,255,255,0.35);
+    }
+
+    .tool-video {
+        position: relative;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        aspect-ratio: 16/9;
+        background: #000;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.75);
+    }
+    .tool-video iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .footer-note {
+        margin-top: 22px;
+        font-size: 0.8rem;
+        text-align: center;
+        color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+        body { padding: 16px 8px 32px; }
+        .header h1 { font-size: 1.3rem; }
+        .category { padding: 12px 12px 14px; }
+        .tools-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <h1>מפת כלים דיגיטליים – כל ההשתלמות</h1>
+            <p>התמקדות בכלים עצמם: איפה הם חוזרים, מה דומה למה, ואיך אפשר לבחור את הכלי הנכון למשימה.</p>
+        </header>
+
+        <div class="legend">
+            <span class="legend-item"><span class="legend-dot freq-3"></span>מופיע בהרבה יחידות / בהמון דוגמאות</span>
+            <span class="legend-item"><span class="legend-dot freq-2"></span>מופיע במספר יחידות / שימושים</span>
+            <span class="legend-item"><span class="legend-dot freq-1"></span>כלי נישתי / ייחודי</span>
+        </div>
+
+        <section class="categories">
+            <!-- בינה כללית ויועצים -->
+            <article class="category">
+                <div class="category-header">
+                    <div class="category-title">בינה כללית ויועצים</div>
+                    <div class="category-sub">שיחות, ייעוץ פדגוגי, ניתוח טקסטים ונתונים</div>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card size-3" data-tags="שיחה, עיבוד מקורות, מצגות, פודקאסט, מפת מושגים">
+                        <div class="tool-header">
+                            <div class="tool-name">NotebookLM / נוטבוקLM</div>
+                            <div class="tool-badge">מופיע המון</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/XMUVxgwVvOw" loading="lazy" allowfullscreen title="נוטבוקLM – מצגות"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-3" data-tags="מודל שפה, מחקר עמוק, קנבס משחקים, אינפוגרפיקה">
+                        <div class="tool-header">
+                            <div class="tool-name">Gemini / ג'מיני</div>
+                            <div class="tool-badge">מופיע המון</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/Tyd7us8HzJI" loading="lazy" allowfullscreen title="ג'מיני – מחקר ואינפוגרפיקה"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="מודל שפה, ארטיפקטים, לוחות מחוונים, ניתוח נתונים">
+                        <div class="tool-header">
+                            <div class="tool-name">Claude / קלוד</div>
+                            <div class="tool-badge">מספר יחידות</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/v86WrqKPnqM" loading="lazy" allowfullscreen title="קלוד – דשבורד"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="מודל שפה, יצירת מבחנים, טקסטים ופרומפטים">
+                        <div class="tool-header">
+                            <div class="tool-name">ChatGPT / GPT</div>
+                            <div class="tool-badge">מספר יחידות</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/FiEcaKlEjHk" loading="lazy" allowfullscreen title="GPT – הערכה"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- מצגות וויזואליזציה -->
+            <article class="category">
+                <div class="category-header">
+                    <div class="category-title">מצגות וייצוגים חזותיים</div>
+                    <div class="category-sub">מצגות בינה, תרשימים, אינפוגרפיקה</div>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card size-3" data-tags="מצגות, וידאו, עיצוב, תרגום פליירים">
+                        <div class="tool-header">
+                            <div class="tool-name">Canva / קנבה</div>
+                            <div class="tool-badge">מופיע המון</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/--WaCeeWMrs" loading="lazy" allowfullscreen title="קנבה – מצגות AI"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="מצגות AI, פירוק למבנה שקפים">
+                        <div class="tool-header">
+                            <div class="tool-name">Gamma / גאמה</div>
+                            <div class="tool-badge">יחידת מצגות</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/Ar_OQUCsm0M" loading="lazy" allowfullscreen title="גאמה – מצגות"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="מצגות, תוצרים מהירים, ממשק משחקי">
+                        <div class="tool-header">
+                            <div class="tool-name">Genspark / ג'נספארק</div>
+                            <div class="tool-badge">יחידת מצגות</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/M2gNlRHKrQ0" loading="lazy" allowfullscreen title="ג'נספארק – מצגות"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="אינפוגרפיקה, תמונה טקסטואלית, ויזואליזציה מורכבת">
+                        <div class="tool-header">
+                            <div class="tool-name">ננו בננה (תמונה)</div>
+                            <div class="tool-badge">ויזואליזציה</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/nUDJ6wQQYmw" loading="lazy" allowfullscreen title="ננו בננה – אינפוגרפיקה"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- תרשימים, מפות חשיבה ואינפוגרפיקה -->
+            <article class="category">
+                <div class="category-header">
+                    <div class="category-title">תרשימים, מפות חשיבה ואינפוגרפיקה</div>
+                    <div class="category-sub">ארגון ידע מורכב למבנה חזותי</div>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card size-2" data-tags="תרשימי זרימה, מפות מושגים, ייצוא ל-SVG">
+                        <div class="tool-header">
+                            <div class="tool-name">Napkin / נאפקין</div>
+                            <div class="tool-badge">תרשימים</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/FaL9tlsYDUw" loading="lazy" allowfullscreen title="נאפקין – תרשימים"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="שפת תרשימים, שילוב בשיחה עם בינה">
+                        <div class="tool-header">
+                            <div class="tool-name">Mermaid / מרמייד</div>
+                            <div class="tool-badge">תרשים טקסטואלי</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/oJCzH_wTG5A" loading="lazy" allowfullscreen title="מרמייד – תרשימי זרימה"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-1" data-tags="אינפוגרפיקה דינמית, מחקר עמוק בג'מיני">
+                        <div class="tool-header">
+                            <div class="tool-name">אינפוגרפיקה – Deep Research</div>
+                            <div class="tool-badge">נישתי</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/Tyd7us8HzJI" loading="lazy" allowfullscreen title="אינפוגרפיקה – Deep Research"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- אינטראקטיביות ומשחקים -->
+            <article class="category">
+                <div class="category-header">
+                    <div class="category-title">אינטראקטיביות ומשחקי למידה</div>
+                    <div class="category-sub">קטעי קוד, משחקונים, לומדות</div>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card size-2" data-tags="משחקים, אינטראקציה, נתוני שחקנים">
+                        <div class="tool-header">
+                            <div class="tool-name">קנבה קוד</div>
+                            <div class="tool-badge">יחידת אינטראקטיביות</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/C0dME1l.png" loading="lazy" allowfullscreen title="קנבה קוד (דוגמה סטטית)"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="קנבס משחקים, פעילויות למקרן, יצירה עם תלמידים">
+                        <div class="tool-header">
+                            <div class="tool-name">ג'מיני קנבס</div>
+                            <div class="tool-badge">משחקי קוד</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/FTw5DhIuJek" loading="lazy" allowfullscreen title="ג'מיני – אינפוגרפיקה/קנבס"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-1" data-tags="ארטיפקטים אינטראקטיביים, דפדפן ניסויים">
+                        <div class="tool-header">
+                            <div class="tool-name">Claude Artifacts</div>
+                            <div class="tool-badge">נישתי</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/3Vg21D8HIgw" loading="lazy" allowfullscreen title="מיקרו הערכה – ניתן להקביל לארטיפקטים"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- מדיה, וידאו ואודיו -->
+            <article class="category">
+                <div class="category-header">
+                    <div class="category-title">מדיה, וידאו ואודיו</div>
+                    <div class="category-sub">פודקאסטים, דיבוב, סרטוני הסבר ועריכת וידאו</div>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card size-2" data-tags="הקלטת מסך, שיתוף מהיר, חשבון חינוך">
+                        <div class="tool-header">
+                            <div class="tool-name">LOOM / לום</div>
+                            <div class="tool-badge">וידאו מהיר</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/j8eljodcbLE" loading="lazy" allowfullscreen title="LOOM – דוגמת הסבר (באמצעות וידאו)"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="פודקאסטים, סיכום הקלטות, עבודה עם מחברת">
+                        <div class="tool-header">
+                            <div class="tool-name">פודקאסט בנוטבוקLM</div>
+                            <div class="tool-badge">שילוב מדיה</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/VMOrQTrCAT4" loading="lazy" allowfullscreen title="נוטבוקLM – פודקאסט"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-1" data-tags="דיבוב, שינוי קול, תזמורת מלווה">
+                        <div class="tool-header">
+                            <div class="tool-name">כלי דיבוב (Vidnoz ודומים)</div>
+                            <div class="tool-badge">נישתי</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/ggBHhywt9BI" loading="lazy" allowfullscreen title="דיבוב – דוגמה"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- הערכה וניהול למידה -->
+            <article class="category">
+                <div class="category-header">
+                    <div class="category-title">הערכה, טפסים וניהול למידה</div>
+                    <div class="category-sub">יצירת מבחנים, ניתוח תוצאות, דשבורדים וארגון</div>
+                </div>
+
+                <div class="tools-grid">
+                    <div class="tool-card size-2" data-tags="טפסים, בניית מבחנים, שאלונים אוטומטיים">
+                        <div class="tool-header">
+                            <div class="tool-name">Google Forms / פורמס</div>
+                            <div class="tool-badge">כלי מבחנים</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/KCN47ZThFsI" loading="lazy" allowfullscreen title="בניית תרגול ומבחן"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="בדיקת מבחנים, ניתוח תשובות, סיכום קבצים">
+                        <div class="tool-header">
+                            <div class="tool-name">ניתוח מבחן עם נוטבוקLM</div>
+                            <div class="tool-badge">יחידת הערכה</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/G71E5ik-8Qg" loading="lazy" allowfullscreen title="ניתוח תוצאות"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="tool-card size-2" data-tags="דשבורד, ניהול נתונים, תצוגת התקדמות">
+                        <div class="tool-header">
+                            <div class="tool-name">לוח מחוונים (Dashboard)</div>
+                            <div class="tool-badge">ניהול נתונים</div>
+                        </div>
+                        <div class="tool-video">
+                            <iframe src="https://www.youtube.com/embed/QHrz5x1Q9Us" loading="lazy" allowfullscreen title="דשבורד – ניהול"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <p class="footer-note">
+            גודל הכלי במפה משקף פחות את ה&quot;חשיבות התאורטית&quot; ויותר את מספר ההופעות והשימושים בהשתלמות – כדי לעזור לראות במה באמת נעזרים הרבה, ואילו כלים דומים עומדים לרשותכם לכל משימה.
+        </p>
+    </div>
+</body>
+</html>
+

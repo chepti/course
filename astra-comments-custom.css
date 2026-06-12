@@ -1,0 +1,280 @@
+/**
+ * עיצוב אזור תגובות – תגובות בלוק (Gutenberg)
+ * הדבק ב: התאמה אישית → CSS נוסף. ספציפיות גבוהה כדי לגבור על עיצובי הבלוק.
+ */
+
+/* ========== תגובות בלוק (מבנה וורדפרס 6 / בלוקים) ========== */
+
+/* קונטיינר ראשי – רוחב מוגבל, מרכז, רקע עדין */
+#comments,
+body #comments,
+body .wp-block-post-comments,
+.wp-block-post-comments,
+[class*="wp-block-comments"] {
+	max-width: 54.6rem !important; /* הרחבה ב־30% מ־42rem */
+	width: 100% !important;
+	margin-right: auto !important;
+	margin-left: auto !important;
+	padding: 1.25rem 1rem !important;
+	background: #f8f9fa !important;
+	border: 1px solid #e9ecef;
+	border-radius: 8px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+	box-sizing: border-box;
+}
+
+/* רשימת תגובות */
+#comments ol,
+#comments .comment-list,
+.wp-block-post-comments ol,
+ol.comment-list {
+	list-style: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+/* תגובה בודדת – קופסה עדינה (סלקטורים גנריים – גם בלי #comments) */
+#comments li.comment,
+#comments .comment,
+body .wp-block-post-comments li.comment,
+body ol.comment-list > li.comment,
+body ol > li.comment,
+.wp-block-post-comments li.comment,
+ol.comment-list > li.comment,
+ol > li.comment {
+	margin-bottom: 1.25rem !important;
+	padding: 1rem 1.1rem !important;
+	background: #fff !important;
+	border: 1px solid #e9ecef !important;
+	border-radius: 6px !important;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+	box-sizing: border-box !important;
+	list-style: none !important;
+}
+
+#comments li.comment:last-child,
+body .wp-block-post-comments li.comment:last-child,
+body ol > li.comment:last-child,
+.wp-block-post-comments li.comment:last-child,
+ol.comment-list > li.comment:last-child,
+ol > li.comment:last-child {
+	margin-bottom: 0 !important;
+}
+
+/* עמודות התגובה – צמצום רווחים (קומפקטי) */
+#comments li.comment .wp-block-columns,
+body li.comment .wp-block-columns,
+.wp-block-post-comments li.comment .wp-block-columns,
+li.comment .wp-block-columns {
+	margin: 0 !important;
+	gap: 0.5rem 0.75rem !important;
+}
+
+/* עמודת התוכן – flex כדי ששם + תאריך + עריכה באותה שורה */
+#comments li.comment .wp-block-columns .wp-block-column:last-child,
+body li.comment .wp-block-columns .wp-block-column:last-child,
+.wp-block-post-comments li.comment .wp-block-columns .wp-block-column:last-child,
+li.comment .wp-block-columns .wp-block-column:last-child {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	align-items: baseline !important;
+	gap: 0.2rem 0.75rem !important;
+}
+
+/* תוכן התגובה וכפתור הגב – שורות מלאות (מתחת לשורת השם/תאריך) */
+#comments li.comment .wp-block-comment-content,
+body li.comment .wp-block-comment-content,
+.wp-block-post-comments li.comment .wp-block-comment-content,
+li.comment .wp-block-comment-content {
+	flex: 1 1 100% !important;
+	width: 100% !important;
+	min-width: 0 !important;
+}
+
+/* שם המגיב – בולט, באותה שורה עם תאריך ועריכה */
+#comments .wp-block-comment-author-name,
+body li.comment .wp-block-comment-author-name,
+.wp-block-post-comments .wp-block-comment-author-name,
+li.comment .wp-block-comment-author-name {
+	font-weight: 600 !important;
+	font-size: 0.95rem !important;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+/* קבוצת תאריך + עריכה – באותה שורה כמו השם, תאריך יותר שמאלה */
+#comments .wp-block-comment-author-name + .wp-block-group,
+body li.comment .wp-block-comment-author-name + .wp-block-group,
+.wp-block-post-comments .wp-block-comment-author-name + .wp-block-group,
+li.comment .wp-block-comment-author-name + .wp-block-group {
+	display: flex !important;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.5rem 1rem;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+#comments .wp-block-comment-date,
+body li.comment .wp-block-comment-date,
+.wp-block-post-comments .wp-block-comment-date,
+li.comment .wp-block-comment-date {
+	margin-inline-start: auto !important;
+	font-size: 0.85rem !important;
+	color: #6c757d !important;
+}
+
+#comments .wp-block-comment-date a,
+body li.comment .wp-block-comment-date a,
+.wp-block-post-comments .wp-block-comment-date a,
+li.comment .wp-block-comment-date a {
+	color: inherit !important;
+	text-decoration: none !important;
+}
+
+#comments .wp-block-comment-date a:hover,
+body li.comment .wp-block-comment-date a:hover,
+.wp-block-post-comments .wp-block-comment-date a:hover,
+li.comment .wp-block-comment-date a:hover {
+	text-decoration: underline !important;
+}
+
+#comments .wp-block-comment-edit-link,
+body li.comment .wp-block-comment-edit-link,
+.wp-block-post-comments .wp-block-comment-edit-link,
+li.comment .wp-block-comment-edit-link {
+	font-size: 0.85rem !important;
+}
+
+/* תוכן התגובה – צמוד לשם (קומפקטי) */
+#comments .wp-block-comment-content,
+body li.comment .wp-block-comment-content,
+.wp-block-post-comments .wp-block-comment-content,
+li.comment .wp-block-comment-content {
+	margin-top: 0.2rem !important;
+	margin-bottom: 0.4rem !important;
+	font-size: 0.9375rem !important;
+	line-height: 1.55 !important;
+}
+
+#comments .wp-block-comment-content p,
+.wp-block-post-comments .wp-block-comment-content p,
+li.comment .wp-block-comment-content p {
+	margin: 0 0 0.35em 0 !important;
+}
+
+/* עטיפת כפתור "הגב" – מרווח מינימלי מלמעלה, יישור לשמאל */
+#comments .wp-block-comment-reply-link,
+body li.comment .wp-block-comment-reply-link,
+.wp-block-post-comments .wp-block-comment-reply-link,
+li.comment .wp-block-comment-reply-link {
+	flex: 1 1 100% !important;
+	width: 100% !important;
+	margin-top: 0.2rem !important;
+	margin-bottom: 0 !important;
+	text-align: end !important; /* ב-RTL: הכפתור לשמאל */
+}
+
+/* כפתור "הגב" – רקע מעוגל (גובר על עיצוב ברירת מחדל) */
+#comments .comment-reply-link,
+#comments .wp-block-comment-reply-link a,
+body li.comment .comment-reply-link,
+body li.comment .wp-block-comment-reply-link a,
+.wp-block-post-comments .comment-reply-link,
+.wp-block-post-comments .wp-block-comment-reply-link a,
+li.comment .comment-reply-link,
+li.comment .wp-block-comment-reply-link a {
+	display: inline-block !important;
+	padding: 0.35rem 0.85rem !important;
+	font-size: 0.875rem !important;
+	text-decoration: none !important;
+	background: #e9ecef !important;
+	color: #495057 !important;
+	border-radius: 20px !important;
+	border: 1px solid #dee2e6 !important;
+	transition: background 0.2s, color 0.2s;
+}
+
+#comments .comment-reply-link:hover,
+#comments .wp-block-comment-reply-link a:hover,
+body li.comment .comment-reply-link:hover,
+body li.comment .wp-block-comment-reply-link a:hover,
+.wp-block-post-comments .comment-reply-link:hover,
+.wp-block-post-comments .wp-block-comment-reply-link a:hover,
+li.comment .comment-reply-link:hover,
+li.comment .wp-block-comment-reply-link a:hover {
+	background: #dee2e6 !important;
+	color: #212529 !important;
+	border-color: #ced4da !important;
+}
+
+/* אווטאר */
+#comments .wp-block-avatar img,
+#comments .wp-block-avatar .avatar,
+body li.comment .wp-block-avatar img,
+.wp-block-post-comments .wp-block-avatar img,
+li.comment .wp-block-avatar img,
+li.comment .wp-block-avatar .avatar {
+	border-radius: 50% !important;
+}
+
+/* תגובות מקוננות (ילדים) */
+#comments li.comment .children,
+#comments .comment-list .children {
+	list-style: none !important;
+	padding-right: 1rem;
+	margin-top: 0.75rem;
+	border-right: 2px solid #e9ecef;
+}
+
+/* טופס תגובה */
+#comments .comment-respond,
+.wp-block-post-comments .comment-respond {
+	margin-top: 1.5rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid #e9ecef;
+}
+
+/* מובייל */
+@media (max-width: 544px) {
+	#comments,
+	.wp-block-post-comments {
+		padding: 1rem 0.75rem !important;
+	}
+	#comments li.comment,
+	.wp-block-post-comments li.comment {
+		padding: 0.85rem 0.9rem !important;
+	}
+}
+
+/* ========== גיבוי: תגובות אסטרה/קלאסי (אם קיימות באותו אתר) ========== */
+.comments-area {
+	max-width: 54.6rem !important; /* הרחבה ב־30% מ־42rem */
+	width: 100% !important;
+	margin-right: auto !important;
+	margin-left: auto !important;
+	padding: 1.25rem 1rem !important;
+	background: #f8f9fa !important;
+	border: 1px solid #e9ecef;
+	border-radius: 8px;
+	box-sizing: border-box;
+}
+.comments-area .ast-comment,
+.comments-area .comment-body {
+	margin-bottom: 1.25rem !important;
+	padding: 1rem 1.1rem !important;
+	background: #fff !important;
+	border: 1px solid #e9ecef;
+	border-radius: 6px;
+	box-sizing: border-box;
+}
+.comments-area .comment-reply-link,
+.comments-area .reply a {
+	display: inline-block;
+	padding: 0.35rem 0.85rem;
+	border-radius: 20px;
+	background: #e9ecef;
+	color: #495057;
+	text-decoration: none;
+	border: 1px solid #dee2e6;
+}

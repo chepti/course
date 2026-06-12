@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תרשים זרימה – כלים מכל היחידות</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+        --bg-dark: #1a1a2e;
+        --bg-mid: #16213e;
+        --start-end: #e91e63;
+        --start-end-light: #f48fb1;
+        --decision: #ff9800;
+        --decision-light: #ffb74d;
+        --process: #5c6bc0;
+        --process-light: #7e57c2;
+        --arrow: #ffffff;
+        --text: #ffffff;
+        --text-dim: rgba(255,255,255,0.85);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 50%, var(--bg-dark) 100%);
+        min-height: 100vh;
+        padding: 24px 16px 48px;
+        direction: rtl;
+        color: var(--text);
+    }
+
+    .flow-header {
+        text-align: center;
+        margin-bottom: 28px;
+    }
+    .flow-header h1 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: var(--text);
+    }
+    .flow-header p {
+        color: var(--text-dim);
+        font-size: 0.95rem;
+    }
+
+    .flow-legend {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px 24px;
+        margin-bottom: 24px;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+    }
+    .flow-legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .flow-legend .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+    }
+    .flow-legend .dot.start-end { background: var(--start-end); border-radius: 50%; }
+    .flow-legend .dot.decision { width: 12px; height: 12px; background: var(--decision); transform: rotate(45deg); }
+    .flow-legend .dot.process { background: var(--process); }
+
+    .flowchart {
+        max-width: 720px;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .flow-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .flow-connector {
+        width: 2px;
+        height: 20px;
+        background: var(--arrow);
+        opacity: 0.8;
+        flex-shrink: 0;
+    }
+    .flow-connector.arrow-down {
+        width: 0;
+        height: 0;
+        border-right: 8px solid transparent;
+        border-left: 8px solid transparent;
+        border-top: 14px solid var(--arrow);
+        background: none;
+        margin: 2px 0;
+        opacity: 0.9;
+    }
+
+    /* Start / End nodes - rounded, pink */
+    .flow-node {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 28px;
+        font-weight: 600;
+        font-size: 1rem;
+        text-align: center;
+        border: none;
+        cursor: default;
+        text-decoration: none;
+        color: var(--text);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .flow-node.start,
+    .flow-node.end {
+        background: var(--start-end);
+        border-radius: 24px;
+        box-shadow: 0 2px 12px rgba(233, 30, 99, 0.4);
+    }
+    .flow-node.start:hover,
+    .flow-node.end:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 16px rgba(233, 30, 99, 0.5);
+    }
+
+    /* Decision - diamond, orange */
+    .flow-node.decision {
+        background: var(--decision);
+        width: 52px;
+        height: 52px;
+        transform: rotate(45deg);
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(255, 152, 0, 0.4);
+        padding: 0;
+    }
+    .flow-node.decision span {
+        transform: rotate(-45deg);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    /* Process - rectangle, blue-purple */
+    .flow-node.process {
+        background: var(--process);
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(92, 107, 192, 0.4);
+        cursor: pointer;
+        max-width: 320px;
+    }
+    .flow-node.process.unit {
+        padding: 14px 24px;
+        font-size: 1.05rem;
+    }
+    .flow-node.process.unit:hover {
+        background: var(--process-light);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(92, 107, 192, 0.5);
+    }
+    .flow-node.process.unit .unit-num {
+        display: block;
+        font-size: 0.8rem;
+        opacity: 0.9;
+        margin-bottom: 2px;
+    }
+
+    /* Expandable tools under each unit */
+    .flow-unit-detail {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.35s ease-out;
+        width: 100%;
+        max-width: 560px;
+        margin-top: 0;
+    }
+    .flow-unit-detail.open {
+        max-height: 1200px;
+    }
+    .flow-unit-detail-inner {
+        padding: 12px 0 16px;
+        border-right: 3px solid var(--process);
+        margin-right: 50%;
+        transform: translateX(50%);
+        padding-right: 16px;
+        padding-left: 16px;
+    }
+    .flow-tool-group {
+        margin-bottom: 10px;
+    }
+    .flow-tool-group-title {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--decision-light);
+        margin-bottom: 4px;
+    }
+    .flow-tools-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+    }
+    .flow-tool-tag {
+        display: inline-block;
+        background: rgba(94, 107, 192, 0.35);
+        color: var(--text);
+        font-size: 0.78rem;
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    .flow-unit-detail .flow-connector.arrow-down {
+        margin: 8px auto;
+    }
+
+    .flow-toggle {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-top: 4px;
+        cursor: pointer;
+        user-select: none;
+    }
+    .flow-toggle:hover {
+        color: var(--arrow);
+    }
+
+    @media (max-width: 640px) {
+        .flow-header h1 { font-size: 1.3rem; }
+        .flow-node.process.unit { max-width: 100%; font-size: 0.98rem; }
+        .flow-unit-detail-inner { margin-right: 0; transform: none; padding-right: 12px; }
+    }
+    </style>
+</head>
+<body>
+    <header class="flow-header">
+        <h1>תרשים זרימה – כלים מכל היחידות</h1>
+        <p>מבנה היררכי וקשרים בין יחידות הקורס. לחצו על יחידה לפרטים.</p>
+    </header>
+
+    <div class="flow-legend">
+        <span><i class="dot start-end"></i> התחלה / סיום</span>
+        <span><i class="dot decision"></i> בחירה</span>
+        <span><i class="dot process"></i> יחידה / כלים</span>
+    </div>
+
+    <div class="flowchart">
+        <!-- התחלה -->
+        <div class="flow-row">
+            <div class="flow-node start">התחלה</div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- בחירה: איזה תחום? -->
+        <div class="flow-row">
+            <div class="flow-node decision" title="בחר יחידה"><span>יחידה?</span></div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 1 -->
+        <div class="flow-row" data-unit="1">
+            <a href="ACODE1_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 1</span>
+                העמקת חשיבה – AI כיועץ
+            </a>
+            <div class="flow-toggle" data-toggle="1" data-label="כלים (9 פריטים)">▼ הצג כלים (9 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-1">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">התייעצות בעל פה</span>
+                            <span class="flow-tool-tag">שאל אותי</span>
+                            <span class="flow-tool-tag">מצב למידה</span>
+                            <span class="flow-tool-tag">פירוק מסמך</span>
+                            <span class="flow-tool-tag">שיתוף מסך</span>
+                        </div>
+                    </div>
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלי עזר</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">אפיקי למידה</span>
+                            <span class="flow-tool-tag">פרומפטים מיוחדים</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 2 -->
+        <div class="flow-row" data-unit="2">
+            <a href="ACODE2_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 2</span>
+                יצירת חומרי ליבה בעזרת AI
+            </a>
+            <div class="flow-toggle" data-toggle="2" data-label="כלים (6 פריטים)">▼ הצג כלים (6 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-2">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">מבט על</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">כלי עזר</span>
+                            <span class="flow-tool-tag">השראה</span>
+                        </div>
+                    </div>
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">סרטוני הדגמה</span>
+                            <span class="flow-tool-tag">מתווכי בינה</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 3 -->
+        <div class="flow-row" data-unit="3">
+            <a href="ACODE3_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 3</span>
+                שילוב תוכן ויזואלי בבית הספר
+            </a>
+            <div class="flow-toggle" data-toggle="3" data-label="כלים (7 פריטים)">▼ הצג כלים (7 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-3">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">מחוללי תמונות</span>
+                            <span class="flow-tool-tag">עריכת תמונות</span>
+                            <span class="flow-tool-tag">עיצובים</span>
+                            <span class="flow-tool-tag">תלת מימד</span>
+                            <span class="flow-tool-tag">כלי עזר</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 4 -->
+        <div class="flow-row" data-unit="4">
+            <a href="ACODE4_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 4</span>
+                תרשימים – תפיסה חזותית
+            </a>
+            <div class="flow-toggle" data-toggle="4" data-label="כלים (6 פריטים)">▼ הצג כלים (6 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-4">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">מצגות</span>
+                            <span class="flow-tool-tag">אינפוגרפיקה</span>
+                            <span class="flow-tool-tag">תרשימים ומפות חשיבה</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list">
+                        <span class="flow-tool-tag">כלי עזר</span>
+                        <span class="flow-tool-tag">דיון</span>
+                        <span class="flow-tool-tag">משימה</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 5 -->
+        <div class="flow-row" data-unit="5">
+            <a href="ACODE5_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 5</span>
+                חומרי לימוד אינטראקטיביים
+            </a>
+            <div class="flow-toggle" data-toggle="5" data-label="כלים (9 פריטים)">▼ הצג כלים (9 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-5">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">משחקים ולומדות</span>
+                            <span class="flow-tool-tag">פעילויות מורכבות</span>
+                            <span class="flow-tool-tag">סטודיו</span>
+                            <span class="flow-tool-tag">בוטים</span>
+                            <span class="flow-tool-tag">עוד אינטראקציות</span>
+                            <span class="flow-tool-tag">קוד</span>
+                            <span class="flow-tool-tag">כלי עזר</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 6 -->
+        <div class="flow-row" data-unit="6">
+            <a href="ACODE6_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 6</span>
+                מדיה ואודיו
+            </a>
+            <div class="flow-toggle" data-toggle="6" data-label="כלים (7 פריטים)">▼ הצג כלים (7 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-6">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">אודיו</span>
+                            <span class="flow-tool-tag">דיבוב</span>
+                            <span class="flow-tool-tag">הנפשה</span>
+                            <span class="flow-tool-tag">סרטוני הסבר</span>
+                            <span class="flow-tool-tag">וידאו</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 7 -->
+        <div class="flow-row" data-unit="7">
+            <a href="ACODE7_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 7</span>
+                פיתוח אפליקציה
+            </a>
+            <div class="flow-toggle" data-toggle="7" data-label="כלים (7 פריטים)">▼ הצג כלים (7 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-7">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">טופס אוטומטי</span>
+                            <span class="flow-tool-tag">אפליקציה חד כיוונית</span>
+                            <span class="flow-tool-tag">אפליקציה דו כיוונית</span>
+                            <span class="flow-tool-tag">כלי קוד מתקדמים</span>
+                            <span class="flow-tool-tag">כלי עזר</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 8 -->
+        <div class="flow-row" data-unit="8">
+            <a href="ACODE8_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 8</span>
+                הערכה
+            </a>
+            <div class="flow-toggle" data-toggle="8" data-label="כלים (8 פריטים)">▼ הצג כלים (8 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-8">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">תרגול וחזרה</span>
+                            <span class="flow-tool-tag">הערכה חלופית</span>
+                            <span class="flow-tool-tag">מיקרו הערכה</span>
+                            <span class="flow-tool-tag">בניית מבחן</span>
+                            <span class="flow-tool-tag">ניתוח התוצאות</span>
+                            <span class="flow-tool-tag">כלי עזר</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- יחידה 9 -->
+        <div class="flow-row" data-unit="9">
+            <a href="ACODE9_WORDPRESS.HTML" class="flow-node process unit">
+                <span class="unit-num">יחידה 9</span>
+                ניהול וארגון
+            </a>
+            <div class="flow-toggle" data-toggle="9" data-label="כלים (7 פריטים)">▼ הצג כלים (7 פריטים)</div>
+            <div class="flow-unit-detail" id="detail-9">
+                <div class="flow-connector arrow-down"></div>
+                <div class="flow-unit-detail-inner">
+                    <div class="flow-tool-group">
+                        <div class="flow-tool-group-title">כלים</div>
+                        <div class="flow-tools-list">
+                            <span class="flow-tool-tag">ניהול פגישות</span>
+                            <span class="flow-tool-tag">ניהול משימות</span>
+                            <span class="flow-tool-tag">מסמכים ויומן</span>
+                            <span class="flow-tool-tag">ניתוח ותובנות</span>
+                            <span class="flow-tool-tag">דשבורד</span>
+                        </div>
+                    </div>
+                    <div class="flow-tools-list"><span class="flow-tool-tag">דיון</span><span class="flow-tool-tag">משימה</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="flow-row"><div class="flow-connector arrow-down"></div></div>
+
+        <!-- סיום -->
+        <div class="flow-row">
+            <div class="flow-node end">סיום הקורס</div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        function ready(fn) {
+            if (document.readyState !== 'loading') fn();
+            else document.addEventListener('DOMContentLoaded', fn);
+        }
+        ready(function() {
+            document.querySelectorAll('.flow-toggle').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var id = this.getAttribute('data-toggle');
+                    var detail = document.getElementById('detail-' + id);
+                    if (!detail) return;
+                    var isOpen = detail.classList.toggle('open');
+                    var label = this.getAttribute('data-label') || 'כלים';
+                    this.textContent = isOpen ? '▲ הסתר ' + label : '▼ הצג ' + label;
+                });
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

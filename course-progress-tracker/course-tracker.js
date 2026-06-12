@@ -163,10 +163,9 @@
                             visibilityCheck = setInterval(() => {
                                 if (entry.isIntersecting && startTime) {
                                     const timeSpent = (Date.now() - startTime) / 1000;
-                                    // Assume 50% watched after 60 seconds of visibility
-                                    // (conservative estimate - average video is ~5 minutes)
-                                    if (timeSpent >= 60 && !hasTracked) {
-                                        console.log('Course Progress Tracker: Video watched for 60 seconds, tracking:', videoKey);
+                                    // 30 שניות נחשבות צפייה (גם במהירות כפולה; סינון כמו רימון עלול לחסום iframe)
+                                    if (timeSpent >= 30 && !hasTracked) {
+                                        console.log('Course Progress Tracker: Video watched for 30 seconds, tracking:', videoKey);
                                         this.trackActivity('video_watch', sectionId, {
                                             video_id: videoId,
                                             progress_percent: 50,
@@ -178,7 +177,7 @@
                                         hasTracked = true;
                                         
                                         // Update progress indicator
-                                        this.updateProgressIndicator(sectionId, Math.min(100, (timeSpent / 60) * 50));
+                                        this.updateProgressIndicator(sectionId, Math.min(100, (timeSpent / 30) * 50));
                                         
                                         if (visibilityCheck) {
                                             clearInterval(visibilityCheck);
@@ -189,7 +188,7 @@
                                     // Video not visible - reset timer
                                     startTime = null;
                                 }
-                            }, 5000); // Check every 5 seconds
+                            }, 3000); // Check every 3 seconds
                         }
                     }
                 });
@@ -199,14 +198,44 @@
 
             observer.observe(videoContainer);
 
+            // גיבוי כשה-iframe חסום (רימון/סינון): נספר צפייה כשהפרק גלוי 30 שניות
+            let sectionStart = null;
+            const sectionEl = (iframe.closest && iframe.closest('[data-track-section]')) || document.querySelector('[data-track-section="' + sectionId + '"]');
+            if (sectionEl) {
+                const sectionObs = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !hasTracked) {
+                            if (!sectionStart) sectionStart = Date.now();
+                            const tid = setInterval(() => {
+                                if (hasTracked) { clearInterval(tid); return; }
+                                if ((Date.now() - sectionStart) / 1000 >= 30) {
+                                    clearInterval(tid);
+                                    hasTracked = true;
+                                    console.log('Course Progress Tracker: Section visible 30s (fallback), tracking:', videoKey);
+                                    this.trackActivity('video_watch', sectionId, { video_id: videoId, progress_percent: 50, watched_at: new Date().toISOString(), method: 'section_visibility' });
+                                    this.trackedVideos.add(videoKey);
+                                    this.updateProgressIndicator(sectionId, 50);
+                                    if (visibilityCheck) clearInterval(visibilityCheck);
+                                    observer.disconnect();
+                                    sectionObs.disconnect();
+                                }
+                            }, 3000);
+                        } else {
+                            sectionStart = null;
+                        }
+                    });
+                }, { threshold: 0.3 });
+                sectionObs.observe(sectionEl);
+            }
+
             // Also track click as engagement indicator
             iframe.addEventListener('click', () => {
                 if (!hasTracked && !startTime) {
                     startTime = Date.now();
-                    // Track after 45 seconds if still visible
+                    // Track after 30 seconds if still visible (תואם לזמן הצפייה הנדרש)
                     setTimeout(() => {
                         if (!hasTracked && startTime) {
-                            console.log('Course Progress Tracker: Video clicked and watched for 45 seconds, tracking:', videoKey);
+                            console.log('Course Progress Tracker: Video clicked and watched 30 seconds, tracking:', videoKey);
                             this.trackActivity('video_watch', sectionId, {
                                 video_id: videoId,
                                 progress_percent: 50,
@@ -224,7 +253,7 @@
                             }
                             observer.disconnect();
                         }
-                    }, 45000);
+                    }, 30000);
                 }
             });
         },
@@ -445,19 +474,22 @@
          * Track manual checkboxes
          */
         trackManualChecks: function() {
-            // Use event delegation to catch dynamically loaded checkboxes
-            document.addEventListener('change', (e) => {
-                const target = e.target;
-                if (target.type !== 'checkbox' || !target.hasAttribute('data-track-manual')) {
-                    return;
-                }
-
+            // נתפוס גם שינוי וגם קליק, ונשתמש ב-closest כדי לתפוס גם לחיצה על label/עטיפות
+            const handleManualCheck = (rawTarget) => {
+                if (!rawTarget || !rawTarget.closest) return;
+                const target = rawTarget.closest('input[type=\"checkbox\"][data-track-manual]');
+                if (!target) return;
                 if (!target.checked) return;
 
-                const sectionId = this.getSectionId(target);
-                if (!sectionId) return;
+                let sectionId = this.getSectionId(target);
+                if (!sectionId) {
+                    sectionId = this.getSectionIdFromContentArea(target);
+                }
+                if (!sectionId) {
+                    console.warn('Course Progress Tracker: לא נמצא section_id לתיבת הסימון. ודא שיש data-track-section על האזור שמכיל את המשימה.', target);
+                    return;
+                }
                 
-                // Check if already tracked in this session
                 const checkKey = `${sectionId}_manual_check`;
                 if (this.trackedClicks && this.trackedClicks.has(checkKey)) {
                     console.log('Course Progress Tracker: Manual check already tracked in this session');
@@ -470,39 +502,44 @@
                     ajaxUrl: this.ajaxUrl
                 });
                 
-                jQuery.ajax({
-                    url: this.ajaxUrl,
-                    type: 'POST',
-                    data: {
-                        action: progress_tracker_data.manual_check_action,
-                        post_id: this.postId,
-                        section_id: sectionId,
-                        nonce: this.nonce
-                    },
-                    success: (response) => {
-                        console.log('Course Progress Tracker: Manual check response', response);
-                        if (response.success) {
-                            console.log('Course Progress Tracker: Manual check saved successfully!');
-                            this.updateProgressIndicator(sectionId, 100);
-                            // Mark as tracked
-                            if (this.trackedClicks) {
-                                this.trackedClicks.add(checkKey);
+                const sendManualCheck = (retryCount) => {
+                    jQuery.ajax({
+                        url: this.ajaxUrl,
+                        type: 'POST',
+                        data: {
+                            action: progress_tracker_data.manual_check_action,
+                            post_id: this.postId,
+                            section_id: sectionId,
+                            nonce: this.nonce
+                        },
+                        success: (response) => {
+                            console.log('Course Progress Tracker: Manual check response', response);
+                            if (response.success) {
+                                console.log('Course Progress Tracker: Manual check saved successfully!');
+                                this.updateProgressIndicator(sectionId, 100);
+                                if (this.trackedClicks) this.trackedClicks.add(checkKey);
+                            } else {
+                                console.error('Course Progress Tracker: Manual check failed', response);
                             }
-                        } else {
-                            console.error('Course Progress Tracker: Manual check failed', response);
-                            console.error('Course Progress Tracker: Error details:', response.data);
-                            console.error('Course Progress Tracker: Full response:', JSON.stringify(response, null, 2));
+                        },
+                        error: (xhr, status, error) => {
+                            console.error('Course Progress Tracker: Manual check AJAX error', { status, error, response: xhr.responseText });
+                            if (retryCount < 1) {
+                                console.log('Course Progress Tracker: Retrying manual check in 2 seconds...');
+                                setTimeout(() => sendManualCheck.call(this, retryCount + 1), 2000);
+                            }
                         }
-                    },
-                    error: (xhr, status, error) => {
-                        console.error('Course Progress Tracker: Manual check AJAX error', {
-                            status: status,
-                            error: error,
-                            response: xhr.responseText,
-                            responseJSON: xhr.responseJSON
-                        });
-                    }
-                });
+                    });
+                };
+                sendManualCheck.call(this, 0);
+            };
+
+            document.addEventListener('change', (e) => {
+                handleManualCheck(e.target);
+            });
+
+            document.addEventListener('click', (e) => {
+                handleManualCheck(e.target);
             });
             
             // Also restore checkboxes when content changes
@@ -593,38 +630,58 @@
          * Get section ID from element or parent
          */
         getSectionId: function(element) {
+            if (!element || !element.getAttribute) return null;
             // For iframes, check data-track-video first
             if (element.tagName === 'IFRAME' && element.hasAttribute('data-track-video')) {
                 return element.getAttribute('data-track-video');
             }
-            
-            // Check element itself
+            // קודם כל – חיפוש עם closest (מעטפת מלאה, גם בתוכן דינמי)
+            const byClosest = element.closest && element.closest('[data-track-section]');
+            if (byClosest) return byClosest.getAttribute('data-track-section');
+            // על האלמנט עצמו
             if (element.hasAttribute('data-track-section')) {
                 return element.getAttribute('data-track-section');
             }
-
-            // Check parent elements
+            // עלית בהורים (עד 15 רמות – תוכן נטען דינמית / חומר פתוח)
             let parent = element.parentElement;
             let depth = 0;
-            while (parent && depth < 5) {
+            while (parent && depth < 15) {
                 if (parent.hasAttribute('data-track-section')) {
                     return parent.getAttribute('data-track-section');
                 }
-                // Check if parent is in a content-section
-                const contentSection = parent.closest('.content-section');
+                const contentSection = parent.closest && parent.closest('.content-section');
                 if (contentSection && contentSection.hasAttribute('data-track-section')) {
                     return contentSection.getAttribute('data-track-section');
                 }
                 parent = parent.parentElement;
                 depth++;
             }
-            
-            // Last resort: try to find section from navigation
+            // אם יש תיבת סימון (חומר פתוח/הגשה) וזה בתוך אזור התוכן – לפי תפריט פעיל
+            const inContent = element.closest && element.closest('#content-area');
             const activeNavItem = document.querySelector('.main-item.active, .sub-item.active');
-            if (activeNavItem) {
+            if (inContent && activeNavItem && activeNavItem.hasAttribute('data-section')) {
                 return activeNavItem.getAttribute('data-section');
             }
+            if (activeNavItem) return activeNavItem.getAttribute('data-section');
+            return null;
+        },
 
+        /**
+         * Fallback: find section from #content-area .content-section that contains the element
+         */
+        getSectionIdFromContentArea: function(element) {
+            const contentArea = document.querySelector('#content-area');
+            if (!contentArea || !element.closest || !element.closest('#content-area')) return null;
+            const section = element.closest('.content-section');
+            if (section && section.getAttribute('data-track-section')) {
+                return section.getAttribute('data-track-section');
+            }
+            const all = contentArea.querySelectorAll('.content-section[data-track-section]');
+            for (let i = 0; i < all.length; i++) {
+                if (all[i].contains(element)) {
+                    return all[i].getAttribute('data-track-section');
+                }
+            }
             return null;
         },
 
@@ -632,7 +689,6 @@
          * Load and display progress indicators
          */
         loadProgressIndicators: function() {
-            console.log('Course Progress Tracker: Loading progress indicators...');
             jQuery.ajax({
                 url: this.ajaxUrl,
                 type: 'GET',
@@ -642,7 +698,6 @@
                     nonce: this.nonce
                 },
                 success: (response) => {
-                    console.log('Course Progress Tracker: Progress indicators loaded', response);
                     if (response.success && response.data.progress) {
                         Object.keys(response.data.progress).forEach(sectionId => {
                             const progress = response.data.progress[sectionId].progress;
@@ -660,16 +715,13 @@
                                     attempts++;
                                     // Find and check the checkbox - check all manual checkboxes
                                     const checkboxes = document.querySelectorAll('[data-track-manual]');
-                                    console.log(`Course Progress Tracker: Attempt ${attempts} - Looking for checkboxes in section ${sectionId}, Found ${checkboxes.length} checkboxes`);
                                     
                                     let found = false;
                                     checkboxes.forEach(checkbox => {
                                         const checkboxSectionId = this.getSectionId(checkbox);
-                                        console.log('Course Progress Tracker: Checkbox section ID:', checkboxSectionId, 'Target:', sectionId);
                                         
                                         if (checkboxSectionId === sectionId) {
                                             checkbox.checked = true;
-                                            console.log('Course Progress Tracker: Checkbox restored for section', sectionId);
                                             found = true;
                                         }
                                     });

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>יחידה 8: הערכה</title>
+    <title>יחידה 9: ניהול וארגון</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         #interactive-unit-container {
-            --primary-color: #F39C12; /* Gold */
+            --primary-color: #3498db; /* Blue */
             --secondary-color: #34495e;
             --nav-width: 300px;
             --header-height: 60px;
@@ -35,7 +35,7 @@
             font-size: 1.1em;
             border-left: 1px solid #dee2e6;
             z-index: 1001;
-            order: 1; /* Set nav to be the first item */
+            order: 1;
         }
 
         #interactive-unit-container .sidebar-title {
@@ -52,9 +52,9 @@
             margin-right: 20px;
             padding: 40px;
             width: calc(100% - var(--nav-width) - 20px);
-            margin-top: 0; /* Remove margin-top as progress bar is gone */
+            margin-top: 0;
             max-width: 1200px;
-            order: 2; /* Set content to be the second item */
+            order: 2;
         }
 
         #interactive-unit-container .progress-bar {
@@ -124,7 +124,6 @@
             flex-shrink: 0;
         }
 
-        /* Completed sections - circle gets checkmark with colored background */
         #interactive-unit-container .nav-item.completed .completion-circle {
             background: var(--primary-color);
             border-color: var(--primary-color);
@@ -137,7 +136,6 @@
             font-weight: bold;
         }
 
-        /* Active section - colored background, no side marker */
         #interactive-unit-container .main-item.active,
         #interactive-unit-container .sub-item.active {
             background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
@@ -406,7 +404,7 @@
     </div>
 
     <div id="nav">
-        <div class="sidebar-title">יחידה 8: הערכה 📝</div>
+        <div class="sidebar-title">יחידה 9: ניהול וארגון 📊</div>
         
         <div class="nav-item">
             <div class="main-item" data-section="overview">
@@ -421,39 +419,33 @@
             </div>
             <div class="sub-items">
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_practice">
+                    <div class="sub-item" data-section="tools_meetings">
                         <div class="completion-circle"></div>
-                        <span>תרגול וחזרה</span>
+                        <span>ניהול פגישות</span>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_alt_assessment">
+                    <div class="sub-item" data-section="tools_tasks">
                         <div class="completion-circle"></div>
-                        <span>הערכה חלופית</span>
+                        <span>ניהול משימות</span>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_micro_assessment">
+                    <div class="sub-item" data-section="tools_documents">
                         <div class="completion-circle"></div>
-                        <span>מיקרו הערכה</span>
+                        <span>מסמכים ויומן</span>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_test_build">
+                    <div class="sub-item" data-section="tools_analysis">
                         <div class="completion-circle"></div>
-                        <span>בניית מבחן</span>
+                        <span>ניתוח ותובנות</span>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_results_analysis">
+                    <div class="sub-item" data-section="tools_dashboard">
                         <div class="completion-circle"></div>
-                        <span>ניתוח התוצאות</span>
-                    </div>
-                </div>
-                <div class="nav-item">
-                    <div class="sub-item" data-section="tools_resources">
-                        <div class="completion-circle"></div>
-                        <span>כלי עזר</span>
+                        <span>דשבורד</span>
                     </div>
                 </div>
             </div>
@@ -490,347 +482,282 @@
                 'overview': `
                     <div class="content-section" data-track-section="overview">
                         <h1>מבט על</h1>
-                        <p><strong>ברוכים הבאים למפגש העוסק בשילוב טכנולוגיות בינה מלאכותית בתהליכי הערכה. במפגש זה נלמד כיצד ניתן להיעזר בכלי AI כדי לייעל ולשפר את תהליכי ההערכה, תוך שמירה על האיכות הפדגוגית והמגע האישי שלנו כמורים.</strong></p>
-                        <p><strong>לפני שנצלול לכלים הספציפיים, חשוב להבין את התמונה הרחבה. נתחיל מבסיס תיאורטי והשראה. הסרטונים עוסקים ביסודות ההערכה הפדגוגית, בהבנת מודלי שפה, ומציגים צפי של שילוב AI בתהליכי הערכה.</strong></p>
-                        <h3>סרטון במבט על - הערכה פדגוגית בעידן הדיגיטלי</h3>
+                        <h3>במבט על</h3>
+                        <p><strong>בבית הספר, יש משמעות גם למבט מערכתי ושותפות לתהליכים שמתרחשים בבית הספר. במיוחד כבעלי תפקידים אנחנו מארגנים הרבה מידע, מסנכרנים בין משימות ובין אנשים. אחת המשימות - לייעל את הצורה בה נאספים נתונים, מנותחים, ומיושמים פרויקטים. נשתמש בפרק הזה בטכנולוגיה מכל מיני סוגים, לא דווקא בינה מלאכותית - כי לפעמים נוכל להפיק תועלת מבינה רק אחרי שנקיים לפניה תהליך נכון.</strong></p>
+                        <p><strong>הניסוח פה הוא לרכז תקשוב, אבל מיועד לכלל המורים שפועלים ברמה קצת יותר רחבה, ורוצים לנצל את יכולות הטכנולוגיה כדי להיות אפקטיביים יותר.</strong></p>
                         <div class="video-container">
-                           <iframe src="https://www.youtube.com/embed/FiEcaKlEjHk" allowfullscreen data-track-video="overview"></iframe>
+                           <iframe src="https://www.youtube.com/embed/ZBefCHysbJU" allowfullscreen data-track-video="overview"></iframe>
                         </div>
-                        <p>ביחידה נכיר דרכים יעילות לשלב בינה בתהליכי הערכה:</p>
-                        <ul>
-                            <li>בתרגול - ליצור סיכומים ובנק שאלות, דפי חזרה ובוטים מתרגלים</li>
-                            <li>הערכה חלופית - מחוונים, רעיונות למשימות והנחיות מפורטות</li>
-                            <li>מיקרו הערכה - לפרק את המבחן לבחנים קטנים ומשחקיים</li>
-                            <li>בניית המבחן, בדיקה וניתוח המבחן והפקת תובנות והצעות להמשך</li>
-                        </ul>
-                        <img src="https://i.imgur.com/Dq43X0q.jpg" alt="אילוסטרציה" class="illustration">
+                        <div class="bug-card">
+                            <p><strong>חשוב להבהיר - הבינה המלאכותית היא כלי עזר, לא תחליף:</strong></p>
+                            <ul>
+                                <li>היא לא מחליטה בשבילכם החלטות פדגוגיות או ניהוליות</li>
+                                <li>היא לא יודעת את ההקשר הספציפי של בית הספר שלכם</li>
+                                <li>היא צריכה בדיקה ואימות - במיוחד בנתונים רגישים</li>
+                                <li>היא לא פותרת בעיות של תהליכים לא ברורים או תקשורת לקויה</li>
+                            </ul>
+                        </div>
                     </div>`,
                 'tools': `
                     <div class="content-section" data-track-section="tools">
                         <h1>כלים</h1>
-                        <p><strong>בחלק זה נכיר מגוון כלים מעשיים שיסייעו לנו ביצירת כלי הערכה. נתחיל בהיכרות עם הכלים הבסיסיים כמו Claude ו-ChatGPT, נמשיך למתווכי בינה שמקלים על העבודה, ונסיים בטריקים שימושיים ליצירת מבחנים ורובריקות באמצעות AI.</strong></p>
-                        <img src="https://i.imgur.com/BJNJC5c.jpg" alt="אילוסטרציה" class="illustration">
+                        <p><strong>ניהול זמן ומשימות הוא אומנות המחייבת כלים טכנולוגיים יעילים. בפרק זה נכיר מספר פלטפורמות דיגיטליות שיסייעו לנו לארגן, לתעדף ולבצע משימות בצורה אופטימלית.</strong></p>
                     </div>`,
-                'tools_practice': `
-                    <div class="content-section" data-track-section="tools_practice">
-                        <h2>תרגול וחזרה למבחן</h2>
-                        <p><strong>יצירת סיכומים, בנק שאלות ובוטים מתרגלים כדי להכין את התלמידים למבחן בצורה מגוונת ומותאמת.</strong></p>
-                        <hr>
-                        <h4>סיכום</h4>
-                        <p>יצירת סיכום, יצירת בנק שאלות, דפי חזרה. נוכל להשתמש בכל אחד ממודלי השפה הגדולים; גרוק נותן תוצר נוח להעתקה ולהדפסה.</p>
-                        <p><strong>פרומפטים</strong></p>
+                'tools_meetings': `
+                    <div class="content-section" data-track-section="tools_meetings">
+                        <h2>ניהול פגישות</h2>
+                        <p><strong>ניהול זמן ומשימות הוא אומנות המחייבת כלים טכנולוגיים יעילים. בפרק זה נכיר מספר פלטפורמות דיגיטליות שיסייעו לנו לארגן, לתעדף ולבצע משימות בצורה אופטימלית.</strong></p>
+                        <h4>הכנה לפגישה</h4>
+                        <p>לקראת פגישה, כדאי להכין את המידע הדרוש - מחקר על הנושא, סיכום תמציתי של דוח ארוך, וסיעור מוחות - לכתוב שאלות לדיון, לתכנן סדר יום לפגישה. תנו לבינה להצטרף אליכם.</p>
+                        <p><strong>פרומפטים:</strong></p>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>צור סיכום רציף ונוח לקריאה של [נושא X, ותתי הנושא…] לכיתה [X].</pre>
-                        </div>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>הכן דף חזרה למבחן על [נושא, תתי נושאים] לכיתה [X]. צרף רשימת מושגים מרכזיים, 20 שאלות (10 אמריקאיות, 5 נכון/לא נכון, 5 קצרות) וטיפים לזכירה.</pre>
-                        </div>
-                        <hr>
-                        <h4>ג'אם בוט תרגול</h4>
-                        <p>על בוטים למדנו - ותרגול לקראת המבחן הוא אחד השימושים הכי מוצלחים בו! ניתן לבוט את הנושאים ותתי הנושאים, הנחיות לליווי למידה מעודד, בחירה וסיכומי ביניים.</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/KCN47ZThFsI" allowfullscreen data-track-video="tools_practice"></iframe>
-                            <div class="button-wrapper">
-                                <a href="https://youtu.be/KCN47ZThFsI" target="_blank" class="styled-button" data-track-click>צפייה ביוטיוב</a>
-                            </div>
-                        </div>
-                        <p><strong>פרומפטים לבוט תרגול</strong></p>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>צור בוט תרגול לכיתה [X] על [נושא]. הבוט יתנהל כך: 1. יציג את הנושאים: [רשימה] 2. יתן לתלמיד לבחור נושא 3. ישאל 3 שאלות, יתן משוב מיידי 4. יעודד ויסכם התקדמות, יכוון את התלמיד להשלים 20 שאלות/ 2 שאלות מכל תת-נושא. טון: מעודד, חם, מאמין בתלמיד.</pre>
+                            <pre>צרף את הדוח המצורף. סכם אותו ב-5 נקודות עיקריות, והדגש ממצאים שדורשים תשומת לב מיידית</pre>
                         </div>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>עזור לתלמיד להתכונן למבחן המצורף. אל תתן את השאלות מהמבחן, אלא שאלות דומות. הצע שאלה קלה יותר אם התלמיד מעדיף. תן רמזים, שבח את ההתמדה והמאמץ.</pre>
-                        </div>
-                        <hr>
-                        <h4>מג'יק סקול - בוט תרגול</h4>
-                        <p>מאושר לשימוש מכיתה ה'. המורה יוצר חדר עם כמה בוטים, התלמיד נכנס ומתרגל, מקבל שאלות, משוב, ועידוד כולל הקראת תשובות.</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/rECV-0MKLgw" allowfullscreen data-track-video="tools_practice"></iframe>
-                        </div>
-                        <hr>
-                        <h4>ארגון החומר הלימודי בנוטבוקLM</h4>
-                        <p>אפשר לשתף מחברת נוטבוקLM עם החומר; התלמיד יכול לקבל בצ'אט מענה ומדריך למידה, ובסטודיו בצד לקבל מדיה מגוונת.</p>
-                    </div>`,
-                'tools_alt_assessment': `
-                    <div class="content-section" data-track-section="tools_alt_assessment">
-                        <h2>הערכה חלופית</h2>
-                        <p><strong>מגוון דרכים לביטוי ידע, מחוונים, UDL וצ'קליסטים שמקדמים למידה מותאמת.</strong></p>
-                        <hr>
-                        <h4>משימות בחירה - UDL</h4>
-                        <p>משימות יצירתיות שמאפשרות בחירה וגיוון. הבינה פורשת מגוון משימות שמודדות שליטה בידע בסגנונות שונים.</p>
-                        <p><strong>פרומפטים ל-UDL</strong></p>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>צור 9 משימות שונות להוכחת שליטה ב[נושא], מתאים לכיתה [X]. הדגש הוא על [שיתוף פעולה/ שימוש נכון במושגים/ הבנת התהליך  ] חלק ל-3 רמות קושי. כל משימה תתאים לסגנון למידה שונה (חזותי/מילולי/קינסתטי/דיגיטלי). כלול הוראות ברורות לכל משימה.</pre>
+                            <pre>אני מתכנן פגישת [נושא] עם [משתתפים]. המטרה: [מטרה]. צור סדר יום ל-45 דקות שכולל: פתיחה, דיון, והחלטות. הצע גם שאלות לדיון</pre>
                         </div>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>הצע 6 דרכים יצירתיות לתלמיד להציג את הידע שלו על [נושא]: - 2 משימות דיגיטליות - 2 משימות אמנותיות/יצירתיות - 2 משימות כתיבה/מצגת כל אחת תמדוד את אותו ידע בצורה שונה.</pre>
-                        </div>
-                        <hr>
-                        <h4>יצירת מחוון</h4>
-                        <p>הבינה מייצרת מחוון עם קריטריונים ומשקולות שקופים לתלמידים.</p>
-                        <p><strong>פרומפטים למחוון</strong></p>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>צור מחוון להערכת [סוג משימה] על [נושא]. 4 קריטריונים: [דגש על …]
-
-4 רמות: מצטיין (100-90), עומד ביעדים (89-75), מתקדם (74-60), מתחיל (59-)
-
-כלול תיאורים התנהגותיים ברורים, לא כלליים.</pre>
+                            <pre>אני צריך להיערך לפגישה על [נושא]. תן לי סקירה של 3 דקות קריאה: מה חשוב לדעת, מה המגמות האחרונות, ומה השאלות הקריטיות לשאול</pre>
                         </div>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>בנה מחוון אחיד ל-3 משימות שונות על [נושא]:
-
-קריטריונים: תוכן (40%), יצירתיות (25%), הבנה (25%), הגשה (10%)
-
-הגדר מה "מצוין" בכל קריטריון.</pre>
+                            <pre>הפגישה תעסוק ב-[נושא]. הצע 10 זוויות שונות לבחון את הנושא, כולל היבטים שאולי לא חשבתי עליהם</pre>
                         </div>
-                        <hr>
-                        <h4>צ'קליסטים והערכת עמיתים</h4>
-                        <p>צ'קליסט עצמי ומשוב בסוף שיעור מחזקים למידה, במיוחד בחטיבת הביניים. אפשר גם הערכת עמיתים ומודל נבחרת.</p>
-                        <p><strong>פרומפטים</strong></p>
+                        <h4>כתיבת תל"א</h4>
+                        <p>שני הכלים להלן נוצרו ע"י מרי גרבי המעולה:</p>
+                        <p>מחולל תל"א - <a href="https://share.google/YxFpKMJYgbZ7jLeCA" target="_blank" class="styled-button" data-track-click>קישור למחולל תל"א</a></p>
+                        <p>בודק תלאות - <a href="https://openstuff.co.il/3989/" target="_blank" class="styled-button" data-track-click>קישור לבודק תלאות</a></p>
+                        <h4>ניתוח תיק אישי</h4>
+                        <p>נוכל להעלות לבינה מידע מבולגן לגבי תלמיד (כמובן כמובן להתמים! ועדיף לעבוד בג'מיני בחשבון ארגוני): אקסלים שהוצאנו מהתל"פ, דיווחי מורים כתובים, סיכומי פגישות עבר או דוחות מקצועיים. ולקבל תמונה מצב מאורגנת, הצעות להתערבות - תמיד נבקש כמה הצעות ונבחר יחד עם הצוות את ההצעות ששוות משהו ביחס לילד האמיתי שאנחנו מכירים.</p>
+                        <h4>תימלול</h4>
+                        <p>אפשר להקליט פגישות (אפילו דרך האפליקציה של נוטבוקLM), בתחילת ההקלטה חשוב להציג את הדוברים "אני יוסי", "אני זיוה". להעלות אל נוטבוקLM את הקובץ ולקבל מיידית (מתחת למקור) את התימלול המדוייק.</p>
+                        <p>הטקסט הזה יכול להוות בסיס לעיבוד תובנות בהמשך; כתיבת מייל סיכום למשתתפים עם רשימת משימות לביצוע; ולהצטבר יחד עם שאר סיכומי הפגישות למאגר ידע מתהווה.</p>
+                        <p><strong>פרומפט:</strong></p>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>צור טופס הערכה עצמית לתלמיד כיתה [X] לאחר [משימה/פרויקט].
+                            <pre>נתח את התימלול הזה והפק:
 
-כלול:
+1. סיכום של 3 משפטים
 
-- 5 שאלות רפלקטיביות על התהליך
+2. רשימת משימות עם אחראים
 
-- סקאלה 1-5 על מאמץ/הבנה/שיתוף פעולה
+3. נושאים שנדחו להמשך
 
-- שאלה פתוחה: "מה הדבר הכי מעניין שלמדתי?"</pre>
+4. שאלות שנשארו פתוחות</pre>
                         </div>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>הכן צ'קליסט "מודל הנבחרת" ל[נושא]:
-
-רשום 10 מיומנויות/נושאי משנה.
-
-ליד כל אחד 3 אפשרויות:
-
-🟢 אני שולט - מוכן ללמד אחרים
-
-🟡 אני מבין - צריך תרגול נוסף
-
-🔴 אני מתקשה - צריך עזרה</pre>
-                        </div>
-                    </div>`,
-                'tools_micro_assessment': `
-                    <div class="content-section" data-track-section="tools_micro_assessment">
-                        <h2>מיקרו הערכה</h2>
-                        <p><strong>חלוקה של הערכה לחלקים קטנים לאורך השנה מפחיתה מתח ומעודדת התנסות.</strong></p>
-                        <hr>
-                        <h4>פליקרס</h4>
-                        <p>כלי ללמידה אינטראקטיבית בלי אמצעי קצה לתלמידים. מקרן וטלפון מורה מספיקים.</p>
-                        <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/3Vg21D8HIgw" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
-                        </div>
-                        <p>מתאים לכרטיס כניסה/יציאה, מבדקי ידע קטנים וגם לכיף. מומלץ לבקש מהבינה לנסח שאלות.</p>
+                        <h4>אליעזר - ממיר הקלטות בווטסאפ לטקסט</h4>
+                        <p>אם כבר דיברנו על תימלול, לרובנו פחות נוח לקבל הקלטות בווטסאפ, ולא תמיד מתאים לנו להשמיע. 'אליעזר' הוא בוט ווטסאפ נהדר שמעבירים אליו את ההקלטה, ומקבלים תמלול חכם ומדוייק.</p>
                         <div class="button-wrapper">
-                            <a href="https://www.plickers.com/" target="_blank" class="styled-button" data-track-click>קישור לכלי</a>
+                            <a href="https://wa.me/972559571223" target="_blank" class="styled-button" data-track-click>לשיחה עם אליעזר</a>
+                        </div>
+                        <h4>הנגשה</h4>
+                        <p>תרגום והתאמת סגנון - כתיבת מיילים שונים לקהלי יעד שונים (הורים, מורים, הנהלה), תרגום תכנים לדוברי שפות זרות. קנבה יכולה לתרגם בקליק פליירים.</p>
+                        <p>הנגשת מידע - הפיכת דוח מקצועי למצגת פשוטה, או להיפך.</p>
+                    </div>`,
+                'tools_tasks': `
+                    <div class="content-section" data-track-section="tools_tasks">
+                        <h2>ניהול משימות</h2>
+                        <p><strong>פירוק משימות מורכבות - יש לכם פרויקט גדול? הבינה עוזרת לפרק אותו לשלבים ברורים.</strong></p>
+                        <h4>שליחת מיילים מרובים עם Apps Script</h4>
+                        <p>איך נקבל קוד קטן מבינה, שיודע לשלוח מייל מעוצב אל כל תלמיד בהתאמה מושלמת לביצועים שלו, בצבעים שונים, עם מידע מתוך טבלת Google Sheets פשוטה.</p>
+                        <p>בסרטון אני מראה כל צעד – זה כלי פשוט להפעלה, לא דורש סבבים רבים, ומדגימה גם יצירה של כפתור לשליחת טסט ועוד.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/32tPe5Bd9Dc" allowfullscreen data-track-video="tools_tasks"></iframe>
                         </div>
                         <hr>
-                        <h4>חידון אינטראקטיבי - בחן אותי</h4>
-                        <p>מצב זריז לייצור בוחן אינטראקטיבי בכל נושא. לפרומפט "בחן אותי".</p>
+                        <h4>goblin.tools - מפרק מטלות</h4>
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/3Hss39zdJv8" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
+                            <iframe src="https://www.youtube.com/embed/lF2SWH5PM0g" allowfullscreen data-track-video="tools_tasks"></iframe>
                             <div class="button-wrapper">
-                                <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                                <a href="https://goblin.tools/" target="_blank" class="styled-button" data-track-click>goblin.tools</a>
                             </div>
                         </div>
-                        <hr>
-                        <h4>קוויזיז - וייגראונד</h4>
-                        <p>פלטפורמה ליצירת חידון אוטומטי מעמוד אינטרנט, מגוון מצבי הפעלה.</p>
+                        <h4>צ'יפים, TASKS חלוקת משימות</h4>
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/rkAQTEG6sKc" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
-                            <div class="button-wrapper">
-                                <a href="https://wayground.com/admin" target="_blank" class="styled-button" data-track-click>Wayground</a>
-                            </div>
+                            <iframe src="https://www.youtube.com/embed/A4lIW_TH8s0" allowfullscreen data-track-video="tools_tasks"></iframe>
                         </div>
-                        <hr>
-                        <h4>קומט מכין לי חידונים מאפס למאה</h4>
-                        <p>לעיתים, גם אחרי שקיבלנו מבינה שאלות, תשובות ומסיחים, נשאר חלק טכני ומעייף: להעתיק הכול למערכת, לסמן תשובות נכונות, להוסיף תמונות ולארגן לפי כיתה ותיקייה.</p>
-                        <p>בדוגמה של חידוני Plickers שאני מפעילה מדי שבוע – בשביל התלמידים זה משחק, בשבילי זו מיקרו‑הערכה יעילה – עדיין היה מסורבל להזין את כל החומר למערכת.</p>
-                        <p>כאן נכנס לפעולה Comet – דפדפן בינה שעובד בשבילנו בתוך האתרים: הוא מוצא בעמוד איך ליצור סט שאלות חדש, מכניס תוכן ותמונות, מסמן תשובה נכונה, משייך לכיתה ומארגן הכול לפי ההנחיות שנתנו לו.</p>
-                        <p>אפשר להשתמש בו כמעט בכל אתר: לארגן קבצים בדרייב לפי נושאים, ליצור מצגת בקנבה, לבנות חידונים ועוד. חשוב לזכור שהמידע שעובר דרך הדפדפן חשוף לחברת Perplexity, ולכן לא להשתמש בו למשימות רגישות במיוחד.</p>
+                        <p>ונושאים שהכרנו בפרק על "התייעצות עם בינה" -</p>
+                        <p>זיהוי נקודות עיוורות - "מה שכחתי לתכנן?" - הבינה יכולה להציע היבטים שלא חשבתם עליהם.</p>
+                        <p>סיעור מוחות מהיר - צריכים רעיונות לפעילות, לפתרון בעיה, או לגישה חדשה? הבינה מציעה אפשרויות.</p>
+                    </div>`,
+                'tools_documents': `
+                    <div class="content-section" data-track-section="tools_documents">
+                        <h2>מסמכים ויומן</h2>
+                        <p><strong>חלק שקצת פחות מתקד בכלי בינה, ויותר בכלים יומיומיים - ומציע כיצד להשתמש בהם טוב יותר.</strong></p>
+                        <h4>אבני בנין בגוגל דוקס</h4>
                         <div class="video-container">
-                            <iframe src="https://www.youtube.com/embed/YxHoWPooIfw" allowfullscreen data-track-video="tools_micro_assessment"></iframe>
+                            <iframe src="https://www.youtube.com/embed/ISQhtXPR0f8" allowfullscreen data-track-video="tools_documents"></iframe>
                         </div>
+                        <h4>טאבים - איגום כמה מסמכים ששייכים למשימה גדולה אחת</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/E0NyR4N1X7k" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>ניהול יומנים</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/NMbwB4MExCw" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>קביעת פגישות ביומן?</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/d71diqdV0_c" allowfullscreen data-track-video="tools_documents"></iframe>
+                        </div>
+                        <h4>מזין אירועים ליומן</h4>
+                        <p>מאפשר העלאה של קובץ, הדבקת תמונה או טקסט - ומחלץ מתוכם את האירועים. בלחיצת כפתור תוכלו להוסיף את האירועים ליומן, אפשר גם להוסיף הקשר או להדביק קישור לזום ב'מיקום'.</p>
+                        <p>יצרתי בכמה דקות בAI STUDIO, כיוון שהכלי עליו המלצתי בעבר הוגבל מאוד.</p>
                         <div class="button-wrapper">
-                            <a href="https://www.perplexity.ai/comet" target="_blank" class="styled-button" data-track-click>Comet – דפדפן בינה לחידונים</a>
+                            <a href="https://ai.studio/apps/drive/1DBiE2kdVs6hOFczCf6jsb3qJ5r9f_USe?fullscreenApplet=true" target="_blank" class="styled-button" data-track-click>מחולל אירועי יומן</a>
                         </div>
                     </div>`,
-                'tools_test_build': `
-                    <div class="content-section" data-track-section="tools_test_build">
-                        <h2>בניית מבחן</h2>
-                        <p><strong>כלים ופרומפטים לבניית מבחן חדש או לשיפור קיים.</strong></p>
-                        <hr>
-                        <h4>בניית המבחן</h4>
-                        <p><strong>פרומפטים</strong></p>
+                'tools_analysis': `
+                    <div class="content-section" data-track-section="tools_analysis">
+                        <h2>ניתוח ותובנות</h2>
+                        <p><strong>הבינה המלאכותית מהווה כיום כלי עוצמתי לניתוח נתונים. נחשף לפלטפורמות מובילות כמו קלוד, GPT וכלים נוספים המאפשרים ניתוח מתקדם של מידע.</strong></p>
+                        <p><strong>בעידן של שפע מידע, היכולת להפיק תובנות משמעותיות היא מפתח להצלחה. נלמד כיצד להשתמש בכלי AI מתקדמים לאיגום מידע, חילוץ תובנות וניתוח יעיל של נתונים.</strong></p>
+                        <h4>כתיבת שאלון משוב, ניתוח משובים</h4>
+                        <p>בינה מיטיבה לחלץ תובנות גם מתשובות פתוחות, נוכל לקבל מידע עשיר הרבה יותר מאשר מטופס "דרג מ1-5". היעזרו בבינה כדי לכתוב את השאלון, ואחרי שאספתם את התשובות - היא תסייע בזיהוי מגמות, הצפת ציטוטים משמעותיים, הסקת מסקנות והצעת פעולות להמשך.</p>
+                        <p><strong>פרומפטים:</strong></p>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>צור מבחן על [נושא] לכיתה [X], 45 דקות. מבנה:- חלק א': 15 שאלות אמריקאיות (30 נקודות)
-
-- חלק ב': 5 שאלות קצרות (20 נקודות)- חלק ג': 2 שאלות מסה (50 נקודות)
-
-כלול ניקוד ותשובון נפרד.</pre>
+                            <pre>צרף את תשובות המשוב (Excel/טקסט). זהה את 5 המגמות המרכזיות, הדגש הפתעות, והצע 3 פעולות אפשריות</pre>
                         </div>
-                        <p>נוכל לקבל טופס פורמס אוטומטי, כמו ביחידה על אפליקציות.</p>
-                        <hr>
-                        <h4>העלאת מבחן קיים</h4>
-                        <p>כדי לשפר או ליצור גרסאות, התאמות או לבנות מבחן חדש לגמרי.</p>
-                        <p><strong>פרומפט לשיפור</strong></p>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>[העלה כאן מבחן קיים]
-
-שפר מבחן זה:
-
-1. הוסף שאלות שמודדות הבנה עמוקה
-
-2. גוון רמות קושי לאורך המבחן, רמות חשיבה שונות.
-
-3. בדוק שכל שאלה ברורה וחד-משמעית, ואם לא - הצע שאלה טובה יותר
-
-4. הצע 2 גרסאות נוספות (A/B), וגרסה נוספת שמותאמת לתלמידים על ליקוי למידה [קושי בשליפה]</pre>
+                            <pre>מצא 5 ציטוטים משמעותיים מהמשובים - 2 חיוביים, 2 שליליים, ו-1 שמציע רעיון חדש</pre>
                         </div>
-                        <img src="https://i.imgur.com/59a8ZF0.png" alt="העלאת מבחן קיים" class="illustration">
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>צרף משובים משנה שעברה ומשנה זו. זהה שינויים, מה שיפרנו , והיכן יש הזדמנות לשיפור</pre>
+                        </div>
+                        <div class="prompt-container">
+                            <button class="copy-button"></button>
+                            <pre>חלק את המשיבים לקבוצות לפי דפוסי תשובות. מה מאפיין כל קבוצה ומה צריכה כל קבוצה?</pre>
+                        </div>
+                        <h4>איגום כל הקבצים סביב משימה - למקום אחד. הפקת תובנות - נוטבוקLM</h4>
+                        <p>נאגד במיקום אחד את כל הקבצים המבולגנים, תכנונים אפויים למחצה, היסטוריה של מה שנעשה בבית הספר בעבר בנושא - ולקבל מהבינה רעיונות חדשים.</p>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/hlNVruYpAXk?t=185" allowfullscreen data-track-video="tools_analysis"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
+                            </div>
+                        </div>
+                        <h4>פרויקטים במודלי השפה</h4>
+                        <p>רוב מודלי השפה הגדולים מאפשרים לרכז שיחות שונות בתוך "פרויקט" אחד. כך הבינה מזהה את ההקשר ולא צריך בכל פעם להסביר את המאפיינים, המטרות והסגנון - כל שיחה שקשורה לאותו נושא מתקשרת וצריך לתת הנחיה רק על מה שצריך.</p>
+                        <p>GPT, גרוק - אין הגבלה</p>
+                        <p>קלוד - מוגבל בחינמי לפרויקט אחד</p>
+                        <p>ג'מיני - בקרוב יאפשר.</p>
+                        <h4>מחקר מעמיק</h4>
+                        <p>עם פרפלקסיטי, ג'מיני, גרוק וGPT</p>
+                        <p>"אני זוכרת ששמעתי על…, תמצא את המאמר שמדבר על זה"</p>
+                        <h4>אינפוגרפיקה אחרי מחקר עמוק</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/Tyd7us8HzJI" allowfullscreen data-track-video="tools_analysis"></iframe>
+                        </div>
+                        <h4>AI STUDIO</h4>
+                        <div class="video-container">
+                            <iframe src="https://www.youtube.com/embed/PC7cJuqmKKg" allowfullscreen data-track-video="tools_analysis"></iframe>
+                            <div class="button-wrapper">
+                                <a href="https://aistudio.google.com/" target="_blank" class="styled-button" data-track-click>AI STUDIO</a>
+                            </div>
+                        </div>
+                        <h4>ניתוח נתונים כמותני</h4>
+                        <p>ערכה לרכז הערכה - אריאל קלפנר - <a href="https://view.genial.ly/65ff4ce170bf98001328c2f8" target="_blank" class="styled-button" data-track-click>אוסף פרומפטים לניתוח נתונים מתקדם</a></p>
                     </div>`,
-                'tools_results_analysis': `
-                    <div class="content-section" data-track-section="tools_results_analysis">
-                        <h2>ניתוח התוצאות</h2>
-                        <p><strong>בדיקה, אנונימיזציה והפקת תובנות מהנתונים.</strong></p>
-                        <hr>
-                        <h4>בדיקת מבחן וניתוח עם נוטבוקLM</h4>
-                        <div class="video-container">
-                           <iframe src="https://www.youtube.com/embed/G71E5ik-8Qg" allowfullscreen data-track-video="tools_results_analysis"></iframe>
-                        </div>
-                        <p><strong>פרומפט</strong></p>
+                'tools_dashboard': `
+                    <div class="content-section" data-track-section="tools_dashboard">
+                        <h2>דשבורד</h2>
+                        <p><strong>יצירת דשבורדים - הצגה ויזואלית של נתונים שעוזרת לקבל החלטות מושכלות.</strong></p>
+                        <p>מידע מצטבר במערכות בית הספר - סביבת הענן, תוכנת הניהול הפדגוגי (תל"פ), משובים ועוד. כדי לקבל תמונה מובנת מתוך כל הנתונים, נוכל להיעזר בכלי בינה לניתוח, וביצירת דשבורד - לוח בקרה ויזואלי עם גרפים מתאימים.</p>
+                        <p>דשבורד איננו רק לוח מידע, אלא חלון הצצה דינמי לעולם הנתונים הבית-ספרי. נלמד כיצד להפוך נתונים גולמיים להצגה ויזואלית ברורה ומשמעותית.</p>
+                        <h4>יצירת דשבורד חכם עם קלוד</h4>
+                        <p><strong>פרומפט:</strong></p>
                         <div class="prompt-container">
                             <button class="copy-button"></button>
-                            <pre>בדוק את המבחנים - תן ניקוד גם לשאלות הפתוחות.
+                            <pre>צרף את הנתונים שלי [טבלת Excel/CSV]. 
 
-תן טבלה עם שמות התלמידים, ציון, והערת משוב אישית עם 2 פסקאות שמתייחסות לנקודות חוזק ושיפור, יחס למשוב ועידוד. נסח בצורה אנושית</pre>
+צור דשבורד אינטראקטיבי שכולל:
+
+1. סקירת מצב כללית (KPIs מרכזיים)
+
+2. 3-4 גרפים שמציגים מגמות
+
+3. אפשרות לסנן לפי [פרמטר]
+
+4. הדגשת נקודות שדורשות תשומת לב
+
+השתמש בצבעים ברורים ובעיצוב נקי</pre>
                         </div>
-                        <div class="button-wrapper">
-                            <a href="https://notebooklm.google.com/" target="_blank" class="styled-button" data-track-click>נוטבוקLM</a>
-                        </div>
-                        <hr>
-                        <h4>סטודיו - ניתוח נתונים</h4>
+                        <h4>נוסחת XLOOKUP לטיוב נתונים</h4>
+                        <p>נכיר את הנוסחה שעוזרת להשלים נתונים חסרים בגליונות שייצאנו מתוך המערכות שמשמשות את בית הספר.</p>
                         <div class="video-container">
-                           <iframe src="https://www.youtube.com/embed/PC7cJuqmKKg" allowfullscreen data-track-video="tools_results_analysis"></iframe>
-                            <div class="button-wrapper">
-                                <a href="https://aistudio.google.com/prompts/new_chat" target="_blank" class="styled-button" data-track-click>סטודיו</a>
-                            </div>
+                            <iframe src="https://www.youtube.com/embed/v86WrqKPnqM" allowfullscreen data-track-video="tools_dashboard"></iframe>
                         </div>
-                        <p>חשוב מאוד להתמים את התוצאות של המבחן (להסיר שמות ולהחליף בסימון מזוהה).</p>
-                        <hr>
-                        <h4>תוצרים בעקבות ניתוח המבחן</h4>
+                        <h4>הצגת נתונים ויזואלית - לוקר</h4>
                         <div class="video-container">
-                            <iframe src="https://www.canva.com/design/DAG7RzS7qtE/rrN4E5U8ChozM7PsyOSngA/view?embed" allowfullscreen data-track-video="tools_results_analysis"></iframe>
-                            <div class="button-wrapper">
-                                <a href="https://www.canva.com/design/DAG7RzS7qtE/rrN4E5U8ChozM7PsyOSngA/view" target="_blank" class="styled-button" data-track-click>להפיק תובנות</a>
-                            </div>
-                        </div>
-                        <p><strong>פרומפטים</strong></p>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>[העלה: מחוון + גליון תוצאות]
-
-
-
-נתח את תוצאות המבחן:
-
-1. ממוצע ציונים + פיזור
-
-2. שאלות שרוב התלמידים נכשלו בהן - למה?
-
-3. תלמידים שצריכים תשומת לב מיוחדת
-
-4. המלצות: מה ללמד שוב? איך?</pre>
-                        </div>
-                        <div class="prompt-container">
-                            <button class="copy-button"></button>
-                            <pre>כתוב משוב לתלמיד כיתה [X] על [משימה/מבחן].
-
-ציון: [X], נקודות חזקות: [פרט], נקודות לשיפור: [פרט]
-
-
-
-המשוב יכלול:
-
-- פתיחה חיובית ומעודדת
-
-- 2-3 דברים שהתלמיד עשה מצוין
-
-- 2 דברים ללמוד/לשפר
-
-- 3 צעדים קונקרטיים הבאים
-
-- סגירה שמאמינה בתלמיד
-
-
-
-אורך: 120-150 מילים. טון: חם, אישי, מעצים, סגנון לא של בינה.</pre>
-                        </div>
-                        <img src="https://i.imgur.com/BJNJC5c.jpg" alt="אילוסטרציה" class="illustration">
-                    </div>`,
-                'tools_resources': `
-                    <div class="content-section" data-track-section="tools_resources">
-                        <h2>כלי עזר</h2>
-                        <p><strong>מצגות מוכנות להשראה ולשיתוף.</strong></p>
-                        <hr>
-                        <h4>מצגת הערכה חלופית ומיקרו הערכה</h4>
-                        <div class="video-container">
-                            <iframe loading="lazy" src="https://www.canva.com/design/DAG3jfA_HuE/4mg3C33VlMy2n9-k1L5ofA/view?embed" allowfullscreen data-track-video="tools_resources"></iframe>
-                            <div class="button-wrapper">
-                                <a href="https://www.canva.com/design/DAG3jfA_HuE/4mg3C33VlMy2n9-k1L5ofA/view" target="_blank" class="styled-button" data-track-click>פתיחת המצגת</a>
-                            </div>
-                        </div>
-                        <hr>
-                        <h4>מצגת הערכה - חזרה, מבחן וניתוח</h4>
-                        <div class="video-container">
-                            <iframe loading="lazy" src="https://www.canva.com/design/DAG557SpAJQ/5F6dgQieyIg00L-U1qx4Aw/view?embed" allowfullscreen data-track-video="tools_resources"></iframe>
-                            <div class="button-wrapper">
-                                <a href="https://www.canva.com/design/DAG557SpAJQ/5F6dgQieyIg00L-U1qx4Aw/view" target="_blank" class="styled-button" data-track-click>פתיחת המצגת</a>
-                            </div>
+                            <iframe src="https://www.youtube.com/embed/QHrz5x1Q9Us" allowfullscreen data-track-video="tools_dashboard"></iframe>
                         </div>
                     </div>`,
                 'discussion': `
                     <div class="content-section" data-track-section="discussion">
                         <h1>דיון</h1>
-                        <p><strong>שילוב בינה בתהליכי הערכה מעורר שאלות מכל הסוגים. בחרו שאלה אחת משמעותית לדעתכם.</strong></p>
-                        <ul>
-                            <li>איך נשמר את הייחודיות והמגע האישי שלנו בהערכה כשאנחנו משתמשים ב-AI?</li>
-                            <li>מתי ואיך נאפשר לתלמידים להיעזר בבינה במשימות? שתפו דוגמאות אמיתיות שעבדו לכם.</li>
-                        </ul>
-                        <h3>דמיינו את בית הספר בעוד שנתיים:</h3>
-                        <ul>
-                           <li>איך ייראה תהליך ההערכה? מה מודדים ועל מה מוותרים?</li>
-                           <li>מה התפקיד של המורה? איך כדאי להכין את עצמנו?</li>
-                           <li>כיצד התלמידים יקבלו משוב על למידתם? האם צריך לדעת ששילבנו בינה?</li>
-                           <li>הגיבו לחזון של עמית אחד.</li>
-                        </ul>
-                        <img src="https://i.imgur.com/wd3ivlG.jpg" alt="אילוסטרציה" class="illustration">
+                        <p><strong>כיצד הופכים אצלכם נתונים לפעולות מעשיות?</strong></p>
+                        <p><strong>מה החלק המאתגר לגבי התנהלות אצלכם - והאם יש משהו שלמדתם ביחידה שיכול לעזור?</strong></p>
+                        <img src="https://i.imgur.com/QiaQy92.jpg" alt="אילוסטרציה" class="illustration">
                     </div>`,
                 'assignment': `
                     <div class="content-section" data-track-section="assignment">
                         <h1>משימה:</h1>
-                        <p><strong>החלק המעשי של ההשתלמות מאפשר התנסות אישית ביצירת כלי הערכה בעזרת AI. המשימה כוללת יצירת מגוון רכיבי הערכה, החל ממבחנים ועד רובריקות, תוך שימוש בכלים שהכרנו. חשוב במיוחד לשתף את הפרומפטים ששימשו ליצירת החומרים, כך שכולם יוכלו ללמוד מהניסיון המשותף.</strong></p>
-                        <h3>שתפו מערכת הערכה שבניתם בעזרת בינה:</h3>
-                        <p>צרו מסמך ושתפו את הקישור לצפייה.</p>
-                        <p><strong>בתוך המסמך - הגישו לפחות 3 רכיבים שבניתם בעזרת בינה, צרפו פרומפטים וציינו באיזה כלי:</strong></p>
+                        <p><strong>אפשרות 1: "מעבדת תהליך" - תיעוד תהליך עבודה אמיתי</strong></p>
+                        <p>קחו תהליך ארגוני אחד שחוזר על עצמו אצלכם:</p>
                         <ul>
-                            <li><strong>סט הערכה חלופית:</strong> כרטיסי יציאה, משימת הערכה חלופית, מחוון מפורט, טופס הערכה עצמית.</li>
-                            <li><strong>סט מבחן:</strong> בנק שאלות בדרגות קושי שונות, סיכום יחידת לימוד, מבחן/מבדק עם הנחיות, צ'קליסט מותאם אישית.</li>
+                            <li>ארגון ועדת קבלה</li>
+                            <li>הכנת דוח תקופתי</li>
+                            <li>תכנון יום פדגוגי</li>
+                            <li>ניתוח נתונים שכבתיים</li>
                         </ul>
+                        <p><strong>מה תעשו:</strong></p>
+                        <ul>
+                            <li>תעבדו עליו בפועל עם הכלים מהיחידה (תימלול, בינה, דשבורד...)</li>
+                            <li>תתעדו: "מה עשיתי בכל שלב + איזה כלי + הפרומפט המדויק"</li>
+                            <li>תצרפו את התוצרים (מטושטשים) - סיכום, דשבורד, מסמך מסודר</li>
+                        </ul>
+                        <p><strong>התוצר:</strong> "מתכון" מפורט שמישהו אחר יכול לעשות בדיוק את אותו דבר בבית הספר שלו</p>
+                        <hr>
+                        <p><strong>אפשרות 2: כלי אוטומטי מוכן לשימוש</strong></p>
+                        <p>בנו אפליקציה/כלי עם AI שפותר בעיה ספציפית:</p>
+                        <p><strong>רעיונות:</strong></p>
+                        <ul>
+                            <li>מנתח משובים אוטומטי - מעלים CSV ומקבלים תובנות + גרפים</li>
+                            <li>מחולל סיכום פגישה - מעלים תימלול ומקבלים: סיכום + משימות + תזכורות</li>
+                            <li>בודק תלאות 2.0 - כמו של מרי גרבי, אבל למשהו אחר (בדיקת תכנית עבודה שנתית?)</li>
+                            <li>מחשבון הקצאת משאבים - לפי נתוני בית הספר</li>
+                        </ul>
+                        <p><strong>התוצר:</strong> קישור לכלי פעיל + הוראות שימוש</p>
+                        <hr>
+                        <p><strong>אפשרות 3: ערכה מלאה לתהליך ספציפי</strong></p>
+                        <p>בחרו תפקיד/תהליך ספציפי ובנו "ערכה שלמה":</p>
+                        <p>לדוגמה - "ערכת רכז חברתי לניהול משבר":</p>
+                        <ul>
+                            <li>📋 תבנית פגישת צוות חירום (סדר יום + תימלול)</li>
+                            <li>🤖 פרומפטים לניתוח המצב</li>
+                            <li>📊 דשבורד מעקב פעולות</li>
+                            <li>✉️ תבניות מיילים להורים/מורים</li>
+                            <li>📝 רשימת משימות לביצוע</li>
+                        </ul>
+                        <p><strong>התוצר:</strong> תיקיית גוגל דרייב עם הכל מוכן - אפשר להעתיק ולהשתמש</p>
+                        <hr>
+                        <p><strong>אפשרות 4: "פתרון בעיה אמיתית"</strong></p>
+                        <p>תארו בעיה שהייתה לכם ואיך פתרתם אותה:</p>
+                        <p>דוגמה: "היה לנו בלגן עם מעקב אחר החלטות מפגישות - דברים התחילו ולא נגמרו. בניתי מערכת פשוטה עם: גוגל פורמס לתיעוד החלטות + גליון מעקב + תזכורות אוטומטיות + דשבורד התקדמות"</p>
+                        <p><strong>התוצר:</strong></p>
+                        <ul>
+                            <li>תיאור הבעיה והפתרון</li>
+                            <li>כל הקבצים להעתקה</li>
+                            <li>הוראות הטמעה</li>
+                        </ul>
+                        <p>העלו למאגר חומר פתוח את התוצר.</p>
+                        <p>לא לשכוח את התגית המיוחדת!</p>
                         <div class="video-container">
                             <div class="button-wrapper">
                                 <a href="https://openstuff.co.il/" target="_blank" class="styled-button" data-track-click>מאגר חומר פתוח</a>
@@ -842,7 +769,6 @@
                                 <span>העליתי פוסט בחומר פתוח עם התגית המתאימה</span>
                             </label>
                         </div>
-                        <img src="https://i.imgur.com/hPNkP6F.png" alt="אילוסטרציה" class="illustration">
                     </div>`
             };
 
@@ -918,6 +844,7 @@
                         }
                     } else {
                         if(contentArea) contentArea.innerHTML = contentHTML;
+                        initializeCopyButtons();
                     }
                 }
             }
@@ -986,4 +913,5 @@
     })();
     </script>
 </body>
-</html> 
+</html>
+
