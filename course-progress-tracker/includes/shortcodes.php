@@ -196,7 +196,7 @@ function cpt_unit_progress_shortcode($atts) {
         'url' => '',
         'percent' => cpt_get_unit_overall_progress($user_id, $post_id, $section_progress),
         'sections' => $section_progress,
-        'section_titles' => $unit_def ? wp_list_pluck($unit_def['sections'], 'title', 'id') : [],
+        'section_titles' => ($unit_def && cpt_manifest_unit_is_curated($unit_def)) ? wp_list_pluck($unit_def['sections'], 'title', 'id') : [],
     ];
 
     return cpt_shortcode_styles() . cpt_render_unit_card($unit, 'h3', false);

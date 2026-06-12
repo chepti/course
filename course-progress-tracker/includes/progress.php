@@ -205,7 +205,7 @@ function cpt_get_unit_overall_progress($user_id, $post_id, $section_progress = n
     }
 
     $unit_def = cpt_manifest_get_unit($post_id);
-    if ($unit_def && !empty($unit_def['sections'])) {
+    if ($unit_def && !empty($unit_def['sections']) && cpt_manifest_unit_is_curated($unit_def)) {
         $total_weight = 0;
         $weighted = 0;
         foreach ($unit_def['sections'] as $section_def) {
@@ -263,7 +263,7 @@ function cpt_get_course_summary($user_id) {
                 'url' => get_permalink($post_id),
                 'percent' => cpt_get_unit_overall_progress($user_id, $post_id, $section_progress),
                 'sections' => $section_progress,
-                'section_titles' => wp_list_pluck($unit_def['sections'], 'title', 'id'),
+                'section_titles' => cpt_manifest_unit_is_curated($unit_def) ? wp_list_pluck($unit_def['sections'], 'title', 'id') : [],
             ];
         }
         return $units;

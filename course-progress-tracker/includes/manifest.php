@@ -75,6 +75,23 @@ function cpt_manifest_get_section($post_id, $section_id) {
 }
 
 /**
+ * Did the admin actually edit section titles? The autobuild sets title = id;
+ * as long as that is the case, learner-facing views collapse to the classic
+ * four groups (מבט על / כלים / דיון / משימה) instead of listing raw ids.
+ */
+function cpt_manifest_unit_is_curated($unit_def) {
+    if (empty($unit_def['sections'])) {
+        return false;
+    }
+    foreach ($unit_def['sections'] as $section) {
+        if (!empty($section['title']) && $section['title'] !== $section['id']) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Build a manifest skeleton from existing data: every post_id seen in the
  * activity table becomes a unit, every section seen becomes a section with
  * requirements equivalent to the legacy heuristics. A starting point to edit.
