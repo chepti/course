@@ -31,9 +31,46 @@ function cpt_course_unit_shortcode($atts) {
         'https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap',
         [], null);
 
+    // Fallback if the wp_enqueue_scripts detection below didn't catch the
+    // shortcode (e.g. shortcode rendered outside post_content). Styles
+    // enqueued this late print in the footer; the slim units' override
+    // selectors are body-prefixed, so the cascade is order-independent.
+    cpt_unit_engine_enqueue_assets();
+
     return file_get_contents($file);
 }
 add_shortcode('course_unit', 'cpt_course_unit_shortcode');
+
+/**
+ * Shared unit engine (v2) assets.
+ *
+ * Loaded for every page containing [course_unit], including old-format units:
+ * that is safe because unit.js no-ops when window.cptUnitContent is undefined
+ * (only slim-format units define it), and every rule in unit.css is prefixed
+ * with #interactive-unit-container.cpt-engine-v2 - a marker class only
+ * slim-format unit markup carries - so old-format units are unaffected.
+ */
+function cpt_unit_engine_enqueue_assets() {
+    wp_enqueue_style('cpt-unit-engine', CPT_PLUGIN_URL . 'assets/unit.css', [], CPT_VERSION);
+    // In the footer: the unit's inline <script> (page content) defines
+    // window.cptUnitContent/cptUnitConfig before this script runs.
+    wp_enqueue_script('cpt-unit-engine', CPT_PLUGIN_URL . 'assets/unit.js', [], CPT_VERSION, true);
+}
+
+/**
+ * Enqueue at wp_enqueue_scripts so the stylesheet prints in <head>, BEFORE the
+ * per-unit inline override <style> that ships inside the unit HTML (page
+ * content always comes after wp_head).
+ */
+add_action('wp_enqueue_scripts', function () {
+    if (!is_singular()) {
+        return;
+    }
+    $post = get_post();
+    if ($post && has_shortcode($post->post_content, 'course_unit')) {
+        cpt_unit_engine_enqueue_assets();
+    }
+});
 
 /**
  * The tracker script is enqueued at wp_enqueue_scripts, before shortcodes run.
