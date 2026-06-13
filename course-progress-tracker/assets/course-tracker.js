@@ -147,21 +147,20 @@
             showResumeButton(state.resume);
         }
 
-        // Debug: log what the server sent and what matched the DOM
+        // Debug: always log to console so we can diagnose circle issues
         /* eslint-disable no-console */
         var navSections = Array.from(document.querySelectorAll('[data-section]')).map(function (el) { return el.getAttribute('data-section'); });
         var spKeys = Object.keys(progressMap);
-        var missing = spKeys.filter(function (id) { return !navSections.includes(id); });
-        if (missing.length || spKeys.length === 0) {
-            console.group('Course Tracker - state debug');
-            console.log('nav data-section values:', navSections);
-            console.log('section_progress keys from API:', spKeys);
-            console.log('completed_sections from API:', state.completed_sections);
-            if (missing.length) {
-                console.warn('IDs in section_progress NOT found in nav:', missing);
-            }
-            console.groupEnd();
-        }
+        var completedNow = Array.from(document.querySelectorAll('.nav-item.completed')).length;
+        console.groupCollapsed('Course Tracker v3.2.2 - state (' + completedNow + ' circles marked)');
+        console.log('nav data-section values:', navSections);
+        console.log('section_progress from API:', progressMap);
+        console.log('completed_sections from API:', state.completed_sections);
+        var missing = spKeys.filter(function (id) { return navSections.indexOf(id) === -1; });
+        if (missing.length) { console.warn('section_progress IDs not in nav DOM:', missing); }
+        var navNotInSP = navSections.filter(function (id) { return spKeys.indexOf(id) === -1 && (!state.completed_sections || state.completed_sections.indexOf(id) === -1); });
+        if (navNotInSP.length) { console.info('nav IDs with no progress data:', navNotInSP); }
+        console.groupEnd();
         /* eslint-enable no-console */
     }
 
@@ -460,6 +459,7 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
+        console.log('Course Tracker v3.2.2 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         bootstrapSession().then(function () {
             return rest('state?post_id=' + POST_ID);
