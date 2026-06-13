@@ -52,16 +52,13 @@ add_action('rest_api_init', function () {
 
             $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
 
-            // Backfill: sections that reach 100% via calculation but aren't yet in
-            // wp_course_progress (happens for users whose data pre-dates v3 REST API).
-            // Write to DB so future calls are consistent, and include in this response.
+            // Elevate: sections that hit 100% via calculation are treated as completed
+            // for display purposes even if not yet written to wp_course_progress.
+            // (No DB write here — state is a read-only GET; the activity POST endpoint
+            // handles the authoritative write.)
             foreach ($section_progress as $sid => $pct) {
                 if ($pct >= 100 && !in_array($sid, $completed, true)) {
                     $completed[] = $sid;
-                    $wpdb->query($wpdb->prepare(
-                        "INSERT IGNORE INTO " . CPT_TABLE_NAME . " (user_id, post_id, section_id, completed_at) VALUES (%d, %d, %s, NOW())",
-                        $user_id, $post_id, $sid
-                    ));
                 }
             }
 
@@ -138,20 +135,17 @@ add_action('rest_api_init', function () {
             $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
 
             // Return completed_sections so the JS can mark circles even for sections
-            // not currently in the manifest (e.g. 'task' recorded under its own ID
-            // but absent from an auto-built manifest).
+            // absent from the manifest (cpt_check_and_mark_section_complete above
+            // already wrote the authoritative DB row via legacy heuristics).
             $completed_after = $wpdb->get_col($wpdb->prepare(
                 "SELECT section_id FROM " . CPT_TABLE_NAME . " WHERE user_id = %d AND post_id = %d",
                 $user_id, $post_id
             ));
-            // Also promote any section that just hit 100% (covers manifest path)
+            // Also elevate any section that reached 100% this request (no extra INSERT—
+            // cpt_check_and_mark_section_complete handles the write).
             foreach ($section_progress as $sid => $pct) {
                 if ($pct >= 100 && !in_array($sid, $completed_after, true)) {
                     $completed_after[] = $sid;
-                    $wpdb->query($wpdb->prepare(
-                        "INSERT IGNORE INTO " . CPT_TABLE_NAME . " (user_id, post_id, section_id, completed_at) VALUES (%d, %d, %s, NOW())",
-                        $user_id, $post_id, $sid
-                    ));
                 }
             }
 
