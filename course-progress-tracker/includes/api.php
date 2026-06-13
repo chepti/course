@@ -51,6 +51,20 @@ add_action('rest_api_init', function () {
             ));
 
             $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
+
+            // Backfill: sections that reach 100% via calculation but aren't yet in
+            // wp_course_progress (happens for users whose data pre-dates v3 REST API).
+            // Write to DB so future calls are consistent, and include in this response.
+            foreach ($section_progress as $sid => $pct) {
+                if ($pct >= 100 && !in_array($sid, $completed, true)) {
+                    $completed[] = $sid;
+                    $wpdb->query($wpdb->prepare(
+                        "INSERT IGNORE INTO " . CPT_TABLE_NAME . " (user_id, post_id, section_id, completed_at) VALUES (%d, %d, %s, NOW())",
+                        $user_id, $post_id, $sid
+                    ));
+                }
+            }
+
             $last_in_unit = cpt_get_last_position($user_id, $post_id);
             $last_anywhere = cpt_get_last_position($user_id);
 

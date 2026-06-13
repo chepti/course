@@ -114,20 +114,43 @@
     function applyState(state) {
         if (!state) return;
         var progressMap = state.section_progress || {};
+
+        // Mark/unmark based on calculated per-section progress
         Object.keys(progressMap).forEach(function (sectionId) {
             updateNavIndicator(sectionId, progressMap[sectionId]);
             if (progressMap[sectionId] >= 100) {
                 restoreManualCheckbox(sectionId);
             }
         });
+
+        // completed_sections (from DB) can include sections whose section_progress
+        // key doesn't reach 100 (legacy data / manifest mismatch) - always honour them
         if (Array.isArray(state.completed_sections)) {
             state.completed_sections.forEach(function (sectionId) {
                 updateNavIndicator(sectionId, 100);
             });
         }
+
         if (state.resume) {
             showResumeButton(state.resume);
         }
+
+        // Debug: log what the server sent and what matched the DOM
+        /* eslint-disable no-console */
+        var navSections = Array.from(document.querySelectorAll('[data-section]')).map(function (el) { return el.getAttribute('data-section'); });
+        var spKeys = Object.keys(progressMap);
+        var missing = spKeys.filter(function (id) { return !navSections.includes(id); });
+        if (missing.length || spKeys.length === 0) {
+            console.group('Course Tracker - state debug');
+            console.log('nav data-section values:', navSections);
+            console.log('section_progress keys from API:', spKeys);
+            console.log('completed_sections from API:', state.completed_sections);
+            if (missing.length) {
+                console.warn('IDs in section_progress NOT found in nav:', missing);
+            }
+            console.groupEnd();
+        }
+        /* eslint-enable no-console */
     }
 
     function findNavItem(sectionId) {
@@ -430,11 +453,11 @@
             return rest('state?post_id=' + POST_ID);
         }).then(function (state) {
             applyState(state);
+            lastState = state; // save full state (including completed_sections) for observer re-apply
             // Re-apply indicators when section content swaps (nav rebuilds)
             observeContent(function () {
-                setTimeout(function () { applyState({ section_progress: lastProgress }); }, 300);
+                setTimeout(function () { applyState(lastState); }, 300);
             });
-            lastProgress = state.section_progress || {};
 
             trackVideos();
             trackClicks();
@@ -448,7 +471,7 @@
         });
     }
 
-    var lastProgress = {};
+    var lastState = {};
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
