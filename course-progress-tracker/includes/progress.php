@@ -185,26 +185,6 @@ function cpt_get_unit_section_progress($user_id, $post_id) {
             $result[$sid] = cpt_calculate_section_progress($post_id, $sid, $acts);
         }
 
-        // Also include any activity-table section IDs not covered by the manifest.
-        // This handles the case where the nav was updated but the manifest still uses
-        // old section IDs, or the manifest was built from a different unit version.
-        foreach ($by_section as $sid => $acts) {
-            if (isset($result[$sid])) {
-                continue; // already computed via manifest
-            }
-            // Skip if already aggregated into a manifest parent (prefix match)
-            $covered = false;
-            foreach ($unit_def['sections'] as $section_def) {
-                if (strpos($sid, $section_def['id'] . '_') === 0) {
-                    $covered = true;
-                    break;
-                }
-            }
-            if (!$covered) {
-                $result[$sid] = cpt_calculate_section_progress($post_id, $sid, $acts);
-            }
-        }
-
         return $result;
     }
 
