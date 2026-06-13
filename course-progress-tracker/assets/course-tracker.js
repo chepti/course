@@ -80,7 +80,19 @@
                 activity_data: data || {}
             }
         }).then(function (resp) {
-            applyState({ section_progress: resp.section_progress });
+            // Include completed_sections so circles light up even when the section
+            // isn't in the manifest (e.g. 'task' absent from an auto-built manifest)
+            applyState({
+                section_progress: resp.section_progress,
+                completed_sections: resp.completed_sections || []
+            });
+            // Keep lastState in sync so observer re-apply also reflects new completions
+            if (resp.completed_sections) {
+                lastState = Object.assign({}, lastState, {
+                    section_progress: resp.section_progress,
+                    completed_sections: resp.completed_sections
+                });
+            }
             return resp;
         }).catch(function (err) {
             if (attempt < 2) {
