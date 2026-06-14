@@ -74,22 +74,35 @@
 
     function postActivity(activityType, sectionId, data, attempt) {
         attempt = attempt || 0;
-        return rest('activity', {
+        // Use admin-ajax instead of REST POST - avoids WAF blocks on /wp-json/ endpoints
+        var formData = new FormData();
+        formData.append('action', 'cpt_activity_v3');
+        formData.append('post_id', POST_ID);
+        formData.append('section_id', sectionId);
+        formData.append('activity_type', activityType);
+        formData.append('activity_data', JSON.stringify(data || {}));
+        return fetch(AJAX_URL, {
             method: 'POST',
-            body: {
-                post_id: POST_ID,
-                section_id: sectionId,
-                activity_type: activityType,
-                activity_data: data || {}
+            credentials: 'same-origin',
+            body: formData
+        }).then(function (r) {
+            if (!r.ok) {
+                return r.text().then(function (t) {
+                    console.warn('Course Tracker: activity HTTP error', r.status, t.substring(0, 200)); // eslint-disable-line no-console
+                    throw new Error('activity HTTP ' + r.status);
+                });
             }
-        }).then(function (resp) {
-            // Include completed_sections so circles light up even when the section
-            // isn't in the manifest (e.g. 'task' absent from an auto-built manifest)
+            return r.json();
+        }).then(function (json) {
+            if (!json || !json.success) {
+                console.warn('Course Tracker: activity error:', json && json.data && json.data.message); // eslint-disable-line no-console
+                return json;
+            }
+            var resp = json.data;
             applyState({
                 section_progress: resp.section_progress,
                 completed_sections: resp.completed_sections || []
             });
-            // Keep lastState in sync so observer re-apply also reflects new completions
             if (resp.completed_sections) {
                 lastState = Object.assign({}, lastState, {
                     section_progress: resp.section_progress,
@@ -103,7 +116,7 @@
                     postActivity(activityType, sectionId, data, attempt + 1);
                 }, 3000 * (attempt + 1));
             } else {
-                console.error('Course Tracker: activity failed', activityType, sectionId, err);
+                console.error('Course Tracker: activity failed', activityType, sectionId, err); // eslint-disable-line no-console
             }
         });
     }
@@ -279,11 +292,16 @@
         if (!sectionId) return;
         clearTimeout(positionTimer);
         positionTimer = setTimeout(function () {
-            rest('position', {
+            var formData = new FormData();
+            formData.append('action', 'cpt_save_last_position');
+            formData.append('post_id', POST_ID);
+            formData.append('section_id', sectionId);
+            fetch(AJAX_URL, {
                 method: 'POST',
-                body: { post_id: POST_ID, section_id: sectionId }
+                credentials: 'same-origin',
+                body: formData
             }).catch(function (err) {
-                console.error('Course Tracker: save position failed', err);
+                console.error('Course Tracker: save position failed', err); // eslint-disable-line no-console
             });
         }, 800); // debounce rapid navigation
     }
@@ -422,8 +440,11 @@
         var key = 'comment_' + sectionId;
         if (trackedKeys[key]) return;
 
-        rest('comment-status?post_id=' + POST_ID).then(function (resp) {
-            if (resp.has_comment) {
+        // Use admin-ajax (same-origin cookie auth, no nonce needed)
+        fetch(AJAX_URL + '?action=cpt_check_comment_status&post_id=' + POST_ID, {
+            credentials: 'same-origin'
+        }).then(function (r) { return r.json(); }).then(function (json) {
+            if (json && json.success && json.data && json.data.has_comment) {
                 trackedKeys[key] = true;
                 if (commentTimer) { clearInterval(commentTimer); commentTimer = null; }
                 postActivity('comment', sectionId, { post_id: POST_ID });
@@ -462,41 +483,39 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.2.4 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.2.5 init - post_id:', POST_ID); // eslint-disable-line no-console
 
-        // Apply server-embedded initial state immediately so circles light up on page
-        // load without waiting for (or depending on) the REST GET /state call.
+        // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {
             applyState(cpt_tracker_data.initial_state);
             lastState = cpt_tracker_data.initial_state;
         }
 
-        // Re-apply indicators whenever section HTML swaps in
+        // Re-apply indicators when section HTML swaps in
         observeContent(function () {
             setTimeout(function () { if (lastState) { applyState(lastState); } }, 300);
         });
 
-        // Bootstrap REST session (nonce) - needed for activity + position POSTs
+        // Start all trackers immediately - they use admin-ajax (no nonce needed)
+        trackVideos();
+        trackClicks();
+        trackScroll();
+        trackManualChecks();
+        trackComments();
+        watchSectionChanges();
+        handleResumeQueryParam();
+
+        // Optional: bootstrap REST session for the resume button (GET /state).
+        // Failure is non-fatal - activity tracking already works via admin-ajax above.
         bootstrapSession().then(function () {
-            // Try to refresh state (gets resume button, latest circles). Non-fatal if it fails -
-            // the server-embedded initial_state already coloured the circles above.
             rest('state?post_id=' + POST_ID).then(function (state) {
                 applyState(state);
                 lastState = state;
             }).catch(function (err) {
-                console.warn('Course Tracker: state refresh failed (using server-embedded data) -', err.message); // eslint-disable-line no-console
+                console.warn('Course Tracker: state load failed -', err.message); // eslint-disable-line no-console
             });
-
-            trackVideos();
-            trackClicks();
-            trackScroll();
-            trackManualChecks();
-            trackComments();
-            watchSectionChanges();
-            handleResumeQueryParam();
         }).catch(function (err) {
-            console.warn('Course Tracker: session failed, activity tracking disabled -', err.message); // eslint-disable-line no-console
-            // Circles already shown via server-embedded initial_state above
+            console.warn('Course Tracker: session failed (resume unavailable) -', err.message); // eslint-disable-line no-console
         });
     }
 

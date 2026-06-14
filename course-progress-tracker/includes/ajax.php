@@ -149,6 +149,78 @@ function cpt_track_activity_callback() {
 add_action('wp_ajax_cpt_track_activity', 'cpt_track_activity_callback');
 
 
+// v3 activity endpoint via admin-ajax — used instead of REST POST /activity on
+// servers where the REST API blocks POST requests (WAF, Hostinger, etc.).
+// Returns section_progress + completed_sections so the JS can update circles.
+function cpt_activity_v3_callback() {
+    if (!is_user_logged_in()) {
+        wp_send_json_error(['message' => 'Not logged in.'], 403);
+        return;
+    }
+
+    $user_id       = get_current_user_id();
+    $post_id       = isset($_POST['post_id'])       ? intval($_POST['post_id'])                         : 0;
+    $section_id    = isset($_POST['section_id'])    ? sanitize_text_field($_POST['section_id'])         : '';
+    $activity_type = isset($_POST['activity_type']) ? sanitize_text_field($_POST['activity_type'])      : '';
+    $allowed       = ['video_watch', 'button_click', 'scroll', 'comment', 'manual_check'];
+
+    if (!$post_id || !$section_id || !in_array($activity_type, $allowed, true)) {
+        wp_send_json_error(['message' => 'Invalid parameters.', 'received' => compact('post_id', 'section_id', 'activity_type')], 400);
+        return;
+    }
+
+    $raw_data      = isset($_POST['activity_data']) ? wp_unslash($_POST['activity_data']) : null;
+    $activity_data = null;
+    if ($raw_data && is_string($raw_data)) {
+        $decoded = json_decode($raw_data, true);
+        if ($decoded !== null) { $activity_data = wp_json_encode($decoded); }
+    }
+
+    global $wpdb;
+    $table = CPT_ACTIVITY_TABLE_NAME;
+
+    $recent = $wpdb->get_var($wpdb->prepare(
+        "SELECT id FROM $table WHERE user_id=%d AND post_id=%d AND section_id=%s AND activity_type=%s AND created_at > DATE_SUB(NOW(), INTERVAL 5 MINUTE) LIMIT 1",
+        $user_id, $post_id, $section_id, $activity_type
+    ));
+
+    if (!$recent) {
+        $wpdb->insert($table, [
+            'user_id'       => $user_id,
+            'post_id'       => $post_id,
+            'section_id'    => $section_id,
+            'activity_type' => $activity_type,
+            'activity_data' => $activity_data,
+        ], ['%d', '%d', '%s', '%s', '%s']);
+        cpt_check_and_mark_section_complete($user_id, $post_id, $section_id);
+    }
+
+    $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
+    if (!is_array($section_progress)) { $section_progress = []; }
+
+    $completed_after = $wpdb->get_col($wpdb->prepare(
+        "SELECT section_id FROM " . CPT_TABLE_NAME . " WHERE user_id=%d AND post_id=%d",
+        $user_id, $post_id
+    ));
+    if (!is_array($completed_after)) { $completed_after = []; }
+
+    foreach ($section_progress as $sid => $pct) {
+        if ((int) $pct >= 100 && !in_array($sid, $completed_after, true)) {
+            $completed_after[] = $sid;
+        }
+    }
+
+    wp_send_json_success([
+        'saved'              => !$recent,
+        'duplicate'          => (bool) $recent,
+        'section_progress'   => (object) $section_progress,
+        'completed_sections' => array_values($completed_after),
+        'unit_percent'       => cpt_get_unit_overall_progress($user_id, $post_id, $section_progress),
+    ]);
+}
+add_action('wp_ajax_cpt_activity_v3', 'cpt_activity_v3_callback');
+
+
 // 3.2 AJAX endpoint to check comment status
 function cpt_check_comment_status_callback() {
     // רק בדיקה שהמשתמש מחובר. ויתרנו על nonce בגלל קאשינג בין משתמשים שונים.
