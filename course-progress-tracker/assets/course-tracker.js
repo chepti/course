@@ -483,7 +483,7 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.2.5 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.2.6 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {

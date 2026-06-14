@@ -22,13 +22,14 @@
             background: #f8f9fa;
             padding: 30px;
             overflow-y: auto;
-            position: sticky;
+            position: fixed;
             top: 0;
+            right: 0;
             font-size: 1.1em;
             border-left: 1px solid #dee2e6;
             z-index: 1001;
-            order: 1;
         }
+        .admin-bar #interactive-unit-container #nav { top: 32px; height: calc(100vh - 32px); }
 
         #interactive-unit-container .sidebar-title {
             font-size: 1.2em;
@@ -41,9 +42,9 @@
         }
 
         #interactive-unit-container #content {
-            margin-right: 20px;
+            margin-right: var(--nav-width);
             padding: 40px;
-            width: calc(100% - var(--nav-width) - 20px);
+            width: calc(100% - var(--nav-width));
             margin-top: 0;
             max-width: 1200px;
             order: 2;
