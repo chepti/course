@@ -41,48 +41,54 @@ add_action('rest_api_init', function () {
             'post_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
         ],
         'callback' => function (WP_REST_Request $request) {
-            $user_id = get_current_user_id();
-            $post_id = intval($request['post_id']);
+            try {
+                $user_id = get_current_user_id();
+                $post_id = intval($request['post_id']);
 
-            global $wpdb;
-            $completed = $wpdb->get_col($wpdb->prepare(
-                "SELECT section_id FROM " . CPT_TABLE_NAME . " WHERE user_id = %d AND post_id = %d",
-                $user_id, $post_id
-            ));
+                global $wpdb;
+                $completed = $wpdb->get_col($wpdb->prepare(
+                    "SELECT section_id FROM " . CPT_TABLE_NAME . " WHERE user_id = %d AND post_id = %d",
+                    $user_id, $post_id
+                ));
+                if (!is_array($completed)) { $completed = []; }
 
-            $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
+                $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
+                if (!is_array($section_progress)) { $section_progress = []; }
 
-            // Elevate: sections that hit 100% via calculation are treated as completed
-            // for display purposes even if not yet written to wp_course_progress.
-            // (No DB write here — state is a read-only GET; the activity POST endpoint
-            // handles the authoritative write.)
-            foreach ($section_progress as $sid => $pct) {
-                if ($pct >= 100 && !in_array($sid, $completed, true)) {
-                    $completed[] = $sid;
+                foreach ($section_progress as $sid => $pct) {
+                    if ($pct >= 100 && !in_array($sid, $completed, true)) {
+                        $completed[] = $sid;
+                    }
                 }
+
+                $last_in_unit = cpt_get_last_position($user_id, $post_id);
+                $last_anywhere = cpt_get_last_position($user_id);
+
+                $resume = null;
+                if ($last_anywhere) {
+                    $resume = [
+                        'post_id' => intval($last_anywhere->post_id),
+                        'post_title' => preg_replace('/^פרטי:\s*/', '', get_the_title($last_anywhere->post_id)),
+                        'post_url' => get_permalink($last_anywhere->post_id),
+                        'section_id' => $last_anywhere->section_id,
+                        'updated_at' => $last_anywhere->updated_at,
+                    ];
+                }
+
+                return rest_ensure_response([
+                    'completed_sections' => $completed,
+                    'section_progress' => $section_progress,
+                    'unit_percent' => cpt_get_unit_overall_progress($user_id, $post_id, $section_progress),
+                    'last_position' => $last_in_unit ? $last_in_unit->section_id : null,
+                    'resume' => $resume,
+                ]);
+            } catch (\Throwable $e) {
+                error_log('CPT /state error: ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+                return new WP_Error('cpt_state_error',
+                    'PHP: ' . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine(),
+                    ['status' => 500]
+                );
             }
-
-            $last_in_unit = cpt_get_last_position($user_id, $post_id);
-            $last_anywhere = cpt_get_last_position($user_id);
-
-            $resume = null;
-            if ($last_anywhere) {
-                $resume = [
-                    'post_id' => intval($last_anywhere->post_id),
-                    'post_title' => preg_replace('/^פרטי:\s*/', '', get_the_title($last_anywhere->post_id)),
-                    'post_url' => get_permalink($last_anywhere->post_id),
-                    'section_id' => $last_anywhere->section_id,
-                    'updated_at' => $last_anywhere->updated_at,
-                ];
-            }
-
-            return rest_ensure_response([
-                'completed_sections' => $completed,
-                'section_progress' => $section_progress,
-                'unit_percent' => cpt_get_unit_overall_progress($user_id, $post_id, $section_progress),
-                'last_position' => $last_in_unit ? $last_in_unit->section_id : null,
-                'resume' => $resume,
-            ]);
         },
     ]);
 

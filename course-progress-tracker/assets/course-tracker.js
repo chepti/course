@@ -63,7 +63,10 @@
                 });
             }
             if (!r.ok) {
-                throw new Error('REST ' + path + ' failed: ' + r.status);
+                return r.text().then(function (body) {
+                    console.warn('Course Tracker REST error body:', body.substring(0, 400)); // eslint-disable-line no-console
+                    throw new Error('REST ' + path + ' failed: ' + r.status);
+                });
             }
             return r.json();
         });
@@ -459,16 +462,29 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.2.2 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.2.4 init - post_id:', POST_ID); // eslint-disable-line no-console
 
+        // Apply server-embedded initial state immediately so circles light up on page
+        // load without waiting for (or depending on) the REST GET /state call.
+        if (cpt_tracker_data.initial_state) {
+            applyState(cpt_tracker_data.initial_state);
+            lastState = cpt_tracker_data.initial_state;
+        }
+
+        // Re-apply indicators whenever section HTML swaps in
+        observeContent(function () {
+            setTimeout(function () { if (lastState) { applyState(lastState); } }, 300);
+        });
+
+        // Bootstrap REST session (nonce) - needed for activity + position POSTs
         bootstrapSession().then(function () {
-            return rest('state?post_id=' + POST_ID);
-        }).then(function (state) {
-            applyState(state);
-            lastState = state; // save full state (including completed_sections) for observer re-apply
-            // Re-apply indicators when section content swaps (nav rebuilds)
-            observeContent(function () {
-                setTimeout(function () { applyState(lastState); }, 300);
+            // Try to refresh state (gets resume button, latest circles). Non-fatal if it fails -
+            // the server-embedded initial_state already coloured the circles above.
+            rest('state?post_id=' + POST_ID).then(function (state) {
+                applyState(state);
+                lastState = state;
+            }).catch(function (err) {
+                console.warn('Course Tracker: state refresh failed (using server-embedded data) -', err.message); // eslint-disable-line no-console
             });
 
             trackVideos();
@@ -479,7 +495,8 @@
             watchSectionChanges();
             handleResumeQueryParam();
         }).catch(function (err) {
-            console.warn('Course Tracker: not active -', err.message);
+            console.warn('Course Tracker: session failed, activity tracking disabled -', err.message); // eslint-disable-line no-console
+            // Circles already shown via server-embedded initial_state above
         });
     }
 

@@ -40,4 +40,32 @@ function cpt_enqueue_course_scripts() {
         'ajax_url' => admin_url('admin-ajax.php'),
         'post_id'  => (int) $post_id,
     ]);
+
+    // Embed initial progress state so circles light up on page load immediately,
+    // without waiting for (or depending on) the GET /state REST call.
+    // Uses the same DB queries as the [user_course_progress] shortcode.
+    $user_id = get_current_user_id();
+    global $wpdb;
+    $completed = $wpdb->get_col($wpdb->prepare(
+        "SELECT section_id FROM " . CPT_TABLE_NAME . " WHERE user_id = %d AND post_id = %d",
+        $user_id, $post_id
+    ));
+    if (!is_array($completed)) { $completed = []; }
+    $sp = cpt_get_unit_section_progress($user_id, $post_id);
+    if (!is_array($sp)) { $sp = []; }
+    foreach ($sp as $sid => $pct) {
+        if ((int) $pct >= 100 && !in_array($sid, $completed, true)) {
+            $completed[] = $sid;
+        }
+    }
+    $initial_json = wp_json_encode([
+        'completed_sections' => array_values($completed),
+        'section_progress'   => (object) $sp,
+    ], JSON_UNESCAPED_UNICODE);
+    if ($initial_json !== false) {
+        wp_add_inline_script('cpt-course-tracker',
+            'if(typeof cpt_tracker_data!=="undefined"){cpt_tracker_data.initial_state=' . $initial_json . ';}',
+            'after'
+        );
+    }
 }
