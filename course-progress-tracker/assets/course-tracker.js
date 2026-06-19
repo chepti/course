@@ -513,7 +513,7 @@
             var navRight = Math.max(0, window.innerWidth - cr.right);
             nav.style.position = 'fixed';
             nav.style.top      = visTop + 'px';
-            nav.style.height   = visH + 'px';
+            nav.style.height   = Math.max(visH, 320) + 'px';
             nav.style.right    = navRight + 'px';
         }
 
@@ -526,7 +526,7 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.2.7 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.2.8 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {
