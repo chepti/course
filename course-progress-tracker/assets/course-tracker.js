@@ -479,11 +479,54 @@
         contentObservers.push(observer);
     }
 
+    // ---------- Sticky nav (JS-driven: fixed within container bounds) ----------
+
+    function initStickyNav() {
+        var nav = document.getElementById('nav');
+        var container = document.getElementById('interactive-unit-container');
+        if (!nav || !container) return;
+
+        container.style.position = 'relative';
+        var adminbar = document.getElementById('wpadminbar');
+
+        function update() {
+            if (window.innerWidth <= 800) {
+                nav.style.cssText = '';
+                return;
+            }
+            var adminH = adminbar ? adminbar.offsetHeight : 0;
+            var cr = container.getBoundingClientRect();
+            var vH = window.innerHeight;
+
+            var visTop    = Math.max(adminH, cr.top);
+            var visBottom = Math.min(vH, cr.bottom);
+            var visH      = visBottom - visTop;
+
+            if (visH < 80) {
+                nav.style.position = 'absolute';
+                nav.style.top      = '0';
+                nav.style.height   = '';
+                nav.style.right    = '0';
+                return;
+            }
+
+            var navRight = Math.max(0, window.innerWidth - cr.right);
+            nav.style.position = 'fixed';
+            nav.style.top      = visTop + 'px';
+            nav.style.height   = visH + 'px';
+            nav.style.right    = navRight + 'px';
+        }
+
+        window.addEventListener('scroll', update, { passive: true });
+        window.addEventListener('resize', update, { passive: true });
+        update();
+    }
+
     // ---------- Init ----------
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.2.6 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.2.7 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {
@@ -504,6 +547,7 @@
         trackComments();
         watchSectionChanges();
         handleResumeQueryParam();
+        initStickyNav();
 
         // Optional: bootstrap REST session for the resume button (GET /state).
         // Failure is non-fatal - activity tracking already works via admin-ajax above.

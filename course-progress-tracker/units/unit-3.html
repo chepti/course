@@ -8,6 +8,7 @@
             font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             direction: rtl;
+            position: relative;
         }
 
         #interactive-unit-container * {
@@ -22,14 +23,14 @@
             background: #f8f9fa;
             padding: 30px;
             overflow-y: auto;
-            position: fixed;
+            position: absolute;
             top: 0;
             right: 0;
+            height: 100%;
             font-size: 1.1em;
             border-left: 1px solid #dee2e6;
             z-index: 1001;
         }
-        .admin-bar #interactive-unit-container #nav { top: 32px; height: calc(100vh - 32px); }
 
         #interactive-unit-container .sidebar-title {
             font-size: 1.2em;
