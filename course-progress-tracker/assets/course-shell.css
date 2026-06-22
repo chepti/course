@@ -27,6 +27,7 @@
   border: 1px solid var(--shell-line);
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(20, 40, 60, 0.06);
+  scroll-margin-top: 90px;
   /* NO overflow:hidden here - it would break the native position:sticky of
      the top nav and the curriculum rail. Corners are rounded per-piece. */
 }
@@ -236,20 +237,24 @@
 }
 .course-progress-head[aria-expanded="true"] .course-progress-chevron { transform: rotate(180deg); }
 
-/* Per-section breakdown (revealed on click) */
+/* Per-chapter breakdown (revealed on click) - compact chips, wrap across width */
 .course-progress-detail {
-  padding: 4px 16px 12px;
-  border-top: 1px solid var(--shell-line);
-  margin-top: 2px;
-}
-.course-progress-row {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 4px;
-  border-bottom: 1px solid #eef1f4;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--shell-line);
 }
-.course-progress-row:last-child { border-bottom: 0; }
+.cpr-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 10px;
+  background: #fff;
+  border: 1px solid var(--shell-line);
+  border-radius: 999px;
+  font-size: .9rem;
+}
 .cpr-mark {
   width: 18px; height: 18px;
   flex: 0 0 auto;
@@ -261,41 +266,43 @@
   font-size: 11px;
   color: #fff;
 }
-.course-progress-row.is-done .cpr-mark {
-  background: var(--shell-accent);
-  border-color: var(--shell-accent);
+.cpr-chip.is-done {
+  background: color-mix(in srgb, var(--shell-accent) 9%, #fff);
+  border-color: color-mix(in srgb, var(--shell-accent) 35%, #fff);
 }
-.course-progress-row.is-done .cpr-mark::after { content: "✓"; }
-.cpr-label { flex: 1 1 auto; font-size: .92rem; color: #44525f; }
-.course-progress-row.is-done .cpr-label { color: var(--shell-ink); font-weight: 600; }
-.cpr-pct { flex: 0 0 auto; font-size: .85rem; font-weight: 700; color: #8895a3; min-width: 42px; text-align: left; }
-.course-progress-row.is-done .cpr-pct { color: var(--shell-accent); }
+.cpr-chip.is-done .cpr-mark { background: var(--shell-accent); border-color: var(--shell-accent); }
+.cpr-chip.is-done .cpr-mark::after { content: "✓"; }
+.cpr-label { color: #44525f; }
+.cpr-chip.is-done .cpr-label { color: var(--shell-ink); font-weight: 600; }
+.cpr-pct { font-size: .8rem; font-weight: 700; color: #98a3af; }
+.cpr-chip.is-done .cpr-pct { color: var(--shell-accent); }
 
-/* ---------- Back to top ---------- */
+/* ---------- Back to top (small floating chevron) ---------- */
 
 .course-backtotop {
   position: fixed;
-  bottom: 22px;
-  left: 22px;
+  bottom: 24px;
+  left: 24px;
   z-index: 1200;
-  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 10px 16px;
+  justify-content: center;
   background: var(--shell-accent);
   color: #fff;
   border: none;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
+  border-radius: 50%;
+  font-size: 26px;
+  line-height: 1;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(20, 40, 60, .25);
+  box-shadow: 0 6px 18px rgba(20, 40, 60, .28);
   opacity: 0;
   visibility: hidden;
   transform: translateY(12px);
-  transition: opacity .25s ease, transform .25s ease, visibility .25s;
+  transition: opacity .25s ease, transform .25s ease, visibility .25s, background-color .2s;
 }
+.course-backtotop > span { display: block; margin-top: 4px; }
 .course-backtotop.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
 .course-backtotop:hover { background: #237777; }
 

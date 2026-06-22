@@ -124,18 +124,10 @@ function cpt_render_unit_shell($slug, $body) {
         if (!is_array($sp)) { $sp = []; }
         $pct = (int) cpt_get_unit_overall_progress($uid, $post_id, $sp);
 
-        // Ordered sections with friendly titles (from the manifest when curated).
-        $rows = [];
-        $unit_def = function_exists('cpt_manifest_get_unit') ? cpt_manifest_get_unit($post_id) : null;
-        if ($unit_def && !empty($unit_def['sections'])) {
-            foreach ($unit_def['sections'] as $s) {
-                $label = (!empty($s['title']) && $s['title'] !== $s['id']) ? $s['title'] : $s['id'];
-                $rows[] = ['id' => $s['id'], 'title' => $label];
-            }
-        } else {
-            foreach ($sp as $sid => $p) { $rows[] = ['id' => $sid, 'title' => $sid]; }
-        }
-
+        // The per-section breakdown is built client-side from the curriculum
+        // sidebar (course-tracker.js initShellChrome) so it uses the SAME
+        // Hebrew chapter labels and main-chapter grouping as the sidebar -
+        // not the raw section ids.
         $html .= '<div class="course-progress" id="course-progress">';
         $html .= '<button type="button" class="course-progress-head" id="course-progress-toggle" aria-expanded="false">';
         $html .= '<span class="course-progress-label">ההתקדמות שלי ביחידה</span>';
@@ -143,20 +135,7 @@ function cpt_render_unit_shell($slug, $body) {
         $html .= '<span class="course-progress-pct" id="course-progress-pct">' . $pct . '%</span>';
         $html .= '<span class="course-progress-chevron" aria-hidden="true">▾</span>';
         $html .= '</button>';
-
-        if ($rows) {
-            $html .= '<div class="course-progress-detail" id="course-progress-detail" hidden>';
-            foreach ($rows as $r) {
-                $rp   = isset($sp[$r['id']]) ? (int) $sp[$r['id']] : 0;
-                $done = $rp >= 100 ? ' is-done' : '';
-                $html .= '<div class="course-progress-row' . $done . '" data-section="' . esc_attr($r['id']) . '">';
-                $html .= '<span class="cpr-mark" aria-hidden="true"></span>';
-                $html .= '<span class="cpr-label">' . esc_html($r['title']) . '</span>';
-                $html .= '<span class="cpr-pct">' . $rp . '%</span>';
-                $html .= '</div>';
-            }
-            $html .= '</div>';
-        }
+        $html .= '<div class="course-progress-detail" id="course-progress-detail" hidden></div>';
         $html .= '</div>';
     }
 

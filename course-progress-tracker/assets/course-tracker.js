@@ -498,35 +498,70 @@
         if (pct)  { pct.textContent = percent + '%'; }
     }
 
-    // Update the per-section breakdown rows (revealed when the bar is expanded)
-    function updateProgressDetail(progressMap, completed) {
+    // Build the per-chapter breakdown FROM the curriculum sidebar, so it uses
+    // the same Hebrew chapter labels and main-chapter grouping (not raw ids).
+    function buildProgressDetail() {
         var detail = document.getElementById('course-progress-detail');
-        if (!detail || !progressMap) return;
-        Object.keys(progressMap).forEach(function (sid) {
-            var row = detail.querySelector('.course-progress-row[data-section="' + sid + '"]');
-            if (!row) return;
-            var p = Math.max(0, Math.min(100, Math.round(progressMap[sid])));
-            var pctEl = row.querySelector('.cpr-pct');
-            if (pctEl) { pctEl.textContent = p + '%'; }
-            row.classList.toggle('is-done', p >= 100);
+        if (!detail || detail.getAttribute('data-built')) return;
+        var mains = document.querySelectorAll('#nav .main-item[data-section]');
+        if (!mains.length) return;
+        var html = '';
+        mains.forEach(function (mi) {
+            var id = mi.getAttribute('data-section');
+            var labelEl = mi.querySelector('span'); // the circle is a div; label is a span
+            var label = labelEl ? labelEl.textContent.trim() : id;
+            html += '<span class="cpr-chip" data-section="' + id + '">'
+                 +  '<span class="cpr-mark" aria-hidden="true"></span>'
+                 +  '<span class="cpr-label">' + label + '</span>'
+                 +  '<span class="cpr-pct">0%</span></span>';
         });
-        if (Array.isArray(completed)) {
-            completed.forEach(function (sid) {
-                var row = detail.querySelector('.course-progress-row[data-section="' + sid + '"]');
-                if (row) {
-                    row.classList.add('is-done');
-                    var pctEl = row.querySelector('.cpr-pct');
-                    if (pctEl) { pctEl.textContent = '100%'; }
-                }
-            });
-        }
+        detail.innerHTML = html;
+        detail.setAttribute('data-built', '1');
     }
 
-    // Wire the expandable progress bar + the floating "back to top" button.
+    // Update each chapter chip's percent + done state.
+    function updateProgressDetail(progressMap, completed) {
+        var detail = document.getElementById('course-progress-detail');
+        if (!detail) return;
+        buildProgressDetail();
+        progressMap = progressMap || {};
+        completed = Array.isArray(completed) ? completed : [];
+        detail.querySelectorAll('.cpr-chip').forEach(function (chip) {
+            var id = chip.getAttribute('data-section');
+            var p = null;
+            if (progressMap[id] !== undefined && progressMap[id] !== null) {
+                p = progressMap[id];
+            } else {
+                // aggregate sub-chapters (id_*) when the main has no direct value
+                var subs = Object.keys(progressMap).filter(function (k) { return k.indexOf(id + '_') === 0; });
+                if (subs.length) {
+                    var sum = 0;
+                    subs.forEach(function (k) { sum += progressMap[k]; });
+                    p = Math.round(sum / subs.length);
+                }
+            }
+            // sidebar completion is authoritative for "done"
+            var done = completed.indexOf(id) !== -1;
+            var navItem = document.querySelector('#nav .main-item[data-section="' + id + '"]');
+            if (navItem && navItem.closest('.nav-item') && navItem.closest('.nav-item').classList.contains('completed')) {
+                done = true;
+            }
+            if (p === null) { p = done ? 100 : 0; }
+            if (done) { p = 100; }
+            p = Math.max(0, Math.min(100, Math.round(p)));
+            chip.classList.toggle('is-done', p >= 100);
+            var pctEl = chip.querySelector('.cpr-pct');
+            if (pctEl) { pctEl.textContent = p + '%'; }
+        });
+    }
+
+    // Wire the expandable progress bar + the floating "back to top" chevron.
     function initShellChrome() {
         var toggle = document.getElementById('course-progress-toggle');
         var detail = document.getElementById('course-progress-detail');
         if (toggle && detail) {
+            buildProgressDetail();
+            if (lastState) { updateProgressDetail(lastState.section_progress, lastState.completed_sections); }
             toggle.addEventListener('click', function () {
                 var open = detail.hasAttribute('hidden');
                 if (open) { detail.removeAttribute('hidden'); } else { detail.setAttribute('hidden', ''); }
@@ -535,21 +570,29 @@
         }
 
         var shell = document.getElementById('course-shell');
-        if (shell) {
-            var btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'course-backtotop';
-            btn.innerHTML = '<span aria-hidden="true">↑</span> חזרה למעלה';
-            document.body.appendChild(btn);
-            btn.addEventListener('click', function () {
-                var y = shell.getBoundingClientRect().top + window.pageYOffset - 80;
-                window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
-            });
-            var onScroll = function () {
+        if (!shell) return;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'course-backtotop';
+        btn.setAttribute('aria-label', 'חזרה לראש היחידה');
+        btn.innerHTML = '<span aria-hidden="true">⌃</span>'; // ⌃ chevron
+        document.body.appendChild(btn);
+        btn.addEventListener('click', function () {
+            // scrollIntoView works even when an ancestor (not window) is the scroller
+            shell.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        // Show once the hero leaves the viewport. IntersectionObserver works even
+        // where the theme scrolls an inner element (so window scroll never fires).
+        var sentinel = shell.querySelector('.course-hero') || shell;
+        if ('IntersectionObserver' in window) {
+            var io = new IntersectionObserver(function (entries) {
+                btn.classList.toggle('is-visible', !entries[0].isIntersecting);
+            }, { threshold: 0 });
+            io.observe(sentinel);
+        } else {
+            window.addEventListener('scroll', function () {
                 btn.classList.toggle('is-visible', window.pageYOffset > 400);
-            };
-            window.addEventListener('scroll', onScroll, { passive: true });
-            onScroll();
+            }, { passive: true });
         }
     }
 
@@ -581,7 +624,7 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.7.0 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.8.0 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {
