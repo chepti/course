@@ -357,27 +357,15 @@
                     </div>
                 </div>
                 <div class="nav-item">
-                    <div class="sub-item" data-section="tools_dubbing">
-                        <div class="completion-circle"></div>
-                        <span>דיבוב</span>
-                    </div>
-                </div>
-                <div class="nav-item">
                     <div class="sub-item" data-section="tools_animation">
                         <div class="completion-circle"></div>
-                        <span>הנפשה</span>
+                        <span>הנפשה וסרטוני AI</span>
                     </div>
                 </div>
                 <div class="nav-item">
                     <div class="sub-item" data-section="tools_explanation">
                         <div class="completion-circle"></div>
                         <span>סרטוני הסבר</span>
-                    </div>
-                </div>
-                <div class="nav-item">
-                    <div class="sub-item" data-section="tools_video">
-                        <div class="completion-circle"></div>
-                        <span>וידאו</span>
                     </div>
                 </div>
             </div>
@@ -483,52 +471,24 @@
                     </div>
 
                     <hr>
-                    
+
+                    <h4>שירים וניגון בג'מיני</h4>
+                    <p>ג'מיני 2.5 מאפשר ליצור שירים ומוזיקה, כולל בעברית. אפשר לבקש ג'ינגל לשיעור, שיר לפרשת שבוע, מנגינה לזיכרון מידע ועוד - ולהוריד את הקובץ לשימוש ישיר בכיתה.</p>
+                    <div class="button-wrapper">
+                        <a href="https://gemini.google.com/app" target="_blank" class="styled-button" data-track-click>ג'מיני</a>
+                    </div>
+
+                    <hr>
+
                     <h4>שירים בסונו</h4>
-                    <p>סונו - הכלי היחיד שיודע ליצור שירים בעברית. בגרסה החינמית נוכל לקבל רק שירים שיישמעו שגויים למדי, ורק מודלים מסויימים מאפשרים הורדת השיר.</p>
-                    <p>רק בגרסה בתשלום אפשר להעלות הקלטה ולקבל תזמורת מלווה, החלפת הקול ועוד.</p>
+                    <p>סונו - יוצר שירים בעברית. <strong>שימו לב: הורדת שיר מסונו מצריכה מנוי בתשלום - גם בגרסה הבסיסית.</strong> בגרסה החינמית אפשר רק להאזין.</p>
+                    <p>בגרסה בתשלום אפשר גם להעלות הקלטה ולקבל תזמורת מלווה, החלפת הקול ועוד.</p>
                     <div class="video-container">
                         <iframe src="https://www.youtube.com/embed/wfCTHXML_SI" allowfullscreen data-track-video="tools_audio"></iframe>
                     </div>
                     <div class="button-wrapper">
                         <a href="https://suno.com/" target="_blank" class="styled-button" data-track-click>סונו</a>
                     </div>
-                </div>
-            `,
-            tools_dubbing: `
-                <div class="content-section" data-track-section="tools_dubbing">
-                    <h2>דיבוב</h2>
-                    
-                    <hr>
-                    
-                    <h4>דיבוב עם HEDRA</h4>
-                    <p>הדרה מאפשרת להעלות תמונה של דמות, לכתוב טקסט, ולקבל דמות מדובבת עם תמיכה טובה בעברית.</p>
-                    <p>300 קרדיטים בחודש, סימן מים על התוצאה, סרטון מוגבל ל-20 שניות.</p>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/ggBHhywt9BI" allowfullscreen data-track-video="tools_dubbing"></iframe>
-                    </div>
-                    <div class="button-wrapper">
-                        <a href="https://www.hedra.com/app" target="_blank" class="styled-button" data-track-click>הדרה</a>
-                    </div>
-
-                    <hr>
-                    
-                    <h4>וידנוז</h4>
-                    <p>וידנוז מאפשר לדובב דמות, שתקריין את הטקסט או ההקלטה שלכם. הדמות קצת "קרטונית" או רובוטית ולא מניעה הרבה תווי פנים.</p>
-                    <p>2 דקות חינם ביום, וגם יצירת אווטאר אישי בחינם - כולל קול ווידאו.</p>
-                    <div class="button-wrapper">
-                        <a href="https://aiapp.vidnoz.com/" target="_blank" class="styled-button" data-track-click>וידנוז</a>
-                    </div>
-
-                    <hr>
-                    
-                    <h4>למון סלייס / אינפיניטי</h4>
-                    <p>הכלי נהיה מוגבל מאוד, אם תרצו להכיר את היכולות:</p>
-                    <div class="button-wrapper">
-                        <a href="https://youtu.be/Fct7r3m2FeE" target="_blank" class="styled-button" data-track-click>למון סלייס / אינפיניטי</a>
-                    </div>
-                    
-                    <img src="https://i.imgur.com/gC1Vdgx.png" alt="איור דיבוב" class="illustration">
                 </div>
             `,
             tools_animation: `
@@ -567,7 +527,17 @@
                     <div class="button-wrapper">
                         <a href="https://hailuoai.video/" target="_blank" class="styled-button" data-track-click>מינמקס</a>
                     </div>
-                    <p>חלופות אחרות: קלינג, וידו, לומה, סורה (בתשלום), ראנווי (בתשלום)</p>
+                    <p>חלופות אחרות: קלינג, וידו, לומה, ראנווי (בתשלום)</p>
+
+                    <hr>
+
+                    <h4>סורה 2</h4>
+                    <p><strong>הכלי נסגר לרישומים חדשים.</strong> מי שרשום מוזמן לנסות: יצירה אוטומטית של סרטון קולנועי קצר (10-15 שניות) מתיאור טקסט, כולל קול ועריכות יצירתיות.</p>
+
+                    <hr>
+
+                    <h4>גרוק - יצירת וידאו</h4>
+                    <p>גרוק (של X) מסוגל ליצור סרטוני AI איכותיים מתיאור טקסט. <strong>שימו לב: יצירת וידאו בגרוק דורשת מנוי בתשלום.</strong></p>
                 </div>
             `,
             tools_explanation: `
@@ -618,25 +588,6 @@
                     <p>עוד חלופה עם בונוס למורים - LOOM. היתרון - מעלה מיד לענן את הסרטון, אפשר לתת סרטון צפיה תוך דקות ספורות. אפשר לבקש חשבון חינוך.</p>
                     <div class="button-wrapper">
                         <a href="https://tikshuv.chepti.com/%D7%90%D7%99%D7%9A-%D7%A4%D7%AA%D7%97%D7%AA%D7%99-%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%95%D7%9D-loom-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A/" target="_blank" class="styled-button" data-track-click>LOOM - חשבון חינוך</a>
-                    </div>
-                </div>
-            `,
-            tools_video: `
-                <div class="content-section" data-track-section="tools_video">
-                    <h2>וידאו</h2>
-                    
-                    <hr>
-                    
-                    <h4>סורה 2</h4>
-                    <p>יצירה אוטומטית של סרטון קולנועי כולל קול, תסריט ועריכות יצירתיות. באורך 10-15 שניות, ניתן ליצור כמה סרטונים בכל יום.</p>
-                    <p>עדיף ליצור מטקסט ולא מתמונה, התוצר מוצלח יותר.</p>
-                    <p>מגבלות כניסה - דורש קוד הזמנה (מי שמקבל הזמנה יכול להוציא קוד הזמנה חדש ל-4 חברים נוספים) והפעלת VPN כדי לדמות שימוש בארה"ב (מודגם בסרטון).</p>
-                    <p><strong>הערה חשובה:</strong> התוסף VPN המוצג בסרטון התברר כבעייתי, ומומלץ להסיר אותו מהמחשב ולא להשתמש בו.</p>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/w7QlS2CF91I" allowfullscreen data-track-video="tools_video"></iframe>
-                    </div>
-                    <div class="button-wrapper">
-                        <a href="https://sora.chatgpt.com/profile" target="_blank" class="styled-button" data-track-click>סורה 2</a>
                     </div>
                 </div>
             `,
