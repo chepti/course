@@ -115,6 +115,20 @@ function cpt_render_unit_shell($slug, $body) {
         $html .= '<div class="course-intro">' . wpautop($intro) . '</div>';
     }
 
+    // Integrated progress bar (replaces the standalone [unit_progress] card).
+    // Server-rendered initial value; course-tracker.js keeps it live.
+    if ($post_id && is_user_logged_in() && function_exists('cpt_get_unit_overall_progress')) {
+        $uid = get_current_user_id();
+        $sp  = cpt_get_unit_section_progress($uid, $post_id);
+        if (!is_array($sp)) { $sp = []; }
+        $pct = (int) cpt_get_unit_overall_progress($uid, $post_id, $sp);
+        $html .= '<div class="course-progress">';
+        $html .= '<span class="course-progress-label">ההתקדמות שלי ביחידה</span>';
+        $html .= '<span class="course-progress-track"><span class="course-progress-fill" id="course-progress-fill" style="width:' . $pct . '%"></span></span>';
+        $html .= '<span class="course-progress-pct" id="course-progress-pct">' . $pct . '%</span>';
+        $html .= '</div>';
+    }
+
     $html .= '<div class="course-unit-body">';
     $html .= '<div class="course-loader" aria-live="polite"><span class="spinner"></span><span>טוען את היחידה…</span></div>';
     $html .= $body;

@@ -32,6 +32,7 @@
   --primary-hover-2: #229954;
   font-family: 'Rubik', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
+  align-items: flex-start;
   direction: rtl;
   position: relative;
 }
@@ -44,16 +45,20 @@
 
 #interactive-unit-container.cpt-engine-v2 #nav {
   width: var(--nav-width);
-  height: 100%;
+  flex: 0 0 var(--nav-width);
+  align-self: flex-start;
+  /* Native sticky - anchored below the admin bar + the sticky top nav.
+     Falls back gracefully if the shell vars are absent (chrome=off). */
+  position: sticky;
+  top: calc(var(--stick-top, 0px) + var(--course-topnav-h, 60px) + 10px);
+  max-height: calc(100vh - var(--stick-top, 0px) - var(--course-topnav-h, 60px) - 20px);
+  overflow-y: auto;
   background: #fbfcfd;
   padding: 22px 18px;
-  overflow-y: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
   font-size: 1rem;
   border-left: 1px solid #e9edf1;
   z-index: 1001;
+  order: 1;
 }
 
 #interactive-unit-container.cpt-engine-v2 .sidebar-title {
@@ -67,11 +72,12 @@
 }
 
 #interactive-unit-container.cpt-engine-v2 #content {
-  margin-right: var(--nav-width);
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-right: 0;
   padding: 40px 40px 40px 30px;
-  width: calc(100% - var(--nav-width));
   margin-top: 0;
-  max-width: 1000px;
+  max-width: none;
   order: 2;
   position: relative;
 }

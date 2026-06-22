@@ -16,7 +16,9 @@
   --shell-salmon: #e67e7e;
   --shell-ink: #2c3e50;
   --shell-line: #e6e9ee;
-  --course-topnav-h: 64px;
+  --course-topnav-h: 60px;
+  /* viewport offset that sticky elements anchor to (admin bar height) */
+  --stick-top: 0px;
   font-family: 'Rubik', 'Varela Round', 'Segoe UI', Tahoma, sans-serif;
   direction: rtl;
   max-width: var(--shell-max);
@@ -25,27 +27,29 @@
   border: 1px solid var(--shell-line);
   border-radius: 16px;
   box-shadow: 0 10px 40px rgba(20, 40, 60, 0.06);
-  overflow: hidden;
+  /* NO overflow:hidden here - it would break the native position:sticky of
+     the top nav and the curriculum rail. Corners are rounded per-piece. */
+}
+
+.admin-bar .course-shell { --stick-top: 32px; }
+@media screen and (max-width: 782px) {
+  .admin-bar .course-shell { --stick-top: 46px; }
 }
 
 /* ---------- Top nav (between units) ---------- */
 
 .course-topnav {
   position: sticky;
-  top: 0;
+  top: var(--stick-top);
   z-index: 1100;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: saturate(1.2) blur(8px);
+  height: var(--course-topnav-h);
+  padding: 0 16px;
+  background: #fff;
   border-bottom: 1px solid var(--shell-line);
-}
-
-.admin-bar .course-topnav { top: 32px; }
-@media screen and (max-width: 782px) {
-  .admin-bar .course-topnav { top: 46px; }
+  border-radius: 16px 16px 0 0;
 }
 
 .course-topnav-list {
@@ -174,6 +178,48 @@
   max-width: 820px;
 }
 
+/* ---------- Integrated unit progress (replaces the standalone card) ---------- */
+
+.course-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 16px 32px 4px;
+  padding: 12px 16px;
+  background: #f7f9fb;
+  border: 1px solid var(--shell-line);
+  border-radius: 12px;
+}
+.course-progress-label {
+  flex: 0 0 auto;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--shell-ink);
+}
+.course-progress-track {
+  flex: 1 1 auto;
+  height: 10px;
+  background: #e6ebef;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.course-progress-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--shell-accent), #4bbf9a);
+  transition: width .5s ease;
+}
+.course-progress-pct {
+  flex: 0 0 auto;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--shell-accent);
+  min-width: 42px;
+  text-align: left;
+}
+
 /* ---------- Loader ---------- */
 
 /* The unit body keeps its normal flow (so the old units' inline layout JS
@@ -182,6 +228,7 @@
 .course-unit-body {
   position: relative;
   min-height: 340px;
+  border-radius: 0 0 16px 16px;
 }
 .course-loader {
   position: absolute;

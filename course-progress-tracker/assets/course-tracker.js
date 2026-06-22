@@ -103,6 +103,7 @@
                 section_progress: resp.section_progress,
                 completed_sections: resp.completed_sections || []
             });
+            updateShellProgress(resp.unit_percent);
             if (resp.completed_sections) {
                 lastState = Object.assign({}, lastState, {
                     section_progress: resp.section_progress,
@@ -479,51 +480,20 @@
         contentObservers.push(observer);
     }
 
-    // ---------- Sticky nav (JS-driven: fixed within container bounds) ----------
+    // ---------- Sticky nav ----------
+    // The curriculum rail and top bar now use native CSS `position: sticky`
+    // (see unit.css / course-shell.css). No JS positioning needed - that older
+    // approach caused the jump on scroll.
 
-    function initStickyNav() {
-        var nav = document.getElementById('nav');
-        var container = document.getElementById('interactive-unit-container');
-        if (!nav || !container) return;
+    // ---------- Shell progress bar ----------
 
-        container.style.position = 'relative';
-        var adminbar = document.getElementById('wpadminbar');
-        var topnav   = document.querySelector('.course-topnav');
-
-        function update() {
-            if (window.innerWidth <= 800) {
-                nav.style.cssText = '';
-                return;
-            }
-            var adminH  = adminbar ? adminbar.offsetHeight : 0;
-            // The between-units bar is sticky at the top; the in-unit sidebar
-            // must stick BELOW it, not under it.
-            var topnavH = topnav ? topnav.offsetHeight : 0;
-            var cr = container.getBoundingClientRect();
-            var vH = window.innerHeight;
-
-            var visTop    = Math.max(adminH + topnavH, cr.top);
-            var visBottom = Math.min(vH, cr.bottom);
-            var visH      = visBottom - visTop;
-
-            if (visH < 80) {
-                nav.style.position = 'absolute';
-                nav.style.top      = '0';
-                nav.style.height   = '';
-                nav.style.right    = '0';
-                return;
-            }
-
-            var navRight = Math.max(0, window.innerWidth - cr.right);
-            nav.style.position = 'fixed';
-            nav.style.top      = visTop + 'px';
-            nav.style.height   = Math.max(visH, 320) + 'px';
-            nav.style.right    = navRight + 'px';
-        }
-
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update, { passive: true });
-        update();
+    function updateShellProgress(percent) {
+        if (percent === null || percent === undefined || isNaN(percent)) return;
+        percent = Math.max(0, Math.min(100, Math.round(percent)));
+        var fill = document.getElementById('course-progress-fill');
+        var pct  = document.getElementById('course-progress-pct');
+        if (fill) { fill.style.width = percent + '%'; }
+        if (pct)  { pct.textContent = percent + '%'; }
     }
 
     // ---------- Shell loader: reveal once the unit content has rendered ----------
@@ -554,7 +524,7 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.5.0 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.6.0 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {
@@ -575,7 +545,6 @@
         trackComments();
         watchSectionChanges();
         handleResumeQueryParam();
-        initStickyNav();
         initShellLoader();
 
         // Optional: bootstrap REST session for the resume button (GET /state).
@@ -583,6 +552,7 @@
         bootstrapSession().then(function () {
             rest('state?post_id=' + POST_ID).then(function (state) {
                 applyState(state);
+                updateShellProgress(state.unit_percent);
                 lastState = state;
             }).catch(function (err) {
                 console.warn('Course Tracker: state load failed -', err.message); // eslint-disable-line no-console
