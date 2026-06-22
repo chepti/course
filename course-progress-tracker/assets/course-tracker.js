@@ -575,7 +575,7 @@
         btn.type = 'button';
         btn.className = 'course-backtotop';
         btn.setAttribute('aria-label', 'חזרה לראש היחידה');
-        btn.innerHTML = '<span aria-hidden="true">⌃</span>'; // ⌃ chevron
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 15 12 9 18 15"></polyline></svg>';
         document.body.appendChild(btn);
         btn.addEventListener('click', function () {
             // scrollIntoView works even when an ancestor (not window) is the scroller
@@ -624,7 +624,7 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.8.0 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.8.1 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {

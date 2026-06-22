@@ -277,34 +277,34 @@
 .cpr-pct { font-size: .8rem; font-weight: 700; color: #98a3af; }
 .cpr-chip.is-done .cpr-pct { color: var(--shell-accent); }
 
-/* ---------- Back to top (small floating chevron) ---------- */
+/* ---------- Back to top (bare colored chevron, no circle/background) ---------- */
 
 .course-backtotop {
   position: fixed;
-  bottom: 24px;
-  left: 24px;
+  bottom: 28px;
+  /* hug the content column's left edge (shell max 1180 -> half 590),
+     never closer than 16px to the viewport edge on narrow screens */
+  left: max(16px, calc(50% - 600px));
   z-index: 1200;
-  width: 46px;
-  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--shell-accent);
-  color: #fff;
+  padding: 6px;
+  background: none;
   border: none;
-  border-radius: 50%;
-  font-size: 26px;
-  line-height: 1;
+  /* literal colours: the button is appended to <body>, outside the
+     .course-shell scope where --shell-* vars are defined */
+  color: #2a8c8c;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(20, 40, 60, .28);
+  filter: drop-shadow(0 2px 5px rgba(20, 40, 60, .22));
   opacity: 0;
   visibility: hidden;
-  transform: translateY(12px);
-  transition: opacity .25s ease, transform .25s ease, visibility .25s, background-color .2s;
+  transform: translateY(10px);
+  transition: opacity .25s ease, transform .25s ease, visibility .25s, color .2s ease;
 }
-.course-backtotop > span { display: block; margin-top: 4px; }
+.course-backtotop svg { display: block; width: 38px; height: 38px; }
 .course-backtotop.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
-.course-backtotop:hover { background: #237777; }
+.course-backtotop:hover { color: #e67e7e; transform: translateY(-4px); }
 
 /* ---------- Loader ---------- */
 
