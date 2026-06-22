@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course shell preview</title>
+<link rel="stylesheet" href="course-progress-tracker/assets/unit.css?b=7">
+<link rel="stylesheet" href="course-progress-tracker/assets/course-shell.css?b=7">
+<style>
+  /* mimic the page background around the shell */
+  body { margin: 0; background: #eef1f4; padding: 24px 0; font-family: 'Rubik','Segoe UI',sans-serif; }
+  /* local placeholders standing in for remote thumbnails / banner / video */
+  .ph-thumb { background: linear-gradient(135deg,#6aa9c9,#34b0a0); }
+  .ph-banner { width:100%; height:100%; display:block; background: linear-gradient(120deg,#1ABC9C,#4A90E2 60%,#9B59B6); }
+  .ph-video { width:100%; max-width:800px; aspect-ratio:16/9; border-radius:8px; background:#111 url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22><circle cx=%2240%22 cy=%2240%22 r=%2238%22 fill=%22%23e62117%22/><polygon points=%2232,24 32,56 58,40%22 fill=%22white%22/></svg>') center/80px no-repeat; box-shadow:0 2px 10px rgba(0,0,0,.1); }
+  /* stand in for the remote thumbnails / banner with no network */
+  .course-topnav-thumb { background: linear-gradient(135deg,#6aa9c9,#34b0a0); }
+  .course-topnav-thumb img { display:none; }
+  .course-topnav { backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+</style>
+</head>
+<body>
+
+<!-- ===== This mimics cpt_render_unit_shell() output ===== -->
+<div class="course-shell" id="course-shell">
+
+  <nav class="course-topnav" aria-label="ניווט בין יחידות הקורס">
+    <ul class="course-topnav-list">
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-7f47ae02-05e5-4749-bc89-6abbfb92b1cf-300x225.jpg" alt=""><span class="course-topnav-num">1</span></span><span class="course-topnav-text">התייעצות</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-1bc53846-ec29-4372-bf70-7d136c36adb6-300x225.jpg" alt=""><span class="course-topnav-num">2</span></span><span class="course-topnav-text">חומרי ליבה</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-9468026b-b6cd-479c-b8c2-5fb01902bf46.jpg" alt=""><span class="course-topnav-num">3</span></span><span class="course-topnav-text">ויזואליה</span></a></li>
+      <li class="course-topnav-item is-active"><a href="#" aria-current="page"><span class="course-topnav-thumb"><img src="local-missing-4af7551d-c742-4e3e-be7c-8fde12dc3737-300x225.jpg" alt=""><span class="course-topnav-num">4</span></span><span class="course-topnav-text">תרשימים</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-fdca443c-e083-4d1c-b4ea-4b146a11fe17-300x225.jpg" alt=""><span class="course-topnav-num">5</span></span><span class="course-topnav-text">אינטראקטיבי</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-1383374a-193e-49aa-b23a-44de7e55d244-300x225.jpg" alt=""><span class="course-topnav-num">6</span></span><span class="course-topnav-text">אודיו ווידאו</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-240f220f-f4e6-4b8d-a6f5-a3f1d0c23c64-300x225.jpg" alt=""><span class="course-topnav-num">7</span></span><span class="course-topnav-text">אפליקציות</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-3ea11d54-2be9-4d9d-ba39-2cb983d11da3-300x225.jpg" alt=""><span class="course-topnav-num">8</span></span><span class="course-topnav-text">הערכה</span></a></li>
+      <li class="course-topnav-item"><a href="#"><span class="course-topnav-thumb"><img src="local-missing-c2426c07-18ca-45f5-9a65-9033f7538667-300x225.jpg" alt=""><span class="course-topnav-num">9</span></span><span class="course-topnav-text">ארגון וניהול</span></a></li>
+    </ul>
+    <a class="course-topnav-blocked" href="#"><span aria-hidden="true">🎬</span> סרטונים לחסומים</a>
+  </nav>
+
+  <header class="course-hero" style="background-image:linear-gradient(120deg,#1ABC9C,#4A90E2 60%,#9B59B6)">
+    <div class="course-hero-overlay">
+      <span class="course-hero-kicker">יחידה 4</span>
+      <h1 class="course-hero-title">תרשימים</h1>
+    </div>
+  </header>
+
+  <div class="course-intro">
+    <p>תרשימים מאפשרים לרכז מידע בצורה ויזואלית, ולתמוך בהעברת רעיונות ותמיכה בלמידה. ביחידה זו נתמקד ביכולות הבינה ליצור בהירות ויזואלית, ובשונה מהיכולת להוסיף צבע וכיף שהכרנו ביחידה השלישית.</p>
+  </div>
+
+  <div class="course-unit-body">
+    <div id="interactive-unit-container" class="cpt-engine-v2">
+      <div id="content">
+        <div id="content-area">
+          <div class="content-section" data-track-section="overview">
+            <h1>במבט על</h1>
+            <p>מחקרים מראים שהמוח יכול לעבד מידע חזותי מהר וביעילות רבה יותר, מה שמאפשר לו לזכור מידע חזותי בצורה טובה יותר מטקסטואלי.</p>
+            <div class="video-container">
+              <div class="video-title">מבט על — תרשימים ככלי חשיבה</div>
+              <div class="ph-video"></div>
+            </div>
+            <h4>מתי?</h4>
+            <ul>
+              <li>כדי להמחיש מושגים מורכבים שקשה להבין במילים בלבד.</li>
+              <li>ללומדים בעלי סגנונות למידה שונים.</li>
+              <li>במצבי הוראה והדרכה — ייצוג חזותי הופך הסבר לברור יותר.</li>
+              <li>כשמדובר במידע כמותי — גרפים ותרשימים מארגנים נתונים.</li>
+            </ul>
+            <a href="#" class="styled-button">מפת כלים דיגיטליים 🗺</a>
+          </div>
+        </div>
+      </div>
+
+      <div id="nav">
+        <div class="sidebar-title">תרשימים — תפיסה חזותית 📊</div>
+        <div class="nav-item">
+          <div class="main-item active" data-section="overview">
+            <div class="completion-circle"></div>
+            <span>במבט על</span>
+          </div>
+        </div>
+        <div class="nav-item">
+          <div class="main-item" data-section="tools">
+            <div class="completion-circle"></div>
+            <span>כלים</span>
+          </div>
+          <div class="sub-items active">
+            <div class="nav-item"><div class="sub-item" data-section="tools_presentations"><div class="completion-circle"></div><span>מצגות</span></div></div>
+            <div class="nav-item"><div class="sub-item" data-section="tools_infographics"><div class="completion-circle"></div><span>אינפוגרפיקה</span></div></div>
+            <div class="nav-item"><div class="sub-item" data-section="tools_diagrams"><div class="completion-circle"></div><span>תרשימים ומפות חשיבה</span></div></div>
+          </div>
+        </div>
+        <div class="nav-item"><div class="main-item" data-section="help_tools"><div class="completion-circle"></div><span>כלי עזר</span></div></div>
+        <div class="nav-item"><div class="main-item" data-section="discussion"><div class="completion-circle"></div><span>דיון</span></div></div>
+        <div class="nav-item"><div class="main-item" data-section="task"><div class="completion-circle"></div><span>משימה</span></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -133,20 +133,19 @@
 
 .course-hero {
   position: relative;
-  background: #0e2230;
-}
-.course-hero-img {
-  width: 100%;
-  height: 260px;
-  object-fit: cover;
-  display: block;
-  opacity: .96;
+  height: clamp(170px, 26vw, 280px);
+  background-color: #0e2230;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-end;
 }
 .course-hero-overlay {
-  position: absolute;
-  inset: auto 0 0 0;
-  padding: 28px 32px 22px;
-  background: linear-gradient(to top, rgba(8, 20, 30, .82), rgba(8, 20, 30, 0));
+  position: relative;
+  width: 100%;
+  padding: 26px 32px 20px;
+  background: linear-gradient(to top, rgba(8, 20, 30, .85), rgba(8, 20, 30, .15) 70%, rgba(8, 20, 30, 0));
 }
 .course-hero-kicker {
   display: inline-block;

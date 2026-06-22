@@ -97,10 +97,10 @@ function cpt_render_unit_shell($slug, $body) {
     $html .= cpt_render_course_topnav($current);
 
     if ($banner || $title) {
-        $html .= '<header class="course-hero">';
-        if ($banner) {
-            $html .= '<img class="course-hero-img" src="' . esc_url($banner) . '" alt="">';
-        }
+        // Background-image (not <img>) so theme "img { height:auto }" rules
+        // cannot blow up the banner; it always crops via background-size:cover.
+        $style = $banner ? ' style="background-image:url(\'' . esc_url($banner) . '\')"' : '';
+        $html .= '<header class="course-hero"' . $style . '>';
         $html .= '<div class="course-hero-overlay">';
         if ($current) {
             $html .= '<span class="course-hero-kicker">יחידה ' . intval($current) . '</span>';

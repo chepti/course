@@ -21,6 +21,10 @@
  */
 
 #interactive-unit-container.cpt-engine-v2 {
+  /* Defaults so the engine never breaks if a unit forgets to set its accent;
+     per-unit inline `--primary-color` overrides these. */
+  --primary-color: #2a8c8c;
+  --secondary-color: #34495e;
   --nav-width: 300px;
   --header-height: 60px;
   --content-strip-rgb: 74, 144, 226;
@@ -41,25 +45,25 @@
 #interactive-unit-container.cpt-engine-v2 #nav {
   width: var(--nav-width);
   height: 100%;
-  background: #f8f9fa;
-  padding: 30px;
+  background: #fbfcfd;
+  padding: 22px 18px;
   overflow-y: auto;
   position: absolute;
   top: 0;
   right: 0;
-  font-size: 1.1em;
-  border-left: 1px solid #dee2e6;
+  font-size: 1rem;
+  border-left: 1px solid #e9edf1;
   z-index: 1001;
 }
 
 #interactive-unit-container.cpt-engine-v2 .sidebar-title {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-align: center;
-  color: var(--secondary-color);
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--primary-color);
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin: 4px 10px 14px;
+  text-align: right;
+  color: #8895a3;
+  text-transform: none;
 }
 
 #interactive-unit-container.cpt-engine-v2 #content {
@@ -102,58 +106,51 @@
 }
 
 #interactive-unit-container.cpt-engine-v2 .nav-item {
-  margin: 15px 0;
+  margin: 2px 0;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 #interactive-unit-container.cpt-engine-v2 .main-item,
 #interactive-unit-container.cpt-engine-v2 .sub-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  border-radius: 25px;
-  border: 2px solid #e5e7eb;
-  transition: all 0.3s ease;
+  gap: 11px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  border-right: 3px solid transparent;
+  background: transparent;
+  color: #3a4756;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease;
 }
 
 #interactive-unit-container.cpt-engine-v2 .main-item {
-  font-weight: bold;
-  background: linear-gradient(45deg, #f3f4f6, #ffffff);
+  font-weight: 600;
 }
 
 #interactive-unit-container.cpt-engine-v2 .sub-item {
-  margin: 8px 0;
-  background: linear-gradient(45deg, #ffffff, #f8f9fa);
-  border-width: 1px;
+  margin: 1px 0;
+  font-size: .95em;
+  color: #5a6776;
 }
 
-#interactive-unit-container.cpt-engine-v2 .main-item:hover {
-  background: linear-gradient(45deg, var(--primary-color), #27ae60);
-  border-color: var(--primary-color);
-  color: white;
-  transform: translateX(-5px);
-  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2);
-}
-
+#interactive-unit-container.cpt-engine-v2 .main-item:hover,
 #interactive-unit-container.cpt-engine-v2 .sub-item:hover {
-  background: linear-gradient(45deg, #edf7f0, #d5f5e3);
-  border-color: var(--primary-color);
-  transform: translateX(-5px);
-  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+  background: #eef2f5;
+  color: var(--secondary-color);
 }
 
 #interactive-unit-container.cpt-engine-v2 .completion-circle {
-  width: 24px;
-  height: 24px;
-  border: 2px solid #ccc;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #cbd3db;
   border-radius: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-  background: white;
+  font-size: 12px;
+  transition: all 0.25s ease;
+  background: #fff;
   flex-shrink: 0;
 }
 
@@ -172,8 +169,7 @@
 
 #interactive-unit-container.cpt-engine-v2 .main-item:hover .completion-circle,
 #interactive-unit-container.cpt-engine-v2 .sub-item:hover .completion-circle {
-  border-color: white;
-  transform: scale(1.1);
+  border-color: var(--primary-color);
 }
 
 #interactive-unit-container.cpt-engine-v2 .sub-items {
@@ -308,26 +304,23 @@
   text-align: left;
 }
 
-/* Active section - colored background, no side marker */
+/* Active section: soft accent tint + accent rail on the right (RTL start). */
 #interactive-unit-container.cpt-engine-v2 .main-item.active,
 #interactive-unit-container.cpt-engine-v2 .sub-item.active {
-  background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;
-  border: 2px solid var(--primary-color) !important;
-  border-color: var(--primary-color) !important;
-  color: white !important;
+  background: color-mix(in srgb, var(--primary-color) 12%, #fff) !important;
+  border: 1px solid transparent !important;
+  border-right: 3px solid var(--primary-color) !important;
+  color: var(--secondary-color) !important;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-weight: 700;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 #interactive-unit-container.cpt-engine-v2 .main-item.active .completion-circle,
 #interactive-unit-container.cpt-engine-v2 .sub-item.active .completion-circle {
-  border-color: white !important;
-  background: white !important;
-}
-
-#interactive-unit-container.cpt-engine-v2 .main-item.active .completion-circle::after,
-#interactive-unit-container.cpt-engine-v2 .sub-item.active .completion-circle::after {
-  content: "";
+  border-color: var(--primary-color) !important;
+  background: #fff !important;
 }
 
 #interactive-unit-container.cpt-engine-v2 .illustration {
