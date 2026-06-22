@@ -117,15 +117,46 @@ function cpt_render_unit_shell($slug, $body) {
 
     // Integrated progress bar (replaces the standalone [unit_progress] card).
     // Server-rendered initial value; course-tracker.js keeps it live.
+    // Click expands a per-section breakdown so the learner sees what's left.
     if ($post_id && is_user_logged_in() && function_exists('cpt_get_unit_overall_progress')) {
         $uid = get_current_user_id();
         $sp  = cpt_get_unit_section_progress($uid, $post_id);
         if (!is_array($sp)) { $sp = []; }
         $pct = (int) cpt_get_unit_overall_progress($uid, $post_id, $sp);
-        $html .= '<div class="course-progress">';
+
+        // Ordered sections with friendly titles (from the manifest when curated).
+        $rows = [];
+        $unit_def = function_exists('cpt_manifest_get_unit') ? cpt_manifest_get_unit($post_id) : null;
+        if ($unit_def && !empty($unit_def['sections'])) {
+            foreach ($unit_def['sections'] as $s) {
+                $label = (!empty($s['title']) && $s['title'] !== $s['id']) ? $s['title'] : $s['id'];
+                $rows[] = ['id' => $s['id'], 'title' => $label];
+            }
+        } else {
+            foreach ($sp as $sid => $p) { $rows[] = ['id' => $sid, 'title' => $sid]; }
+        }
+
+        $html .= '<div class="course-progress" id="course-progress">';
+        $html .= '<button type="button" class="course-progress-head" id="course-progress-toggle" aria-expanded="false">';
         $html .= '<span class="course-progress-label">ההתקדמות שלי ביחידה</span>';
         $html .= '<span class="course-progress-track"><span class="course-progress-fill" id="course-progress-fill" style="width:' . $pct . '%"></span></span>';
         $html .= '<span class="course-progress-pct" id="course-progress-pct">' . $pct . '%</span>';
+        $html .= '<span class="course-progress-chevron" aria-hidden="true">▾</span>';
+        $html .= '</button>';
+
+        if ($rows) {
+            $html .= '<div class="course-progress-detail" id="course-progress-detail" hidden>';
+            foreach ($rows as $r) {
+                $rp   = isset($sp[$r['id']]) ? (int) $sp[$r['id']] : 0;
+                $done = $rp >= 100 ? ' is-done' : '';
+                $html .= '<div class="course-progress-row' . $done . '" data-section="' . esc_attr($r['id']) . '">';
+                $html .= '<span class="cpr-mark" aria-hidden="true"></span>';
+                $html .= '<span class="cpr-label">' . esc_html($r['title']) . '</span>';
+                $html .= '<span class="cpr-pct">' . $rp . '%</span>';
+                $html .= '</div>';
+            }
+            $html .= '</div>';
+        }
         $html .= '</div>';
     }
 

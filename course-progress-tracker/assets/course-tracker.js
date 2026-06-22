@@ -164,6 +164,8 @@
             showResumeButton(state.resume);
         }
 
+        updateProgressDetail(progressMap, state.completed_sections);
+
         // Debug: always log to console so we can diagnose circle issues
         /* eslint-disable no-console */
         var navSections = Array.from(document.querySelectorAll('[data-section]')).map(function (el) { return el.getAttribute('data-section'); });
@@ -496,6 +498,61 @@
         if (pct)  { pct.textContent = percent + '%'; }
     }
 
+    // Update the per-section breakdown rows (revealed when the bar is expanded)
+    function updateProgressDetail(progressMap, completed) {
+        var detail = document.getElementById('course-progress-detail');
+        if (!detail || !progressMap) return;
+        Object.keys(progressMap).forEach(function (sid) {
+            var row = detail.querySelector('.course-progress-row[data-section="' + sid + '"]');
+            if (!row) return;
+            var p = Math.max(0, Math.min(100, Math.round(progressMap[sid])));
+            var pctEl = row.querySelector('.cpr-pct');
+            if (pctEl) { pctEl.textContent = p + '%'; }
+            row.classList.toggle('is-done', p >= 100);
+        });
+        if (Array.isArray(completed)) {
+            completed.forEach(function (sid) {
+                var row = detail.querySelector('.course-progress-row[data-section="' + sid + '"]');
+                if (row) {
+                    row.classList.add('is-done');
+                    var pctEl = row.querySelector('.cpr-pct');
+                    if (pctEl) { pctEl.textContent = '100%'; }
+                }
+            });
+        }
+    }
+
+    // Wire the expandable progress bar + the floating "back to top" button.
+    function initShellChrome() {
+        var toggle = document.getElementById('course-progress-toggle');
+        var detail = document.getElementById('course-progress-detail');
+        if (toggle && detail) {
+            toggle.addEventListener('click', function () {
+                var open = detail.hasAttribute('hidden');
+                if (open) { detail.removeAttribute('hidden'); } else { detail.setAttribute('hidden', ''); }
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+        }
+
+        var shell = document.getElementById('course-shell');
+        if (shell) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'course-backtotop';
+            btn.innerHTML = '<span aria-hidden="true">↑</span> חזרה למעלה';
+            document.body.appendChild(btn);
+            btn.addEventListener('click', function () {
+                var y = shell.getBoundingClientRect().top + window.pageYOffset - 80;
+                window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+            });
+            var onScroll = function () {
+                btn.classList.toggle('is-visible', window.pageYOffset > 400);
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        }
+    }
+
     // ---------- Shell loader: reveal once the unit content has rendered ----------
 
     function initShellLoader() {
@@ -546,6 +603,7 @@
         watchSectionChanges();
         handleResumeQueryParam();
         initShellLoader();
+        initShellChrome();
 
         // Optional: bootstrap REST session for the resume button (GET /state).
         // Failure is non-fatal - activity tracking already works via admin-ajax above.
