@@ -13,7 +13,10 @@ if (!defined('ABSPATH')) { exit; }
  */
 
 function cpt_course_unit_shortcode($atts) {
-    $atts = shortcode_atts(['id' => ''], $atts);
+    $atts = shortcode_atts([
+        'id'    => '',
+        'chrome' => 'on',   // set chrome="off" to render only the unit body (legacy)
+    ], $atts);
     $slug = strtolower(trim($atts['id']));
 
     // Strict allowlist pattern - the slug becomes part of a file path
@@ -30,16 +33,96 @@ function cpt_course_unit_shortcode($atts) {
     wp_enqueue_style('cpt-rubik-font',
         'https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap',
         [], null);
+    wp_enqueue_style('cpt-varela-font',
+        'https://fonts.googleapis.com/css2?family=Varela+Round&display=swap',
+        [], null);
 
     // Fallback if the wp_enqueue_scripts detection below didn't catch the
     // shortcode (e.g. shortcode rendered outside post_content). Styles
     // enqueued this late print in the footer; the slim units' override
     // selectors are body-prefixed, so the cascade is order-independent.
     cpt_unit_engine_enqueue_assets();
+    wp_enqueue_style('cpt-course-shell', CPT_PLUGIN_URL . 'assets/course-shell.css', [], CPT_VERSION);
 
-    return file_get_contents($file);
+    $body = file_get_contents($file);
+
+    // Legacy escape hatch: render bare unit, no shell chrome.
+    if (strtolower($atts['chrome']) === 'off') {
+        return $body;
+    }
+
+    return cpt_render_unit_shell($slug, $body);
 }
 add_shortcode('course_unit', 'cpt_course_unit_shortcode');
+
+/**
+ * Wrap a unit body in the coherent course shell: between-units nav, hero
+ * banner, intro and loader. Title / banner / intro come from the WordPress
+ * page (title / featured image / excerpt) so the author edits them with no
+ * code; the top nav comes from the central course-structure config.
+ */
+function cpt_render_unit_shell($slug, $body) {
+    $current = is_numeric($slug) ? intval($slug) : 0;
+    if (!$current) {
+        // map slugs like "4-map" back to their unit number for nav highlight
+        if (preg_match('/^(\d+)/', $slug, $m)) {
+            $current = intval($m[1]);
+        }
+    }
+
+    $post_id = get_the_ID();
+    $title   = $post_id ? preg_replace('/^פרטי:\s*/u', '', get_the_title($post_id)) : '';
+
+    $banner = '';
+    if ($post_id && has_post_thumbnail($post_id)) {
+        $banner = get_the_post_thumbnail_url($post_id, 'full');
+    }
+    if (!$banner) {
+        foreach (cpt_course_units() as $u) {
+            if ($u['n'] === $current) { $banner = $u['img']; break; }
+        }
+    }
+
+    // Intro: only the manually-set excerpt, never an auto-generated one
+    // (auto-excerpt would scrape the unit HTML).
+    $intro = '';
+    if ($post_id) {
+        $post = get_post($post_id);
+        if ($post && trim($post->post_excerpt) !== '') {
+            $intro = wp_kses_post($post->post_excerpt);
+        }
+    }
+
+    $html  = '<div class="course-shell" id="course-shell">';
+    $html .= cpt_render_course_topnav($current);
+
+    if ($banner || $title) {
+        $html .= '<header class="course-hero">';
+        if ($banner) {
+            $html .= '<img class="course-hero-img" src="' . esc_url($banner) . '" alt="">';
+        }
+        $html .= '<div class="course-hero-overlay">';
+        if ($current) {
+            $html .= '<span class="course-hero-kicker">יחידה ' . intval($current) . '</span>';
+        }
+        if ($title) {
+            $html .= '<h1 class="course-hero-title">' . esc_html($title) . '</h1>';
+        }
+        $html .= '</div></header>';
+    }
+
+    if ($intro !== '') {
+        $html .= '<div class="course-intro">' . wpautop($intro) . '</div>';
+    }
+
+    $html .= '<div class="course-unit-body">';
+    $html .= '<div class="course-loader" aria-live="polite"><span class="spinner"></span><span>טוען את היחידה…</span></div>';
+    $html .= $body;
+    $html .= '</div>'; // .course-unit-body
+
+    $html .= '</div>'; // .course-shell
+    return $html;
+}
 
 /**
  * Shared unit engine (v2) assets.

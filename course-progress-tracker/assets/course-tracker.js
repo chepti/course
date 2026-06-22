@@ -488,17 +488,21 @@
 
         container.style.position = 'relative';
         var adminbar = document.getElementById('wpadminbar');
+        var topnav   = document.querySelector('.course-topnav');
 
         function update() {
             if (window.innerWidth <= 800) {
                 nav.style.cssText = '';
                 return;
             }
-            var adminH = adminbar ? adminbar.offsetHeight : 0;
+            var adminH  = adminbar ? adminbar.offsetHeight : 0;
+            // The between-units bar is sticky at the top; the in-unit sidebar
+            // must stick BELOW it, not under it.
+            var topnavH = topnav ? topnav.offsetHeight : 0;
             var cr = container.getBoundingClientRect();
             var vH = window.innerHeight;
 
-            var visTop    = Math.max(adminH, cr.top);
+            var visTop    = Math.max(adminH + topnavH, cr.top);
             var visBottom = Math.min(vH, cr.bottom);
             var visH      = visBottom - visTop;
 
@@ -522,11 +526,35 @@
         update();
     }
 
+    // ---------- Shell loader: reveal once the unit content has rendered ----------
+
+    function initShellLoader() {
+        var shell = document.getElementById('course-shell');
+        if (!shell) return;
+        var area = document.getElementById('content-area') || shell.querySelector('#content');
+
+        function ready() { shell.classList.add('is-ready'); }
+
+        // Reveal as soon as the content area has meaningful children…
+        if (area) {
+            if (area.children.length > 0 && area.offsetHeight > 40) {
+                ready();
+            } else {
+                var obs = new MutationObserver(function () {
+                    if (area.children.length > 0) { ready(); obs.disconnect(); }
+                });
+                obs.observe(area, { childList: true, subtree: true });
+            }
+        }
+        // …with a hard fallback so the loader never sticks.
+        setTimeout(ready, 2500);
+    }
+
     // ---------- Init ----------
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.2.8 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.4.0 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         // Apply server-embedded initial state immediately so circles are coloured on load
         if (cpt_tracker_data.initial_state) {
@@ -548,6 +576,7 @@
         watchSectionChanges();
         handleResumeQueryParam();
         initStickyNav();
+        initShellLoader();
 
         // Optional: bootstrap REST session for the resume button (GET /state).
         // Failure is non-fatal - activity tracking already works via admin-ajax above.
