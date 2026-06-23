@@ -43,6 +43,10 @@ function cpt_save_unit_content($slug, $data) {
     return update_option(cpt_unit_content_option_key($slug), $data, false);
 }
 
+function cpt_delete_unit_content($slug) {
+    return delete_option(cpt_unit_content_option_key($slug));
+}
+
 /**
  * Normalise a YouTube (or other) URL to its embeddable form.
  */

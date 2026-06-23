@@ -125,6 +125,27 @@ function cpt_content_editor_page() {
         $notice = '<div class="notice notice-success"><p>' . $msg . ' (יחידה ' . esc_html($slug) . ', ' . count($data['sections']) . ' פרקים).</p></div>';
     }
 
+    // Bulk import: convert every unit's HTML file into the new format and save.
+    if (isset($_POST['cpt_import_all']) && check_admin_referer('cpt_import_all')) {
+        $done = [];
+        foreach (cpt_course_units() as $u) {
+            $slug = (string) $u['n'];
+            $d = cpt_import_unit_from_file($slug);
+            if ($d && !empty($d['sections'])) {
+                cpt_save_unit_content($slug, $d);
+                $done[] = $u['n'] . ' (' . count($d['sections']) . ')';
+            }
+        }
+        $notice = '<div class="notice notice-success"><p>הומרו ונשמרו: יחידות ' . esc_html(implode(', ', $done)) . '. עברי על כל יחידה ובדקי.</p></div>';
+    }
+
+    // Revert one unit to its original file (delete the saved content).
+    if (isset($_GET['revert']) && check_admin_referer('cpt_revert_' . sanitize_text_field($_GET['revert']))) {
+        $rslug = sanitize_text_field(wp_unslash($_GET['revert']));
+        cpt_delete_unit_content($rslug);
+        $notice = '<div class="notice notice-success"><p>יחידה ' . esc_html($rslug) . ' חזרה להצגה מהקובץ המקורי.</p></div>';
+    }
+
     $unit = isset($_GET['unit']) ? sanitize_text_field(wp_unslash($_GET['unit'])) : '';
 
     echo '<div class="wrap" dir="rtl">';
@@ -141,13 +162,30 @@ function cpt_content_editor_page() {
 function cpt_content_editor_list() {
     echo '<h1>עריכת תוכן יחידות</h1>';
     echo '<p>בחרי יחידה לעריכה. יחידה שנערכה כאן תוצג מהתוכן הערוך; יחידה שלא נגעת בה ממשיכה להציג את הקובץ המקורי.</p>';
-    echo '<table class="widefat striped" style="max-width:680px"><thead><tr><th>#</th><th>יחידה</th><th>מצב</th><th></th></tr></thead><tbody>';
+
+    // bulk import
+    echo '<form method="post" style="margin:14px 0">';
+    wp_nonce_field('cpt_import_all');
+    echo '<button type="submit" name="cpt_import_all" value="1" class="button button-primary" '
+       . 'onclick="return confirm(\'להמיר ולשמור את כל היחידות מהקבצים לתצורה החדשה? אפשר להחזיר כל יחידה בנפרד אחר כך.\');">'
+       . '⤓ ייבא ושמור את כל היחידות</button> '
+       . '<span class="description">המרה חד-פעמית של כל הקורס לתצורה הניתנת לעריכה.</span>';
+    echo '</form>';
+
+    echo '<table class="widefat striped" style="max-width:760px"><thead><tr><th>#</th><th>יחידה</th><th>מצב</th><th></th></tr></thead><tbody>';
     foreach (cpt_course_units() as $u) {
         $slug = (string) $u['n'];
-        $has  = cpt_get_unit_content($slug) ? '✅ נערך' : '— קובץ מקורי';
+        $data = cpt_get_unit_content($slug);
+        $has  = $data ? ('✅ נערך (' . count($data['sections']) . ' פרקים)') : '— קובץ מקורי';
         $url  = admin_url('admin.php?page=cpt-content-editor&unit=' . $slug);
-        echo '<tr><td>' . intval($u['n']) . '</td><td>' . esc_html($u['title']) . '</td><td>' . $has . '</td>'
-           . '<td><a class="button" href="' . esc_url($url) . '">ערוך תוכן</a></td></tr>';
+        echo '<tr><td>' . intval($u['n']) . '</td><td>' . esc_html($u['title']) . '</td><td>' . $has . '</td><td>';
+        echo '<a class="button" href="' . esc_url($url) . '">ערוך תוכן</a>';
+        if ($data) {
+            $revert = wp_nonce_url(admin_url('admin.php?page=cpt-content-editor&revert=' . $slug), 'cpt_revert_' . $slug);
+            echo ' <a class="button-link-delete" style="color:#b32d2e" href="' . esc_url($revert) . '" '
+               . 'onclick="return confirm(\'להחזיר יחידה זו להצגה מהקובץ המקורי? התוכן הערוך יימחק.\');">החזר לקובץ</a>';
+        }
+        echo '</td></tr>';
     }
     echo '</tbody></table>';
 }
