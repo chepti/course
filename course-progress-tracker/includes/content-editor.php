@@ -67,14 +67,15 @@ function cpt_content_editor_page() {
 
     $notice = '';
 
-    // Save
-    if (isset($_POST['cpt_save_content']) && check_admin_referer('cpt_save_content')) {
+    // Save (also fires for ▲▼ reorder, which saves then swaps two chapters)
+    if ((isset($_POST['cpt_save_content']) || isset($_POST['cpt_move'])) && check_admin_referer('cpt_save_content')) {
         $slug = sanitize_text_field(wp_unslash($_POST['unit_slug']));
         $data = [
             'sidebar_title' => sanitize_text_field(wp_unslash($_POST['sidebar_title'] ?? '')),
             'primary_color' => sanitize_hex_color($_POST['primary_color'] ?? '') ?: '#2a8c8c',
             'sections'      => [],
         ];
+        $built_idx = []; // POST row index for each built section (for reorder mapping)
         $ids = isset($_POST['sec_id']) && is_array($_POST['sec_id']) ? $_POST['sec_id'] : [];
         foreach ($ids as $i => $sid) {
             if (!empty($_POST['sec_delete'][$i])) { continue; }
@@ -87,6 +88,7 @@ function cpt_content_editor_page() {
                 'videos' => cpt_parse_videos_textarea($_POST['sec_videos'][$i] ?? ''),
                 'html'   => cpt_kses_section_html($_POST['sec_html'][$i] ?? ''),
             ];
+            $built_idx[] = $i;
         }
         // optional new section
         if (!empty($_POST['new_id'])) {
@@ -99,10 +101,28 @@ function cpt_content_editor_page() {
                     'videos' => cpt_parse_videos_textarea($_POST['new_videos'] ?? ''),
                     'html'   => cpt_kses_section_html($_POST['new_html'] ?? ''),
                 ];
+                $built_idx[] = -1;
             }
         }
+
+        // Apply a reorder move (swap the chapter with its neighbour)
+        if (!empty($_POST['cpt_move']) && preg_match('/^(up|down)_(\d+)$/', $_POST['cpt_move'], $mv)) {
+            $dir = $mv[1];
+            $row = intval($mv[2]);
+            $k = array_search($row, $built_idx, true);
+            if ($k !== false) {
+                $j = ($dir === 'up') ? $k - 1 : $k + 1;
+                if ($j >= 0 && $j < count($data['sections'])) {
+                    $tmp = $data['sections'][$k];
+                    $data['sections'][$k] = $data['sections'][$j];
+                    $data['sections'][$j] = $tmp;
+                }
+            }
+        }
+
         cpt_save_unit_content($slug, $data);
-        $notice = '<div class="notice notice-success"><p>התוכן של יחידה ' . esc_html($slug) . ' נשמר (' . count($data['sections']) . ' פרקים).</p></div>';
+        $msg = !empty($_POST['cpt_move']) ? 'הסדר עודכן' : 'התוכן נשמר';
+        $notice = '<div class="notice notice-success"><p>' . $msg . ' (יחידה ' . esc_html($slug) . ', ' . count($data['sections']) . ' פרקים).</p></div>';
     }
 
     $unit = isset($_GET['unit']) ? sanitize_text_field(wp_unslash($_GET['unit'])) : '';
@@ -162,7 +182,12 @@ function cpt_content_editor_form($slug) {
     echo '<tr><th>צבע ראשי</th><td><input type="color" name="primary_color" value="' . esc_attr($data['primary_color']) . '"></td></tr></table>';
 
     echo '<h2>פרקים</h2>';
-    echo '<p class="description">כל פרק: מזהה (אנגלית, יציב), כותרת (עברית), פרק-אב (ריק = פרק ראשי), סרטונים (שורה לכל סרטון: <code>קישור | כותרת</code>), ותוכן.</p>';
+    echo '<div class="description" style="background:#f6f7f7;border-right:4px solid #2271b1;padding:10px 14px;margin:10px 0;max-width:760px">';
+    echo '<b>איך עורכים פרק:</b> מזהה (אנגלית, יציב), כותרת (עברית), פרק-אב (ריק = פרק ראשי), ותוכן.<br>';
+    echo 'כדי לשבץ <b>סרטון במקום מסוים</b> בתוך הטקסט — כתבי שורה: <code>[video: קישור-יוטיוב | כותרת]</code> (הכותרת לא חובה). אפשר כמה סרטונים, כל אחד במקומו, כך שכל מקטע נשאר ברצף (כותרת → טקסט → סרטון → כפתור).<br>';
+    echo 'ל<b>קו הפרדה עדין</b> בין מקטעים — כפתור הקו האופקי (⎯) בעורך.<br>';
+    echo 'השדה "סרטונים (בסוף הפרק)" מוסיף סרטונים בסוף הפרק בלבד — לרוב עדיף הטוקן <code>[video:]</code>.';
+    echo '</div>';
 
     foreach ($data['sections'] as $i => $s) {
         cpt_content_editor_section_block($i, $s, $main_options);
@@ -174,7 +199,7 @@ function cpt_content_editor_form($slug) {
     echo '<tr><th>מזהה</th><td><input type="text" name="new_id" placeholder="לדוגמה: summary"></td></tr>';
     echo '<tr><th>כותרת</th><td><input type="text" name="new_title" class="regular-text"></td></tr>';
     echo '<tr><th>פרק-אב</th><td>' . cpt_parent_select('new_parent', '', $main_options) . '</td></tr>';
-    echo '<tr><th>סרטונים</th><td><textarea name="new_videos" rows="2" style="width:100%;max-width:560px" placeholder="https://youtu.be/XXXX | כותרת הסרטון"></textarea></td></tr>';
+    echo '<tr><th>סרטונים (בסוף)</th><td><textarea name="new_videos" rows="2" style="width:100%;max-width:560px" placeholder="https://youtu.be/XXXX | כותרת הסרטון"></textarea></td></tr>';
     echo '<tr><th>תוכן</th><td>';
     wp_editor('', 'new_html', ['textarea_name' => 'new_html', 'textarea_rows' => 8, 'media_buttons' => true]);
     echo '</td></tr></table>';
@@ -196,12 +221,15 @@ function cpt_content_editor_section_block($i, $s, $main_options) {
     $sid = isset($s['id']) ? $s['id'] : '';
     echo '<div style="border:1px solid #ccd0d4;background:#fff;padding:12px 16px;margin:12px 0;border-radius:6px">';
     echo '<input type="hidden" name="sec_id[' . $i . ']" value="' . esc_attr($sid) . '">';
-    echo '<p style="margin:0 0 8px"><b>' . esc_html($s['title'] ?: $sid) . '</b> <code>' . esc_html($sid) . '</code> '
-       . '<label style="float:left;color:#b32d2e"><input type="checkbox" name="sec_delete[' . $i . ']" value="1"> מחק פרק זה</label></p>';
+    echo '<p style="margin:0 0 8px;display:flex;align-items:center;gap:8px">';
+    echo '<button type="submit" name="cpt_move" value="up_' . $i . '" class="button button-small" title="הזז למעלה">▲</button>';
+    echo '<button type="submit" name="cpt_move" value="down_' . $i . '" class="button button-small" title="הזז למטה">▼</button>';
+    echo '<b>' . esc_html($s['title'] ?: $sid) . '</b> <code>' . esc_html($sid) . '</code>';
+    echo '<label style="margin-right:auto;color:#b32d2e"><input type="checkbox" name="sec_delete[' . $i . ']" value="1"> מחק פרק זה</label></p>';
     echo '<table class="form-table" style="margin:0">';
     echo '<tr><th style="width:120px">כותרת</th><td><input type="text" name="sec_title[' . $i . ']" class="regular-text" value="' . esc_attr($s['title']) . '"></td></tr>';
     echo '<tr><th>פרק-אב</th><td>' . cpt_parent_select('sec_parent[' . $i . ']', isset($s['parent']) ? $s['parent'] : '', $main_options) . '</td></tr>';
-    echo '<tr><th>סרטונים</th><td><textarea name="sec_videos[' . $i . ']" rows="2" style="width:100%;max-width:560px">' . esc_textarea(cpt_videos_to_textarea(isset($s['videos']) ? $s['videos'] : [])) . '</textarea></td></tr>';
+    echo '<tr><th>סרטונים (בסוף)</th><td><textarea name="sec_videos[' . $i . ']" rows="2" style="width:100%;max-width:560px">' . esc_textarea(cpt_videos_to_textarea(isset($s['videos']) ? $s['videos'] : [])) . '</textarea></td></tr>';
     echo '<tr><th>תוכן</th><td>';
     wp_editor(isset($s['html']) ? $s['html'] : '', 'sec_html_' . $i, ['textarea_name' => 'sec_html[' . $i . ']', 'textarea_rows' => 8, 'media_buttons' => true]);
     echo '</td></tr></table>';
@@ -230,21 +258,19 @@ function cpt_import_unit_from_file($slug) {
         $data['sidebar_title'] = trim(wp_strip_all_tags($m[1]));
     }
 
-    // Nav tree: ordered list of (id, title, parent)
+    // Nav tree: ordered list of (id, title, parent). Run the item regex over
+    // the WHOLE file - the only .main-item/.sub-item markup is the nav, and
+    // bounding the nav region with </div> counting truncated it (dropped the
+    // later chapters like discussion/task).
     $order = [];   // id => ['title'=>, 'parent'=>]
-    if (preg_match('/<div id="nav">(.*?)<\/div>\s*<\/div>\s*<\/div>/su', $src, $navm)
-        || preg_match('/<div id="nav">(.*)/su', $src, $navm)) {
-        $nav = $navm[1];
-        // walk main-items and the sub-items that follow them
-        if (preg_match_all('/<div class="(main-item|sub-item)" data-section="([^"]+)">.*?<span>(.*?)<\/span>/su', $nav, $items, PREG_SET_ORDER)) {
-            $current_main = '';
-            foreach ($items as $it) {
-                $is_main = ($it[1] === 'main-item');
-                $id = $it[2];
-                $title = trim(wp_strip_all_tags($it[3]));
-                if ($is_main) { $current_main = $id; $order[$id] = ['title' => $title, 'parent' => '']; }
-                else { $order[$id] = ['title' => $title, 'parent' => $current_main]; }
-            }
+    if (preg_match_all('/<div class="(main-item|sub-item)" data-section="([^"]+)">.*?<span>(.*?)<\/span>/su', $src, $items, PREG_SET_ORDER)) {
+        $current_main = '';
+        foreach ($items as $it) {
+            $is_main = ($it[1] === 'main-item');
+            $id = $it[2];
+            $title = trim(wp_strip_all_tags($it[3]));
+            if ($is_main) { $current_main = $id; $order[$id] = ['title' => $title, 'parent' => '']; }
+            else { $order[$id] = ['title' => $title, 'parent' => $current_main]; }
         }
     }
 
@@ -262,21 +288,21 @@ function cpt_import_unit_from_file($slug) {
         // strip the outer content-section wrapper
         $raw = preg_replace('/^\s*<div class="content-section"[^>]*>/u', '', $raw);
         $raw = preg_replace('/<\/div>\s*$/u', '', $raw);
-        // lift videos out
-        $videos = [];
-        $raw = preg_replace_callback('/<div class="video-container">([\s\S]*?)<\/div>/u', function ($mm) use (&$videos) {
+        // turn each video-container into an inline [video:..] token IN PLACE,
+        // so the video keeps its position in the flow (matched up to the
+        // closing </iframe></div> so a nested video-title div doesn't cut it short)
+        $raw = preg_replace_callback('/<div class="video-container">([\s\S]*?)<\/iframe>\s*<\/div>/u', function ($mm) {
             $blk = $mm[1];
             $vt = '';
             if (preg_match('/<div class="video-title">(.*?)<\/div>/su', $blk, $tm)) { $vt = trim(wp_strip_all_tags($tm[1])); }
             if (preg_match('/<iframe[^>]*src="([^"]+)"/u', $blk, $im)) {
-                $videos[] = ['url' => $im[1], 'title' => $vt];
-                return '';
+                return '<p>[video: ' . $im[1] . ($vt !== '' ? ' | ' . $vt : '') . ']</p>';
             }
             return $mm[0];
         }, $raw);
         // drop ${copyIcon} interpolations left from template literals
         $raw = str_replace(['${copyIcon}', '${checkIcon}'], '', $raw);
-        return ['id' => $id, 'title' => $title, 'parent' => $parent, 'videos' => $videos, 'html' => trim($raw)];
+        return ['id' => $id, 'title' => $title, 'parent' => $parent, 'videos' => [], 'html' => trim($raw)];
     };
 
     if ($order) {

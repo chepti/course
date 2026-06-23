@@ -56,26 +56,54 @@ function cpt_youtube_embed_url($url) {
 }
 
 /**
- * Build the content-section HTML for one section: the author's rich text,
- * followed by each video (with the data-track-video attribute that the
- * progress tracker relies on).
+ * Build the <iframe> markup for one video (carrying the data-track-video
+ * attribute the progress tracker relies on).
+ */
+function cpt_video_html($url, $title, $section_id) {
+    $embed = cpt_youtube_embed_url($url);
+    if ($embed === '') { return ''; }
+    $h = '<div class="video-container">';
+    if (trim((string) $title) !== '') {
+        $h .= '<div class="video-title">' . esc_html(trim($title)) . '</div>';
+    }
+    $h .= '<iframe src="' . esc_url($embed) . '" allowfullscreen data-track-video="' . esc_attr($section_id) . '"></iframe></div>';
+    return $h;
+}
+
+/**
+ * Replace inline [video: URL | optional title] tokens (placed by the author
+ * inside the rich text) with the tracked video markup - so videos sit exactly
+ * where they belong in the flow, not lumped at the end. A token alone in its
+ * own paragraph drops the wrapping <p> so the layout stays clean.
+ */
+function cpt_replace_video_tokens($html, $section_id) {
+    return preg_replace_callback(
+        '/(?:<p>\s*)?\[video:\s*([^\]\|]+?)\s*(?:\|\s*([^\]]*?))?\s*\](?:\s*<\/p>)?/u',
+        function ($m) use ($section_id) {
+            return cpt_video_html($m[1], isset($m[2]) ? $m[2] : '', $section_id);
+        },
+        $html
+    );
+}
+
+/**
+ * Build the content-section HTML for one section: the author's rich text
+ * (with inline [video:..] tokens resolved in place), then any videos from the
+ * structured list appended at the end.
  */
 function cpt_build_section_html($section) {
     $id   = $section['id'];
     $html = isset($section['html']) ? $section['html'] : '';
+    $html = cpt_replace_video_tokens($html, $id);
 
     $videos_html = '';
     if (!empty($section['videos']) && is_array($section['videos'])) {
         foreach ($section['videos'] as $v) {
-            $embed = cpt_youtube_embed_url(isset($v['url']) ? $v['url'] : '');
-            if ($embed === '') { continue; }
-            $vtitle = isset($v['title']) ? trim($v['title']) : '';
-            $videos_html .= '<div class="video-container">';
-            if ($vtitle !== '') {
-                $videos_html .= '<div class="video-title">' . esc_html($vtitle) . '</div>';
-            }
-            $videos_html .= '<iframe src="' . esc_url($embed) . '" allowfullscreen data-track-video="' . esc_attr($id) . '"></iframe>';
-            $videos_html .= '</div>';
+            $videos_html .= cpt_video_html(
+                isset($v['url']) ? $v['url'] : '',
+                isset($v['title']) ? $v['title'] : '',
+                $id
+            );
         }
     }
 
