@@ -44,7 +44,10 @@ function cpt_course_unit_shortcode($atts) {
     cpt_unit_engine_enqueue_assets();
     wp_enqueue_style('cpt-course-shell', CPT_PLUGIN_URL . 'assets/course-shell.css', [], CPT_VERSION);
 
-    $body = file_get_contents($file);
+    // Structured content (Phase 2 editor) takes precedence over the HTML file
+    // when it exists; otherwise fall back to the hand-authored unit file.
+    $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
+    $body = $data ? cpt_render_unit_from_data($data) : file_get_contents($file);
 
     // Legacy escape hatch: render bare unit, no shell chrome.
     if (strtolower($atts['chrome']) === 'off') {
