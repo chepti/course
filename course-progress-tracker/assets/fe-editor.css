@@ -1,0 +1,103 @@
+/**
+ * Front-end inline editor (admins only). Hidden entirely from learners - the
+ * assets are enqueued only for users with manage_options.
+ */
+
+.cpt-fe-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100000;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #2271b1;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  font: 600 14px/1 'Rubik', sans-serif;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(20, 40, 60, .3);
+}
+.cpt-fe-toggle:hover { background: #135e96; }
+body.cpt-edit-mode .cpt-fe-toggle { background: #d63638; }
+body.cpt-edit-mode .cpt-fe-toggle:hover { background: #b32d2e; }
+
+/* In edit mode, outline the editable regions */
+body.cpt-edit-mode #content-area,
+body.cpt-edit-mode .sidebar-title {
+  outline: 2px dashed #2271b1;
+  outline-offset: 4px;
+  position: relative;
+}
+
+.cpt-fe-edit-btn {
+  position: absolute;
+  top: -14px;
+  inset-inline-start: -14px;
+  z-index: 50;
+  width: 30px;
+  height: 30px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #2271b1;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+}
+body.cpt-edit-mode .cpt-fe-edit-btn { display: inline-flex; }
+.cpt-fe-edit-btn:hover { background: #135e96; }
+
+/* Editing panel (right-side drawer) */
+.cpt-fe-panel {
+  position: fixed;
+  top: 0;
+  inset-inline-end: 0;
+  width: min(560px, 96vw);
+  height: 100vh;
+  background: #fff;
+  z-index: 100001;
+  box-shadow: -8px 0 30px rgba(0, 0, 0, .2);
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+}
+.cpt-fe-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 30, .45);
+  z-index: 100000;
+}
+.cpt-fe-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e0e4e8;
+  font: 700 16px/1.2 'Rubik', sans-serif;
+  color: #1d2939;
+}
+.cpt-fe-panel-body { flex: 1 1 auto; overflow: auto; padding: 14px 18px; }
+.cpt-fe-panel-foot {
+  display: flex;
+  gap: 10px;
+  padding: 14px 18px;
+  border-top: 1px solid #e0e4e8;
+}
+.cpt-fe-btn {
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  font: 600 14px/1 'Rubik', sans-serif;
+  cursor: pointer;
+}
+.cpt-fe-save { background: #2271b1; color: #fff; }
+.cpt-fe-save:hover { background: #135e96; }
+.cpt-fe-cancel { background: #f0f0f1; color: #1d2939; }
+.cpt-fe-hint { font-size: 12px; color: #667; margin: 0 0 8px; }
+.cpt-fe-spinner { opacity: .6; pointer-events: none; }
