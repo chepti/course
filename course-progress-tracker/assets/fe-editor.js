@@ -50,19 +50,27 @@
         document.body.appendChild(panel);
 
         var ta = document.getElementById(EDITOR_ID);
-        ta.value = rawHtml || '';
+        ta.value = rawHtml || ''; // Text/Code tab + plain-textarea fallback
 
         // rich editor (falls back to a plain textarea if wp.editor is absent)
         if (window.wp && wp.editor && wp.editor.initialize) {
+            var edHeight = Math.max(360, window.innerHeight - 250);
             wp.editor.initialize(EDITOR_ID, {
                 tinymce: {
                     wpautop: true,
+                    height: edHeight,
                     toolbar1: 'formatselect bold italic bullist numlist link hr removeformat undo redo',
                     directionality: 'rtl'
                 },
                 quicktags: true,
                 mediaButtons: true
             });
+            // TinyMCE reads the textarea at init; the value we just set can be
+            // missed, so push it into the visual editor once it's ready.
+            setTimeout(function () {
+                var ed = window.tinymce && tinymce.get(EDITOR_ID);
+                if (ed) { ed.setContent(rawHtml || ''); }
+            }, 300);
         }
 
         panel.querySelector('.cpt-fe-cancel').addEventListener('click', closePanel);

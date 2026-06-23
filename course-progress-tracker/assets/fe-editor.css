@@ -82,7 +82,11 @@ body.cpt-edit-mode .cpt-fe-edit-btn { display: inline-flex; }
   font: 700 16px/1.2 'Rubik', sans-serif;
   color: #1d2939;
 }
-.cpt-fe-panel-body { flex: 1 1 auto; overflow: auto; padding: 14px 18px; }
+.cpt-fe-panel-body { flex: 1 1 auto; overflow: auto; padding: 14px 18px; display: flex; flex-direction: column; }
+.cpt-fe-panel-body .wp-editor-wrap { flex: 1 1 auto; display: flex; flex-direction: column; }
+.cpt-fe-panel-body .wp-editor-container { flex: 1 1 auto; }
+/* plain-textarea fallback fills the height when TinyMCE isn't active */
+.cpt-fe-panel-body > textarea#cpt-fe-textarea { flex: 1 1 auto; min-height: 50vh; }
 .cpt-fe-panel-foot {
   display: flex;
   gap: 10px;
