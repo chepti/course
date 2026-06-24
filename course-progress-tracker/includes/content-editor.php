@@ -317,9 +317,11 @@ function cpt_import_unit_from_file($slug) {
         }
     }
 
-    // Content map: key: `...` (slim) or 'key': `...` - capture backtick blocks
+    // Content map: matches  key: `...`  AND  'key': `...`  AND  "key": `...`
+    // (units differ - some quote the keys, which the old pattern missed,
+    // leaving units 3/9 with titles but no content).
     $content_map = [];
-    if (preg_match_all('/([A-Za-z0-9_]+)\s*:\s*`([\s\S]*?)`\s*(?:,|\}\s*;)/u', $src, $cm, PREG_SET_ORDER)) {
+    if (preg_match_all('/[\'"]?([A-Za-z0-9_]+)[\'"]?\s*:\s*`([\s\S]*?)`\s*(?:,|\}\s*;)/u', $src, $cm, PREG_SET_ORDER)) {
         foreach ($cm as $c) {
             $content_map[$c[1]] = $c[2];
         }
@@ -351,6 +353,13 @@ function cpt_import_unit_from_file($slug) {
     if ($order) {
         foreach ($order as $id => $meta) {
             $data['sections'][] = $build($id, $meta['title'], $meta['parent']);
+        }
+        // append any content section that isn't referenced in the nav, so no
+        // content is silently dropped (e.g. an "intro" without a nav entry)
+        foreach ($content_map as $cid => $_) {
+            if (!isset($order[$cid])) {
+                $data['sections'][] = $build($cid, $cid, '');
+            }
         }
     } else {
         foreach ($content_map as $id => $_) {
