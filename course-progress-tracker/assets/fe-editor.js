@@ -153,9 +153,9 @@
         if (content && !content.querySelector(':scope > .cpt-fe-edit-btn')) {
             var b = document.createElement('button');
             b.type = 'button';
-            b.className = 'cpt-fe-edit-btn';
+            b.className = 'cpt-fe-edit-btn cpt-fe-edit-content';
             b.title = 'ערוך את תוכן הפרק';
-            b.textContent = '✏️';
+            b.innerHTML = '<span aria-hidden="true">✏️</span> ערוך פרק';
             b.addEventListener('click', function (e) { e.preventDefault(); editContent(); });
             content.appendChild(b);
         }

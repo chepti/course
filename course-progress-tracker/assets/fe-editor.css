@@ -36,12 +36,13 @@ body.cpt-edit-mode .sidebar-title {
   position: absolute;
   top: -14px;
   inset-inline-start: -14px;
-  z-index: 50;
+  z-index: 1002;
   width: 30px;
   height: 30px;
   display: none;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   background: #2271b1;
   color: #fff;
   border: 2px solid #fff;
@@ -52,6 +53,19 @@ body.cpt-edit-mode .sidebar-title {
 }
 body.cpt-edit-mode .cpt-fe-edit-btn { display: inline-flex; }
 .cpt-fe-edit-btn:hover { background: #135e96; }
+
+/* the content pencil: a labelled pill at the content's top-left (away from the
+   sidebar, which would otherwise cover it), clearly visible */
+.cpt-fe-edit-content {
+  top: 8px;
+  inset-inline-start: auto;
+  inset-inline-end: 8px;
+  width: auto;
+  height: auto;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font: 600 13px/1 'Rubik', sans-serif;
+}
 
 /* Editing panel (right-side drawer) */
 .cpt-fe-panel {
