@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Course Progress Tracker
  * Description: מעקב התקדמות בקורס מבוסס יחידות HTML - מניפסט קורס מרכזי, REST API, דשבורד לומד, המשך מאיפה שעצרת, ודוחות. (הרישום האוטומטי הופרד לתוסף Course Registration)
- * Version: 3.10.8
+ * Version: 3.10.9
  * Author: Chepti
  */
 
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-define('CPT_VERSION', '3.10.8');
+define('CPT_VERSION', '3.10.9');
 define('CPT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CPT_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -81,3 +81,4 @@ require_once CPT_PLUGIN_DIR . 'includes/shortcodes.php'; // learner dashboard, r
 require_once CPT_PLUGIN_DIR . 'includes/admin.php';      // admin reports, admin bar, drill-down
 require_once CPT_PLUGIN_DIR . 'includes/enqueue.php';    // frontend script loading
 require_once CPT_PLUGIN_DIR . 'includes/units.php';      // [course_unit] - unit content served from the plugin
+require_once CPT_PLUGIN_DIR . 'includes/comments.php';   // Hebrew comment UI strings (reply link)

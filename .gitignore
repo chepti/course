@@ -1,0 +1,3 @@
+﻿
+# ZIPs not needed - deploy is via SCP
+*.zip
