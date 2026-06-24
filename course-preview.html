@@ -4,8 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Course shell preview</title>
-<link rel="stylesheet" href="course-progress-tracker/assets/unit.css?b=13">
-<link rel="stylesheet" href="course-progress-tracker/assets/course-shell.css?b=13">
+<link rel="stylesheet" href="course-progress-tracker/assets/unit.css?b=14">
+<link rel="stylesheet" href="course-progress-tracker/assets/course-shell.css?b=14">
+<link rel="stylesheet" href="course-progress-tracker/assets/fe-editor.css?b=14">
+<style>
+  /* ADVERSARIAL: mimic a theme that hijacks every button (like the real site) */
+  button { background:#7a1f1f !important; border-radius:50% !important; width:34px !important; height:34px !important; color:transparent !important; font-size:0 !important; padding:0 !important; }
+</style>
 <style>
   /* mimic the page background around the shell */
   body { margin: 0; background: #eef1f4; padding: 24px 0; font-family: 'Rubik','Segoe UI',sans-serif; }
@@ -111,5 +116,10 @@
 
 </div>
 
+<script>
+  window.cptFE = { ajaxUrl:'#', nonce:'x', slug:'4', hasData:1,
+    sidebarTitle:'תרשימים — תפיסה חזותית', sections:{ overview:'<h1>במבט על</h1><p>טקסט</p>' }, editUrl:'#' };
+</script>
+<script src="course-progress-tracker/assets/fe-editor.js?b=14"></script>
 </body>
 </html>

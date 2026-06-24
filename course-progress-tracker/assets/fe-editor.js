@@ -135,40 +135,41 @@
             if (res && res.success) {
                 cptFE.sidebarTitle = val;
                 var st = document.querySelector('.sidebar-title');
-                if (st) {
-                    var btn = st.querySelector('.cpt-fe-edit-btn');
-                    st.textContent = val;
-                    if (btn) { st.appendChild(btn); }
-                }
+                if (st) { st.textContent = val; }
             } else {
                 alert('שמירה נכשלה');
             }
         });
     }
 
-    function ensureEditButtons() {
-        // attach to #content (stable) - #content-area's innerHTML is replaced on
-        // save and on chapter switches, which would wipe a button placed inside it
-        var content = document.getElementById('content');
-        if (content && !content.querySelector(':scope > .cpt-fe-edit-btn')) {
-            var b = document.createElement('button');
-            b.type = 'button';
-            b.className = 'cpt-fe-edit-btn cpt-fe-edit-content';
-            b.title = 'ערוך את תוכן הפרק';
-            b.innerHTML = '<span aria-hidden="true">✏️</span> ערוך פרק';
-            b.addEventListener('click', function (e) { e.preventDefault(); editContent(); });
-            content.appendChild(b);
-        }
-        var st = document.querySelector('.sidebar-title');
-        if (st && !st.querySelector('.cpt-fe-edit-btn')) {
-            var b2 = document.createElement('button');
-            b2.type = 'button';
-            b2.className = 'cpt-fe-edit-btn';
-            b2.title = 'ערוך כותרת';
-            b2.textContent = '✏️';
-            b2.addEventListener('click', function (e) { e.preventDefault(); editSidebarTitle(); });
-            st.appendChild(b2);
-        }
+    // A fixed bottom toolbar (theme-proof) instead of per-area buttons that the
+    // theme's button styles hijack and the sidebar covers.
+    function buildToolbar() {
+        if (document.getElementById('cpt-fe-bar')) { return; }
+        var bar = document.createElement('div');
+        bar.id = 'cpt-fe-bar';
+        bar.className = 'cpt-fe-bar';
+
+        var edit = document.createElement('button');
+        edit.type = 'button';
+        edit.className = 'cpt-fe-bar-btn';
+        edit.innerHTML = '✏️ ערוך פרק';
+        edit.addEventListener('click', function (e) { e.preventDefault(); editContent(); });
+
+        var title = document.createElement('button');
+        title.type = 'button';
+        title.className = 'cpt-fe-bar-btn cpt-fe-bar-btn-sec';
+        title.innerHTML = 'כותרת צד';
+        title.addEventListener('click', function (e) { e.preventDefault(); editSidebarTitle(); });
+
+        bar.appendChild(edit);
+        bar.appendChild(title);
+        document.body.appendChild(bar);
+    }
+
+    function removeToolbar() {
+        var b = document.getElementById('cpt-fe-bar');
+        if (b) { b.remove(); }
     }
 
     // ---------- Toggle ----------
@@ -176,6 +177,7 @@
     function init() {
         var toggle = document.createElement('button');
         toggle.type = 'button';
+        toggle.id = 'cpt-fe-toggle';
         toggle.className = 'cpt-fe-toggle';
         toggle.innerHTML = '<span>✏️</span> מצב עריכה';
         document.body.appendChild(toggle);
@@ -189,7 +191,7 @@
             }
             var on = document.body.classList.toggle('cpt-edit-mode');
             toggle.innerHTML = on ? '<span>✓</span> סיום עריכה' : '<span>✏️</span> מצב עריכה';
-            if (on) { ensureEditButtons(); }
+            if (on) { buildToolbar(); } else { removeToolbar(); }
         });
     }
 

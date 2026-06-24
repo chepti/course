@@ -3,26 +3,69 @@
  * assets are enqueued only for users with manage_options.
  */
 
-.cpt-fe-toggle {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 100000;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: #2271b1;
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  font: 600 14px/1 'Rubik', sans-serif;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(20, 40, 60, .3);
+#cpt-fe-toggle.cpt-fe-toggle {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 100000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 11px 18px !important;
+  background: #2271b1 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font: 700 15px/1 'Rubik', 'Segoe UI', sans-serif !important;
+  text-shadow: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 6px 18px rgba(20, 40, 60, .3) !important;
 }
-.cpt-fe-toggle:hover { background: #135e96; }
-body.cpt-edit-mode .cpt-fe-toggle { background: #d63638; }
-body.cpt-edit-mode .cpt-fe-toggle:hover { background: #b32d2e; }
+.cpt-fe-toggle:hover { background: #135e96 !important; }
+body.cpt-edit-mode .cpt-fe-toggle { background: #d63638 !important; }
+body.cpt-edit-mode .cpt-fe-toggle:hover { background: #b32d2e !important; }
+
+/* Fixed edit toolbar (shown in edit mode). Every critical property is
+   !important so the active theme's generic button/anchor styles cannot
+   hijack it (which turned the old inline pencil into a maroon blob). */
+.cpt-fe-bar {
+  position: fixed !important;
+  bottom: 80px !important;
+  right: 24px !important;
+  z-index: 100000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  align-items: flex-end !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#cpt-fe-bar .cpt-fe-bar-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 11px 18px !important;
+  background: #2271b1 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 999px !important;
+  font: 700 15px/1 'Rubik', 'Segoe UI', sans-serif !important;
+  text-shadow: none !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 5px 16px rgba(20, 40, 60, .3) !important;
+}
+#cpt-fe-bar .cpt-fe-bar-btn:hover { background: #135e96 !important; transform: none !important; }
+#cpt-fe-bar .cpt-fe-bar-btn-sec { background: #50575e !important; font-size: 13px !important; padding: 9px 14px !important; }
+#cpt-fe-bar .cpt-fe-bar-btn-sec:hover { background: #3c434a !important; }
 
 /* In edit mode, outline the editable regions */
 body.cpt-edit-mode #content-area,
