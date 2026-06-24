@@ -19,6 +19,9 @@ function cpt_kses_section_html($html) {
         'allow' => true, 'allowfullscreen' => true, 'loading' => true,
         'frameborder' => true, 'title' => true,
     ];
+    // keep prompt boxes intact (copy button + <pre>) across a re-save
+    $allowed['button'] = ['class' => true, 'type' => true];
+    $allowed['pre']    = ['class' => true, 'style' => true];
     return wp_kses(wp_unslash($html), $allowed);
 }
 
@@ -223,6 +226,7 @@ function cpt_content_editor_form($slug) {
     echo '<div class="description" style="background:#f6f7f7;border-right:4px solid #2271b1;padding:10px 14px;margin:10px 0;max-width:760px">';
     echo '<b>איך עורכים פרק:</b> מזהה (אנגלית, יציב), כותרת (עברית), פרק-אב (ריק = פרק ראשי), ותוכן.<br>';
     echo 'כדי לשבץ <b>סרטון במקום מסוים</b> בתוך הטקסט — כתבי שורה: <code>[video: קישור-יוטיוב | כותרת]</code> (הכותרת לא חובה). אפשר כמה סרטונים, כל אחד במקומו, כך שכל מקטע נשאר ברצף (כותרת → טקסט → סרטון → כפתור).<br>';
+    echo 'ל<b>תיבת פרומפט להעתקה</b> — כתבי <code>[prompt]טקסט הפרומפט[/prompt]</code> (תיבה עם כפתור העתקה תיווצר אוטומטית).<br>';
     echo 'ל<b>קו הפרדה עדין</b> בין מקטעים — כפתור הקו האופקי (⎯) בעורך.<br>';
     echo 'השדה "סרטונים (בסוף הפרק)" מוסיף סרטונים בסוף הפרק בלבד — לרוב עדיף הטוקן <code>[video:]</code>.';
     echo '</div>';

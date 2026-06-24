@@ -38,7 +38,7 @@
         panel.innerHTML =
             '<div class="cpt-fe-panel-head"><span>' + title + '</span></div>' +
             '<div class="cpt-fe-panel-body">' +
-              '<p class="cpt-fe-hint">לשיבוץ סרטון במקום מסוים: שורה <code>[video: קישור | כותרת]</code>. קו מפריד: כפתור הקו האופקי.</p>' +
+              '<p class="cpt-fe-hint">סרטון במקום מסוים: <code>[video: קישור | כותרת]</code> · תיבת פרומפט להעתקה: <code>[prompt]הטקסט[/prompt]</code> · קו מפריד: כפתור הקו האופקי.</p>' +
               '<textarea id="' + EDITOR_ID + '" style="width:100%;min-height:320px"></textarea>' +
             '</div>' +
             '<div class="cpt-fe-panel-foot">' +
@@ -115,6 +115,9 @@
                     cptFE.sections[sid] = html;
                     var area = document.getElementById('content-area');
                     if (area) { area.innerHTML = res.data.rendered; }
+                    // keep the engine's in-memory copy in sync so navigating away
+                    // and back shows the new content (not the page-load version)
+                    if (window.cptUnitContent) { window.cptUnitContent[sid] = res.data.rendered; }
                     done(true);
                 } else {
                     alert('שמירה נכשלה: ' + (res && res.data ? res.data.message : 'שגיאה'));
@@ -144,15 +147,17 @@
     }
 
     function ensureEditButtons() {
-        var area = document.getElementById('content-area');
-        if (area && !area.querySelector(':scope > .cpt-fe-edit-btn')) {
+        // attach to #content (stable) - #content-area's innerHTML is replaced on
+        // save and on chapter switches, which would wipe a button placed inside it
+        var content = document.getElementById('content');
+        if (content && !content.querySelector(':scope > .cpt-fe-edit-btn')) {
             var b = document.createElement('button');
             b.type = 'button';
             b.className = 'cpt-fe-edit-btn';
             b.title = 'ערוך את תוכן הפרק';
             b.textContent = '✏️';
             b.addEventListener('click', function (e) { e.preventDefault(); editContent(); });
-            area.appendChild(b);
+            content.appendChild(b);
         }
         var st = document.querySelector('.sidebar-title');
         if (st && !st.querySelector('.cpt-fe-edit-btn')) {

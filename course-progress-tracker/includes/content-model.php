@@ -91,13 +91,30 @@ function cpt_replace_video_tokens($html, $section_id) {
 }
 
 /**
+ * Replace [prompt]…[/prompt] tokens with a copyable prompt box. Line breaks in
+ * the authored text are preserved inside the <pre>; the empty .copy-button is
+ * filled with the copy icon by the engine (unit.js, copyIcons:'inject').
+ */
+function cpt_replace_prompt_tokens($html) {
+    return preg_replace_callback('/\[prompt\]([\s\S]*?)\[\/prompt\]/u', function ($m) {
+        $txt = $m[1];
+        $txt = preg_replace('/<br\s*\/?>/i', "\n", $txt);
+        $txt = preg_replace('/<\/p>\s*<p[^>]*>/i', "\n\n", $txt);
+        $txt = wp_strip_all_tags($txt);
+        $txt = html_entity_decode($txt, ENT_QUOTES, 'UTF-8');
+        return '<div class="prompt-container"><button class="copy-button"></button><pre>' . esc_html(trim($txt)) . '</pre></div>';
+    }, $html);
+}
+
+/**
  * Build the content-section HTML for one section: the author's rich text
- * (with inline [video:..] tokens resolved in place), then any videos from the
- * structured list appended at the end.
+ * (with inline [video:..] and [prompt]..[/prompt] tokens resolved in place),
+ * then any videos from the structured list appended at the end.
  */
 function cpt_build_section_html($section) {
     $id   = $section['id'];
     $html = isset($section['html']) ? $section['html'] : '';
+    $html = cpt_replace_prompt_tokens($html);
     $html = cpt_replace_video_tokens($html, $id);
 
     $videos_html = '';

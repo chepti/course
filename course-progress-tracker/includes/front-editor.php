@@ -21,6 +21,7 @@ add_action('wp_enqueue_scripts', function () {
     $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
 
     wp_enqueue_editor(); // TinyMCE + quicktags for the inline rich editor
+    wp_enqueue_media();  // so the "Add Media" button's modal works
     wp_enqueue_style('cpt-fe-editor', CPT_PLUGIN_URL . 'assets/fe-editor.css', [], CPT_VERSION);
     wp_enqueue_script('cpt-fe-editor', CPT_PLUGIN_URL . 'assets/fe-editor.js', [], CPT_VERSION, true);
 
