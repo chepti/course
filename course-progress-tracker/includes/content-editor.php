@@ -321,7 +321,7 @@ function cpt_import_unit_from_file($slug) {
     // (units differ - some quote the keys, which the old pattern missed,
     // leaving units 3/9 with titles but no content).
     $content_map = [];
-    if (preg_match_all('/[\'"]?([A-Za-z0-9_]+)[\'"]?\s*:\s*`([\s\S]*?)`\s*(?:,|\}\s*;)/u', $src, $cm, PREG_SET_ORDER)) {
+    if (preg_match_all('/[\'"]?([A-Za-z0-9_-]+)[\'"]?\s*:\s*`([\s\S]*?)`\s*(?:,|\}\s*;)/u', $src, $cm, PREG_SET_ORDER)) {
         foreach ($cm as $c) {
             $content_map[$c[1]] = $c[2];
         }
