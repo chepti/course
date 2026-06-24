@@ -225,6 +225,20 @@
   line-height: 1.6;
 }
 
+/* Lists: the global `* { padding:0 }` reset strips marker indentation -
+   restore a slight inward indent (RTL: padding on the right) */
+#interactive-unit-container.cpt-engine-v2 .content-section ul,
+#interactive-unit-container.cpt-engine-v2 .content-section ol {
+  padding-right: 1.8em;
+  margin: 12px 0;
+  list-style-position: outside;
+}
+
+#interactive-unit-container.cpt-engine-v2 .content-section li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+
 #interactive-unit-container.cpt-engine-v2 .styled-button {
   display: inline-block;
   background: linear-gradient(45deg, var(--primary-color), #27ae60) !important;

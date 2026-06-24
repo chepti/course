@@ -107,14 +107,40 @@ function cpt_replace_prompt_tokens($html) {
 }
 
 /**
+ * Replace [canva: URL] tokens with a responsive Canva embed. The author pastes
+ * the Canva "view" link; we normalise it to the ?embed form and wrap it in the
+ * 16:9 responsive container. (Content is rendered client-side, so WordPress's
+ * own [embed]/oEmbed never runs here - hence a dedicated token.)
+ */
+function cpt_replace_canva_tokens($html) {
+    return preg_replace_callback(
+        '/(?:<p>\s*)?\[canva:\s*([^\]\s]+)\s*\](?:\s*<\/p>)?/u',
+        function ($m) {
+            $url = trim($m[1]);
+            if (preg_match('~canva\.com/design/([A-Za-z0-9_-]+)/([A-Za-z0-9_-]+)~', $url, $mm)) {
+                $embed = 'https://www.canva.com/design/' . $mm[1] . '/' . $mm[2] . '/view?embed';
+            } else {
+                $embed = esc_url_raw($url);
+            }
+            return '<div class="canva-embed" style="position:relative;width:100%;height:0;padding-top:56.25%;margin:20px 0;'
+                 . 'box-shadow:0 2px 8px rgba(63,69,81,0.16);overflow:hidden;border-radius:8px;">'
+                 . '<iframe loading="lazy" style="position:absolute;width:100%;height:100%;top:0;left:0;border:none;padding:0;margin:0;" '
+                 . 'src="' . esc_url($embed) . '" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe></div>';
+        },
+        $html
+    );
+}
+
+/**
  * Build the content-section HTML for one section: the author's rich text
- * (with inline [video:..] and [prompt]..[/prompt] tokens resolved in place),
- * then any videos from the structured list appended at the end.
+ * (with inline [video:..], [prompt]..[/prompt] and [canva:..] tokens resolved
+ * in place), then any videos from the structured list appended at the end.
  */
 function cpt_build_section_html($section) {
     $id   = $section['id'];
     $html = isset($section['html']) ? $section['html'] : '';
     $html = cpt_replace_prompt_tokens($html);
+    $html = cpt_replace_canva_tokens($html);
     $html = cpt_replace_video_tokens($html, $id);
 
     $videos_html = '';
