@@ -232,7 +232,8 @@ function cpt_content_editor_form($slug) {
     echo 'ל<b>תיבת פרומפט להעתקה</b> — כתבי <code>[prompt]טקסט הפרומפט[/prompt]</code> (תיבה עם כפתור העתקה תיווצר אוטומטית).<br>';
     echo 'ל<b>מצגת קנבה</b> — כתבי <code>[canva: קישור-הצפייה-של-קנבה]</code> (ההטמעה הרספונסיבית תיווצר אוטומטית).<br>';
     echo 'ל<b>קו הפרדה עדין</b> בין מקטעים — כפתור הקו האופקי (⎯) בעורך.<br>';
-    echo 'השדה "סרטונים (בסוף הפרק)" מוסיף סרטונים בסוף הפרק בלבד — לרוב עדיף הטוקן <code>[video:]</code>.';
+    echo 'השדה "סרטונים (בסוף הפרק)" מוסיף סרטונים בסוף הפרק בלבד — לרוב עדיף הטוקן <code>[video:]</code>.<br>'
+       . 'ל<b>כפתור "סיימתי / העליתי"</b> שמסמן השלמה (עם וי) — כתבי <code>[done-button: העליתי לחומר פתוח]</code> (הכותרת ניתנת לשינוי).';
     echo '</div>';
 
     foreach ($data['sections'] as $i => $s) {
@@ -351,6 +352,13 @@ function cpt_import_unit_from_file($slug) {
             }
             return $mm[0];
         }, $raw);
+        // convert manual-completion checkboxes to [done-button:] tokens so
+        // they survive TinyMCE and wp_kses (both strip <input>)
+        $raw = preg_replace_callback(
+            '/<div[^>]*>\s*<label[^>]*>\s*<input[^>]+data-track-manual[^>]*>\s*<span>(.*?)<\/span>\s*<\/label>\s*<\/div>/su',
+            function ($mm) { return '[done-button: ' . trim(wp_strip_all_tags($mm[1])) . ']'; },
+            $raw
+        );
         // drop ${copyIcon} interpolations left from template literals
         $raw = str_replace(['${copyIcon}', '${checkIcon}'], '', $raw);
         return ['id' => $id, 'title' => $title, 'parent' => $parent, 'videos' => [], 'html' => trim($raw)];

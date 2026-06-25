@@ -132,9 +132,30 @@ function cpt_replace_canva_tokens($html) {
 }
 
 /**
+ * Replace [done-button: label] tokens with a manual-completion checkbox.
+ * TinyMCE and wp_kses both strip <input>, so we store a token and render
+ * the real <input data-track-manual> server-side (never touches the editor).
+ */
+function cpt_replace_done_button_tokens($html) {
+    return preg_replace_callback(
+        '/(?:<p>\s*)?\[done-button:\s*([^\]]+?)\s*\](?:\s*<\/p>)?/u',
+        function ($m) {
+            $label = esc_html(trim($m[1]));
+            return '<div class="task-done-box" style="margin:20px 0;padding:15px;'
+                 . 'background:#f0f7ff;border-right:4px solid var(--primary-color);border-radius:4px;">'
+                 . '<label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:bold;">'
+                 . '<input type="checkbox" data-track-manual style="width:20px;height:20px;cursor:pointer;">'
+                 . '<span>' . $label . '</span>'
+                 . '</label></div>';
+        },
+        $html
+    );
+}
+
+/**
  * Build the content-section HTML for one section: the author's rich text
- * (with inline [video:..], [prompt]..[/prompt] and [canva:..] tokens resolved
- * in place), then any videos from the structured list appended at the end.
+ * (with inline [video:..], [prompt]..[/prompt], [canva:..] and [done-button:..]
+ * tokens resolved in place), then any videos from the structured list appended at the end.
  */
 function cpt_build_section_html($section) {
     $id   = $section['id'];
@@ -142,6 +163,7 @@ function cpt_build_section_html($section) {
     $html = cpt_replace_prompt_tokens($html);
     $html = cpt_replace_canva_tokens($html);
     $html = cpt_replace_video_tokens($html, $id);
+    $html = cpt_replace_done_button_tokens($html);
 
     $videos_html = '';
     if (!empty($section['videos']) && is_array($section['videos'])) {

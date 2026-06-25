@@ -38,7 +38,7 @@
         panel.innerHTML =
             '<div class="cpt-fe-panel-head"><span>' + title + '</span></div>' +
             '<div class="cpt-fe-panel-body">' +
-              '<p class="cpt-fe-hint">סרטון: <code>[video: קישור | כותרת]</code> · פרומפט: <code>[prompt]הטקסט[/prompt]</code> · מצגת קנבה: <code>[canva: קישור]</code> · קו מפריד: כפתור הקו האופקי.</p>' +
+              '<p class="cpt-fe-hint">סרטון: <code>[video: קישור | כותרת]</code> · פרומפט: <code>[prompt]הטקסט[/prompt]</code> · קנבה: <code>[canva: קישור]</code> · כפתור השלמה: <code>[done-button: העליתי לחומר פתוח]</code> · קו מפריד: כפתור הקו האופקי.</p>' +
               '<textarea id="' + EDITOR_ID + '" style="width:100%;min-height:320px"></textarea>' +
             '</div>' +
             '<div class="cpt-fe-panel-foot">' +
