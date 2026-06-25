@@ -55,22 +55,21 @@
         // rich editor (falls back to a plain textarea if wp.editor is absent)
         if (window.wp && wp.editor && wp.editor.initialize) {
             var edHeight = Math.max(360, window.innerHeight - 250);
+            var _raw = rawHtml || '';
             wp.editor.initialize(EDITOR_ID, {
                 tinymce: {
-                    wpautop: true,
+                    wpautop: false,          // must be false: true mutates <hr>/<h4>/<a> on set/get
                     height: edHeight,
                     toolbar1: 'formatselect bold italic bullist numlist link hr removeformat undo redo',
-                    directionality: 'rtl'
+                    directionality: 'rtl',
+                    setup: function (ed) {
+                        // fires exactly when TinyMCE is ready — replaces the fragile setTimeout
+                        ed.on('init', function () { ed.setContent(_raw); });
+                    }
                 },
                 quicktags: true,
                 mediaButtons: true
             });
-            // TinyMCE reads the textarea at init; the value we just set can be
-            // missed, so push it into the visual editor once it's ready.
-            setTimeout(function () {
-                var ed = window.tinymce && tinymce.get(EDITOR_ID);
-                if (ed) { ed.setContent(rawHtml || ''); }
-            }, 300);
         }
 
         panel.querySelector('.cpt-fe-cancel').addEventListener('click', closePanel);
@@ -94,6 +93,11 @@
     }
 
     function closePanel() {
+        // Remove TinyMCE instance first (both via wp.editor and tinymce directly)
+        // so the next openPanel() gets a clean slate and always initializes fully.
+        if (window.tinymce) {
+            try { var ed = tinymce.get(EDITOR_ID); if (ed) { ed.remove(); } } catch (e) {}
+        }
         if (window.wp && wp.editor && wp.editor.remove) {
             try { wp.editor.remove(EDITOR_ID); } catch (e) {}
         }
