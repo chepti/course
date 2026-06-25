@@ -95,8 +95,11 @@ function cpt_content_editor_page() {
         }
         // optional new section
         if (!empty($_POST['new_id'])) {
-            $nid = sanitize_key($_POST['new_id']);
-            if ($nid !== '') {
+            $raw_nid = trim(wp_unslash($_POST['new_id']));
+            $nid = sanitize_key($raw_nid);
+            if ($nid === '') {
+                $notice = '<div class="notice notice-error"><p>⚠️ הפרק החדש לא נשמר: המזהה "' . esc_html($raw_nid) . '" אינו תקין. יש להשתמש באנגלית בלבד (אותיות, מספרים, קו תחתון, מקף).</p></div>';
+            } else {
                 $data['sections'][] = [
                     'id'     => $nid,
                     'title'  => sanitize_text_field(wp_unslash($_POST['new_title'] ?? '')),
@@ -239,7 +242,7 @@ function cpt_content_editor_form($slug) {
     // new section
     echo '<hr><h2>הוספת פרק חדש</h2>';
     echo '<table class="form-table">';
-    echo '<tr><th>מזהה</th><td><input type="text" name="new_id" placeholder="לדוגמה: summary"></td></tr>';
+    echo '<tr><th>מזהה <span style="color:#b32d2e">*</span></th><td><input type="text" name="new_id" placeholder="לדוגמה: summary (אנגלית בלבד, ללא רווחים)" style="width:100%;max-width:320px"><br><small style="color:#666">⚠️ חובה — אנגלית בלבד (אותיות, מספרים, _ או -). עברית לא נשמרת.</small></td></tr>';
     echo '<tr><th>כותרת</th><td><input type="text" name="new_title" class="regular-text"></td></tr>';
     echo '<tr><th>פרק-אב</th><td>' . cpt_parent_select('new_parent', '', $main_options) . '</td></tr>';
     echo '<tr><th>סרטונים (בסוף)</th><td><textarea name="new_videos" rows="2" style="width:100%;max-width:560px" placeholder="https://youtu.be/XXXX | כותרת הסרטון"></textarea></td></tr>';
