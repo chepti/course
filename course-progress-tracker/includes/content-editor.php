@@ -266,14 +266,17 @@ function cpt_parent_select($name, $current, $main_options) {
 function cpt_content_editor_section_block($i, $s, $main_options) {
     $sid = isset($s['id']) ? $s['id'] : '';
     echo '<div style="border:1px solid #ccd0d4;background:#fff;padding:12px 16px;margin:12px 0;border-radius:6px">';
-    echo '<input type="hidden" name="sec_id[' . $i . ']" value="' . esc_attr($sid) . '">';
     echo '<p style="margin:0 0 8px;display:flex;align-items:center;gap:8px">';
     echo '<button type="submit" name="cpt_move" value="up_' . $i . '" class="button button-small" title="הזז למעלה">▲</button>';
     echo '<button type="submit" name="cpt_move" value="down_' . $i . '" class="button button-small" title="הזז למטה">▼</button>';
-    echo '<b>' . esc_html($s['title'] ?: $sid) . '</b> <code>' . esc_html($sid) . '</code>';
+    echo '<b>' . esc_html($s['title'] ?: $sid) . '</b>';
     echo '<label style="margin-right:auto;color:#b32d2e"><input type="checkbox" name="sec_delete[' . $i . ']" value="1"> מחק פרק זה</label></p>';
     echo '<table class="form-table" style="margin:0">';
-    echo '<tr><th style="width:120px">כותרת</th><td><input type="text" name="sec_title[' . $i . ']" class="regular-text" value="' . esc_attr($s['title']) . '"></td></tr>';
+    echo '<tr><th style="width:120px">מזהה (slug)</th><td>'
+       . '<input type="text" name="sec_id[' . $i . ']" value="' . esc_attr($sid) . '" style="width:220px;font-family:monospace" pattern="[a-z0-9_-]+" title="אנגלית בלבד: אותיות קטנות, מספרים, _ או -">'
+       . '<br><small style="color:#888">⚠️ שינוי המזהה ימחק היסטוריית התקדמות לפרק זה.</small>'
+       . '</td></tr>';
+    echo '<tr><th>כותרת</th><td><input type="text" name="sec_title[' . $i . ']" class="regular-text" value="' . esc_attr($s['title']) . '"></td></tr>';
     echo '<tr><th>פרק-אב</th><td>' . cpt_parent_select('sec_parent[' . $i . ']', isset($s['parent']) ? $s['parent'] : '', $main_options) . '</td></tr>';
     echo '<tr><th>סרטונים (בסוף)</th><td><textarea name="sec_videos[' . $i . ']" rows="2" style="width:100%;max-width:560px">' . esc_textarea(cpt_videos_to_textarea(isset($s['videos']) ? $s['videos'] : [])) . '</textarea></td></tr>';
     echo '<tr><th>תוכן</th><td>';
