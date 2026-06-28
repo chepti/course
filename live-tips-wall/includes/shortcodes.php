@@ -15,46 +15,54 @@ function ltw_live_tips_wall_shortcode($atts) {
     ob_start();
     ?>
     <div class="ltw-root" data-campaign="<?php echo $campaign; ?>" dir="rtl">
-        <section class="ltw-form-section" aria-labelledby="ltw-form-title">
-            <h3 id="ltw-form-title" class="ltw-form-title"></h3>
-            <p class="ltw-form-hint"></p>
-            <form class="ltw-form" novalidate>
-                <input type="text" name="website_url" class="ltw-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
-                <label class="ltw-field">
-                    <span class="ltw-label ltw-label-tip"></span>
-                    <textarea name="tip" rows="3" maxlength="280" required></textarea>
-                    <span class="ltw-char-count"><span class="ltw-char-current">0</span>/280</span>
-                </label>
-                <div class="ltw-row">
-                    <label class="ltw-field ltw-field-name">
-                        <span class="ltw-label ltw-label-name"></span>
-                        <input type="text" name="name" maxlength="50" autocomplete="name">
-                    </label>
-                    <label class="ltw-check">
-                        <input type="checkbox" name="initials_only">
-                        <span class="ltw-label-initials"></span>
-                    </label>
-                </div>
-                <fieldset class="ltw-stars-field">
-                    <legend class="ltw-label ltw-label-stars"></legend>
-                    <div class="ltw-stars-input" role="radiogroup" aria-label="דירוג">
-                        <?php for ($i = 5; $i >= 1; $i--) : ?>
-                            <label class="ltw-star-btn">
-                                <input type="radio" name="stars" value="<?php echo $i; ?>" <?php echo $i === 5 ? 'checked' : ''; ?>>
-                                <span aria-hidden="true">★</span>
+        <div class="ltw-split">
+            <section class="ltw-wall-section" aria-labelledby="ltw-wall-title">
+                <h3 id="ltw-wall-title" class="ltw-wall-title"></h3>
+                <div class="ltw-wall" role="list"></div>
+                <p class="ltw-wall-empty" hidden></p>
+            </section>
+
+            <aside class="ltw-form-aside" aria-labelledby="ltw-form-title">
+                <div class="ltw-form-card">
+                    <span class="ltw-pin" aria-hidden="true">📌</span>
+                    <h3 id="ltw-form-title" class="ltw-form-title"></h3>
+                    <p class="ltw-form-hint"></p>
+                    <form class="ltw-form" novalidate>
+                        <input type="text" name="website_url" class="ltw-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+                        <label class="ltw-field ltw-field-tip">
+                            <span class="ltw-sr-only ltw-label-tip"></span>
+                            <textarea name="tip" rows="2" maxlength="280" required placeholder=""></textarea>
+                            <span class="ltw-char-count"><span class="ltw-char-current">0</span>/280</span>
+                        </label>
+                        <div class="ltw-name-row">
+                            <label class="ltw-field ltw-field-name">
+                                <span class="ltw-sr-only ltw-label-name"></span>
+                                <input type="text" name="name" maxlength="50" autocomplete="name" required placeholder="">
                             </label>
-                        <?php endfor; ?>
-                    </div>
-                </fieldset>
-                <p class="ltw-msg" role="status" aria-live="polite"></p>
-                <button type="submit" class="ltw-submit"></button>
-            </form>
-        </section>
-        <section class="ltw-wall-section" aria-labelledby="ltw-wall-title">
-            <h3 id="ltw-wall-title" class="ltw-wall-title"></h3>
-            <div class="ltw-wall" role="list"></div>
-            <p class="ltw-wall-empty" hidden></p>
-        </section>
+                            <label class="ltw-check ltw-check-mini" title="">
+                                <input type="checkbox" name="initials_only" checked>
+                                <span class="ltw-label-initials"></span>
+                            </label>
+                        </div>
+                        <div class="ltw-form-footer">
+                            <fieldset class="ltw-stars-field">
+                                <legend class="ltw-sr-only ltw-label-stars"></legend>
+                                <div class="ltw-stars-input" role="radiogroup" aria-label="דירוג">
+                                    <?php for ($i = 5; $i >= 1; $i--) : ?>
+                                        <label class="ltw-star-btn">
+                                            <input type="radio" name="stars" value="<?php echo $i; ?>" <?php echo $i === 5 ? 'checked' : ''; ?>>
+                                            <span aria-hidden="true">★</span>
+                                        </label>
+                                    <?php endfor; ?>
+                                </div>
+                            </fieldset>
+                            <button type="submit" class="ltw-submit"></button>
+                        </div>
+                        <p class="ltw-msg" role="status" aria-live="polite"></p>
+                    </form>
+                </div>
+            </aside>
+        </div>
     </div>
     <?php
     return ob_get_clean();

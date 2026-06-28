@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Live Tips Wall
  * Description: דף נחיתה לאתגר הקיץ וקיר טיפים חי — פתקים צבעוניים עם דירוג כוכבים, ללא הרשמה. פרסום מיידי + הסתרה לאדמין.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Chepti
  */
 
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LTW_VERSION', '1.0.1');
+define('LTW_VERSION', '1.0.2');
 define('LTW_DEFAULT_WHATSAPP', 'https://chat.whatsapp.com/Gl65KQDZUApFdpXiwniKMD');
 define('LTW_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('LTW_PLUGIN_URL', plugin_dir_url(__FILE__));
@@ -57,22 +57,25 @@ function ltw_enqueue_wall_assets($campaign = 'summer-2026') {
         'pollMs'    => 15000,
         'maxTipLen' => 280,
         'i18n'      => [
-            'submit'       => 'שלחו את הטיפ שלי',
-            'submitting'   => 'שולח…',
-            'thanks'       => 'תודה! הטיפ שלכם על הקיר.',
-            'error'        => 'משהו השתבש. נסו שוב.',
-            'rateLimit'    => 'כבר שלחתם טיפ לאחרונה. נסו שוב בעוד כמה דקות.',
-            'tipRequired'  => 'כתבו טיפ לפני השליחה.',
-            'starsRequired'=> 'בחרו דירוג כוכבים.',
-            'anonymous'    => 'מורה/ה',
-            'wallTitle'    => 'טיפים ממורים שכבר למדו',
-            'wallEmpty'    => 'היו הראשונים לשתף טיפ!',
-            'formTitle'    => 'שתפו טיפ ללמידה',
-            'formHint'     => 'איך הכי כדאי ללמוד את הקורס?',
-            'nameLabel'    => 'שם (אופציונלי)',
-            'initialsLabel'=> 'הציגו רק ראשי תיבות',
-            'tipLabel'     => 'הטיפ שלכם',
-            'starsLabel'   => 'דירוג',
+            'submit'        => '✨ שלחו',
+            'submitting'    => 'שולח…',
+            'thanks'        => 'תודה! הטיפ על הקיר 💛',
+            'error'         => 'משהו השתבש. נסו שוב.',
+            'rateLimit'     => 'כבר שלחתם טיפ לאחרונה. נסו שוב בעוד כמה דקות.',
+            'tipRequired'   => 'כתבו טיפ לפני השליחה.',
+            'nameRequired'  => 'כתבו את שמכם.',
+            'starsRequired' => 'בחרו דירוג כוכבים.',
+            'anonymous'     => 'מורה/ה',
+            'wallTitle'     => 'טיפים ממורים שכבר למדו',
+            'wallEmpty'     => 'היו הראשונים לשתף טיפ!',
+            'formTitle'     => 'הוסיפו פתק!',
+            'formHint'      => 'טיפ קצר — איך הכי כדאי ללמוד?',
+            'nameLabel'     => 'השם שלכם',
+            'namePlaceholder'=> 'השם שלכם',
+            'tipPlaceholder'=> 'למשל: ליישם כל יחידה מיד…',
+            'initialsLabel' => 'ראשי תיבות בלבד',
+            'tipLabel'      => 'הטיפ שלכם',
+            'starsLabel'    => 'דירוג',
         ],
     ]);
 }

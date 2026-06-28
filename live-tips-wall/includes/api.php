@@ -97,6 +97,9 @@ function ltw_rest_create_tip(WP_REST_Request $request) {
 
     $name = sanitize_text_field((string) $request->get_param('name'));
     $name = mb_substr(trim($name), 0, 50, 'UTF-8');
+    if ($name === '') {
+        return new WP_Error('ltw_empty_name', 'חסר שם.', ['status' => 400]);
+    }
     $initials_only = (bool) $request->get_param('initials_only');
 
     $tip_row = ltw_insert_tip([

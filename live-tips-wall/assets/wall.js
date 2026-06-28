@@ -72,8 +72,19 @@
         el.textContent = i18n[map[sel]];
       }
     });
+    if (tipField && i18n.tipPlaceholder) {
+      tipField.placeholder = i18n.tipPlaceholder;
+    }
+    var nameField = qs('input[name="name"]', form);
+    if (nameField && i18n.namePlaceholder) {
+      nameField.placeholder = i18n.namePlaceholder;
+    }
     if (emptyEl && i18n.wallEmpty) {
       emptyEl.textContent = i18n.wallEmpty;
+    }
+
+    function noteTilt() {
+      return ((Math.random() * 3.6) - 1.8).toFixed(2) + 'deg';
     }
 
     function showMsg(text, type) {
@@ -88,6 +99,7 @@
       el.setAttribute('role', 'listitem');
       el.dataset.id = String(tip.id);
       el.style.background = tip.color || '#fef3c7';
+      el.style.transform = 'rotate(' + noteTilt() + ')';
 
       var text = document.createElement('p');
       text.className = 'ltw-note-text';
@@ -202,6 +214,13 @@
         return;
       }
 
+      var nameVal = (qs('input[name="name"]', form).value || '').trim();
+      if (!nameVal) {
+        showMsg(i18n.nameRequired || 'כתבו שם', 'err');
+        qs('input[name="name"]', form).focus();
+        return;
+      }
+
       var starsInput = qs('input[name="stars"]:checked', form);
       var stars = starsInput ? parseInt(starsInput.value, 10) : 0;
       if (stars < 1 || stars > 5) {
@@ -218,7 +237,7 @@
         body: {
           campaign: campaign,
           tip: tip,
-          name: (qs('input[name="name"]', form).value || '').trim(),
+          name: nameVal,
           initials_only: qs('input[name="initials_only"]', form).checked,
           stars: stars,
           website_url: (qs('input[name="website_url"]', form).value || ''),
@@ -229,12 +248,17 @@
             prependNote(data.tip, true);
           }
           form.reset();
+          qs('input[name="initials_only"]', form).checked = true;
+          qs('input[name="stars"][value="5"]', form).checked = true;
           if (charCurrent) charCurrent.textContent = '0';
+          refreshStars();
           showMsg(i18n.thanks || 'תודה!', 'ok');
         })
         .catch(function (err) {
           if (err.code === 'ltw_rate_limit' || err.status === 429) {
             showMsg(i18n.rateLimit || 'המתינו', 'err');
+          } else if (err.code === 'ltw_empty_name') {
+            showMsg(i18n.nameRequired || 'כתבו שם', 'err');
           } else {
             showMsg(i18n.error || 'שגיאה', 'err');
           }
