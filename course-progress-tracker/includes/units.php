@@ -147,6 +147,11 @@ function cpt_render_unit_shell($slug, $body) {
     $html .= $body;
     $html .= '</div>'; // .course-unit-body
 
+    // Dismiss the loader even when a full-page cache serves guest HTML to
+    // logged-in learners (course-tracker.js is only enqueued for logged-in
+    // users at render time, so cached pages never include it).
+    $html .= '<script>(function(){var s=document.getElementById("course-shell");if(!s)return;function r(){s.classList.add("is-ready");}var a=document.getElementById("content-area")||s.querySelector("#content");if(a){if(a.children.length>0&&a.offsetHeight>40)r();else{var o=new MutationObserver(function(){if(a.children.length>0){r();o.disconnect();}});o.observe(a,{childList:true,subtree:true});}}setTimeout(r,2500);})();</script>';
+
     $html .= '</div>'; // .course-shell
     return $html;
 }

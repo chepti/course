@@ -2,6 +2,48 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * True when the current request is a course unit / aia child page.
+ */
+function cpt_is_course_tracker_page($post_id = 0) {
+    $post_id = $post_id ? (int) $post_id : (int) get_queried_object_id();
+    if (!$post_id) {
+        return false;
+    }
+    $parent_page = get_page_by_path('aia');
+    if ($parent_page && (is_page($parent_page->ID) || in_array($parent_page->ID, get_post_ancestors($post_id), true))) {
+        return true;
+    }
+    if (function_exists('cpt_manifest_get_unit') && cpt_manifest_get_unit($post_id)) {
+        return true;
+    }
+    $post = get_post($post_id);
+    return $post && has_shortcode($post->post_content, 'course_unit');
+}
+
+/**
+ * Logged-in learners must not get guest-cached HTML: tracker scripts and
+ * progress state are only injected when WordPress renders the page live.
+ */
+add_action('template_redirect', function () {
+    if (!is_user_logged_in() || !cpt_is_course_tracker_page()) {
+        return;
+    }
+    if (!defined('DONOTCACHEPAGE')) {
+        define('DONOTCACHEPAGE', true);
+    }
+    if (function_exists('do_action')) {
+        do_action('litespeed_control_set_nocache', 'cpt course page');
+    }
+}, 0);
+
+add_filter('rocket_override_donotcachepage', function ($donotcache, $post_id) {
+    if (is_user_logged_in() && cpt_is_course_tracker_page($post_id)) {
+        return true;
+    }
+    return $donotcache;
+}, 10, 2);
+
+/**
  * Frontend script loading for course unit pages.
  * Loads for logged-in users on pages under the 'aia' parent page,
  * or on any page allowed via the 'cpt_should_load_tracker' filter.
