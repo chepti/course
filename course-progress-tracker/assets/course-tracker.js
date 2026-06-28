@@ -596,6 +596,52 @@
         }
     }
 
+    // ---------- Guest banner (view-only; progress needs a logged-in user) ----------
+
+    function showGuestBanner() {
+        if (document.getElementById('course-guest-banner')) return;
+        var shell = document.getElementById('course-shell');
+        if (!shell) return;
+        var loginUrl = cpt_tracker_data.login_url || '/wp-login.php';
+        var el = document.createElement('div');
+        el.id = 'course-guest-banner';
+        el.className = 'course-guest-banner';
+        el.setAttribute('role', 'note');
+        el.innerHTML = '<p><strong>צפייה חופשית</strong> — אפשר ללמוד מהתוכן גם בלי התחברות. '
+            + 'כדי לשמור התקדמות, לסמן פרקים כהושלמו ולקבל תעודה — '
+            + '<a href="' + loginUrl + '">התחברו או הירשמו</a>.</p>';
+        var anchor = shell.querySelector('.course-progress') || shell.querySelector('.course-intro') || shell.querySelector('.course-hero');
+        if (anchor && anchor.nextSibling) {
+            anchor.parentNode.insertBefore(el, anchor.nextSibling);
+        } else if (anchor) {
+            anchor.parentNode.appendChild(el);
+        } else {
+            var body = shell.querySelector('.course-unit-body');
+            if (body) shell.insertBefore(el, body);
+        }
+    }
+
+    function startTracking() {
+        trackVideos();
+        trackClicks();
+        trackScroll();
+        trackManualChecks();
+        trackComments();
+        watchSectionChanges();
+        handleResumeQueryParam();
+        bootstrapSession().then(function () {
+            rest('state?post_id=' + POST_ID).then(function (state) {
+                applyState(state);
+                updateShellProgress(state.unit_percent);
+                lastState = state;
+            }).catch(function (err) {
+                console.warn('Course Tracker: state load failed -', err.message); // eslint-disable-line no-console
+            });
+        }).catch(function (err) {
+            console.warn('Course Tracker: session failed (resume unavailable) -', err.message); // eslint-disable-line no-console
+        });
+    }
+
     // ---------- Shell loader: reveal once the unit content has rendered ----------
 
     function initShellLoader() {
@@ -624,42 +670,31 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.9.0 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.10.0 init - post_id:', POST_ID); // eslint-disable-line no-console
 
-        // Apply server-embedded initial state immediately so circles are coloured on load
-        if (cpt_tracker_data.initial_state) {
-            applyState(cpt_tracker_data.initial_state);
-            lastState = cpt_tracker_data.initial_state;
-        }
+        initShellLoader();
+        initShellChrome();
 
-        // Re-apply indicators when section HTML swaps in
+        // Re-apply indicators when section HTML swaps in (logged-in only)
         observeContent(function () {
             setTimeout(function () { if (lastState) { applyState(lastState); } }, 300);
         });
 
-        // Start all trackers immediately - they use admin-ajax (no nonce needed)
-        trackVideos();
-        trackClicks();
-        trackScroll();
-        trackManualChecks();
-        trackComments();
-        watchSectionChanges();
-        handleResumeQueryParam();
-        initShellLoader();
-        initShellChrome();
+        if (cpt_tracker_data.logged_in) {
+            if (cpt_tracker_data.initial_state) {
+                applyState(cpt_tracker_data.initial_state);
+                lastState = cpt_tracker_data.initial_state;
+            }
+            startTracking();
+            return;
+        }
 
-        // Optional: bootstrap REST session for the resume button (GET /state).
-        // Failure is non-fatal - activity tracking already works via admin-ajax above.
+        // Guest page (or guest-cached HTML): confirm live session before view-only mode.
         bootstrapSession().then(function () {
-            rest('state?post_id=' + POST_ID).then(function (state) {
-                applyState(state);
-                updateShellProgress(state.unit_percent);
-                lastState = state;
-            }).catch(function (err) {
-                console.warn('Course Tracker: state load failed -', err.message); // eslint-disable-line no-console
-            });
-        }).catch(function (err) {
-            console.warn('Course Tracker: session failed (resume unavailable) -', err.message); // eslint-disable-line no-console
+            // Logged in but page was cached for guests — reload for tracker scripts + state.
+            window.location.reload();
+        }).catch(function () {
+            showGuestBanner();
         });
     }
 

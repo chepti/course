@@ -171,6 +171,43 @@
 
 /* ---------- Intro ---------- */
 
+.course-guest-banner {
+  margin: 0 32px 12px;
+  padding: 14px 18px;
+  background: #fff8e6;
+  border: 1px solid #f0d78c;
+  border-radius: 12px;
+  color: #5c4a1a;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+.course-guest-banner a {
+  color: #b45309;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.course-guest-banner p { margin: 0; }
+
+.course-login-gate {
+  max-width: 520px;
+  margin: 48px auto;
+  padding: 32px;
+  text-align: center;
+  background: #f8fafc;
+  border: 1px solid var(--shell-line);
+  border-radius: 16px;
+}
+.course-login-gate-btn {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 24px;
+  background: var(--shell-accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 999px;
+}
+
 .course-intro {
   padding: 22px 32px 4px;
   color: #44525f;

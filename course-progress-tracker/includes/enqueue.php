@@ -50,9 +50,6 @@ add_filter('rocket_override_donotcachepage', function ($donotcache, $post_id) {
  */
 add_action('wp_enqueue_scripts', 'cpt_enqueue_course_scripts', 5);
 function cpt_enqueue_course_scripts() {
-    if (!is_user_logged_in()) {
-        return;
-    }
     $post_id = get_the_ID();
     if (!$post_id) {
         return;
@@ -79,9 +76,15 @@ function cpt_enqueue_course_scripts() {
     );
 
     wp_localize_script('cpt-course-tracker', 'cpt_tracker_data', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'post_id'  => (int) $post_id,
+        'ajax_url'  => admin_url('admin-ajax.php'),
+        'post_id'   => (int) $post_id,
+        'logged_in' => is_user_logged_in(),
+        'login_url' => wp_login_url(get_permalink($post_id)),
     ]);
+
+    if (!is_user_logged_in()) {
+        return;
+    }
 
     // Embed initial progress state so circles light up on page load immediately,
     // without waiting for (or depending on) the GET /state REST call.

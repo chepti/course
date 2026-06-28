@@ -49,6 +49,14 @@ function cpt_course_unit_shortcode($atts) {
     $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
     $body = $data ? cpt_render_unit_from_data($data) : file_get_contents($file);
 
+    if (apply_filters('cpt_require_login_for_units', false) && !is_user_logged_in()) {
+        $login_url = wp_login_url(get_permalink());
+        return '<div class="course-login-gate">'
+            . '<p>כדי לצפות ביחידה זו יש להתחבר לחשבון.</p>'
+            . '<p><a class="course-login-gate-btn" href="' . esc_url($login_url) . '">התחברות / הרשמה</a></p>'
+            . '</div>';
+    }
+
     // Legacy escape hatch: render bare unit, no shell chrome.
     if (strtolower($atts['chrome']) === 'off') {
         return $body;
