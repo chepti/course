@@ -49,7 +49,7 @@ function ltw_admin_page() {
     }
 
     $tips = $wpdb->get_results($wpdb->prepare(
-        "SELECT id, tip_text, display_name, initials_only, stars, color, status, created_at
+        "SELECT id, campaign, tip_text, display_name, initials_only, stars, color, status, created_at
          FROM $table
          WHERE campaign = %s
          ORDER BY id DESC
