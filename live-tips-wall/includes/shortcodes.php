@@ -110,14 +110,26 @@ function ltw_render_managers_offer($whatsapp_url = '') {
     return ob_get_clean();
 }
 
+function ltw_managers_offer_shortcode($atts) {
+    $atts = shortcode_atts([
+        'wa_url' => LTW_MANAGERS_WHATSAPP,
+    ], $atts);
+
+    ltw_enqueue_wall_assets();
+
+    return '<div class="ltw-landing ltw-managers-standalone" dir="rtl">'
+        . ltw_render_managers_offer($atts['wa_url'])
+        . '</div>';
+}
+add_shortcode('managers_offer', 'ltw_managers_offer_shortcode');
+
 function ltw_summer_challenge_shortcode($atts) {
     $atts = shortcode_atts([
-        'campaign'         => 'summer-2026',
-        'join_url'         => '',
-        'join_text'        => 'להצטרפות לאתגר',
-        'whatsapp_url'     => LTW_DEFAULT_WHATSAPP,
-        'whatsapp_text'    => 'להצטרפות לקבוצת התמיכה בוואטסאפ',
-        'managers_wa_url'  => LTW_MANAGERS_WHATSAPP,
+        'campaign'      => 'summer-2026',
+        'join_url'      => '',
+        'join_text'     => 'להצטרפות לאתגר',
+        'whatsapp_url'  => LTW_DEFAULT_WHATSAPP,
+        'whatsapp_text' => 'להצטרפות לקבוצת התמיכה בוואטסאפ',
     ], $atts);
 
     ltw_enqueue_wall_assets($atts['campaign']);
@@ -168,8 +180,6 @@ function ltw_summer_challenge_shortcode($atts) {
         </div>
 
         <?php echo ltw_live_tips_wall_shortcode(['campaign' => $atts['campaign']]); ?>
-
-        <?php echo ltw_render_managers_offer($atts['managers_wa_url']); ?>
 
         <footer class="ltw-signature">
             <span class="ltw-signature-line"></span>

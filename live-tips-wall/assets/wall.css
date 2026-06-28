@@ -209,6 +209,14 @@
   font-size: 1rem;
 }
 
+.ltw-managers-standalone {
+  margin-bottom: 48px;
+}
+
+.ltw-managers-standalone .ltw-managers-offer {
+  margin-top: 0;
+}
+
 .ltw-signature {
   margin-top: 40px;
   padding-top: 8px;

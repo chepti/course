@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Live Tips Wall
  * Description: דף נחיתה לאתגר הקיץ וקיר טיפים חי — פתקים צבעוניים עם דירוג כוכבים, ללא הרשמה. פרסום מיידי + הסתרה לאדמין.
- * Version: 1.0.4
+ * Version: 1.0.5
  * Author: Chepti
  */
 
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LTW_VERSION', '1.0.4');
+define('LTW_VERSION', '1.0.5');
 define('LTW_DEFAULT_WHATSAPP', 'https://chat.whatsapp.com/Gl65KQDZUApFdpXiwniKMD');
 define('LTW_MANAGERS_WHATSAPP', 'https://wa.me/972544477081');
 define('LTW_PLUGIN_DIR', plugin_dir_path(__FILE__));
@@ -36,6 +36,7 @@ function ltw_maybe_enqueue_assets() {
     if (!$post || (
         !has_shortcode($post->post_content, 'live_tips_wall')
         && !has_shortcode($post->post_content, 'summer_challenge_2026')
+        && !has_shortcode($post->post_content, 'managers_offer')
     )) {
         return;
     }
