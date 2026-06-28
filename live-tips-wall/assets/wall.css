@@ -138,6 +138,77 @@
   color: var(--ltw-muted);
 }
 
+/* Managers offer — below tips wall */
+
+.ltw-managers-offer {
+  margin: 48px 0 0;
+  padding: 28px 24px;
+  background: linear-gradient(160deg, #f0fdfa 0%, #fff 45%, #f8fafc 100%);
+  border: 1px solid var(--ltw-line);
+  border-radius: var(--ltw-radius);
+  box-shadow: 0 8px 32px rgba(42, 140, 140, 0.08);
+}
+
+.ltw-managers-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ltw-accent);
+}
+
+.ltw-managers-title {
+  margin: 0 0 14px;
+  font-size: clamp(1.25rem, 3vw, 1.55rem);
+  line-height: 1.35;
+  color: var(--ltw-ink);
+}
+
+.ltw-managers-lead {
+  margin: 0 0 12px;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--ltw-ink);
+}
+
+.ltw-managers-tagline {
+  margin: 0 0 20px;
+  padding: 12px 16px;
+  background: rgba(42, 140, 140, 0.08);
+  border-radius: 10px;
+  border-right: 4px solid var(--ltw-accent);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--ltw-ink);
+}
+
+.ltw-managers-list {
+  margin: 0 0 22px;
+  padding-right: 1.25em;
+  line-height: 1.65;
+}
+
+.ltw-managers-list li + li {
+  margin-top: 12px;
+}
+
+.ltw-managers-cta-text {
+  margin: 0 0 16px;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ltw-muted);
+}
+
+.ltw-managers-cta-wrap {
+  text-align: center;
+  margin: 0;
+}
+
+.ltw-managers-wa {
+  font-size: 1rem;
+}
+
 .ltw-signature {
   margin-top: 40px;
   padding-top: 8px;
@@ -509,7 +580,8 @@
 }
 
 @media (max-width: 600px) {
-  .ltw-landing-card {
+  .ltw-landing-card,
+  .ltw-managers-offer {
     padding: 18px 14px;
   }
 

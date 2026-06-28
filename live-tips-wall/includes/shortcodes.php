@@ -70,13 +70,54 @@ function ltw_live_tips_wall_shortcode($atts) {
 }
 add_shortcode('live_tips_wall', 'ltw_live_tips_wall_shortcode');
 
+function ltw_render_managers_offer($whatsapp_url = '') {
+    $wa = esc_url($whatsapp_url ?: LTW_MANAGERS_WHATSAPP);
+    ob_start();
+    ?>
+    <section class="ltw-managers-offer" aria-labelledby="ltw-managers-title">
+        <p class="ltw-managers-eyebrow">הצעה למנהלים</p>
+        <h2 id="ltw-managers-title" class="ltw-managers-title">ומה אחרי שלושת השבועות של האתגר?</h2>
+        <p class="ltw-managers-lead">
+            הקורס שוב נסגר, אבל אתם יכולים לפתוח אותו — ולא רק לכם אלא לכל חדר המורים שלכם!
+        </p>
+        <p class="ltw-managers-tagline">
+            חבילה מיוחדת להפוך את הבינה המלאכותית לשפה בית ספרית גם אצלכם.
+        </p>
+        <ul class="ltw-managers-list">
+            <li>
+                <strong>הקורס נפתח במלואו</strong> לכל צוות המורים בבית הספר. כולל עדכונים במהלך השנה.
+            </li>
+            <li>
+                <strong>קבוצת אתגר בכל יום למשך חודש</strong> — פרטית לחדר המורים — שבה מתפרסם בכל יום טיפ ואתגר, המורים משתפים תוצרים, דילמות ומקבלים מענה מהיר לשאלות.
+            </li>
+            <li>
+                <strong>הרצאת השראה</strong> — לאן הבינה לוקחת אותנו? איך עולם החינוך יכול להיראות בעוד שנתיים? איך להגן ולהכין את הלומדים?
+            </li>
+            <li>
+                <strong>מבנה ליום סמינר לצוות המורים</strong> — שילוב של למידה ובחירה, יישום ויצירה משותפת של יחידות לימוד לשימוש מיידי.
+            </li>
+        </ul>
+        <p class="ltw-managers-cta-text">
+            דברו איתי לפרטים נוספים ולהרכיב את המענה המדויק עבורכם
+        </p>
+        <p class="ltw-managers-cta-wrap">
+            <a href="<?php echo $wa; ?>" class="ltw-cta ltw-cta-whatsapp ltw-managers-wa" target="_blank" rel="noopener">
+                וואטסאפ · 054-447-7081
+            </a>
+        </p>
+    </section>
+    <?php
+    return ob_get_clean();
+}
+
 function ltw_summer_challenge_shortcode($atts) {
     $atts = shortcode_atts([
-        'campaign'       => 'summer-2026',
-        'join_url'       => '',
-        'join_text'      => 'להצטרפות לאתגר',
-        'whatsapp_url'   => LTW_DEFAULT_WHATSAPP,
-        'whatsapp_text'  => 'להצטרפות לקבוצת התמיכה בוואטסאפ',
+        'campaign'         => 'summer-2026',
+        'join_url'         => '',
+        'join_text'        => 'להצטרפות לאתגר',
+        'whatsapp_url'     => LTW_DEFAULT_WHATSAPP,
+        'whatsapp_text'    => 'להצטרפות לקבוצת התמיכה בוואטסאפ',
+        'managers_wa_url'  => LTW_MANAGERS_WHATSAPP,
     ], $atts);
 
     ltw_enqueue_wall_assets($atts['campaign']);
@@ -127,6 +168,8 @@ function ltw_summer_challenge_shortcode($atts) {
         </div>
 
         <?php echo ltw_live_tips_wall_shortcode(['campaign' => $atts['campaign']]); ?>
+
+        <?php echo ltw_render_managers_offer($atts['managers_wa_url']); ?>
 
         <footer class="ltw-signature">
             <span class="ltw-signature-line"></span>
