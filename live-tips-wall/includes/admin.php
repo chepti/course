@@ -123,7 +123,8 @@ function ltw_admin_page() {
 
         <hr>
         <h2>שימוש</h2>
-        <p>דף נחיתה מלא: <code>[summer_challenge_2026 join_url="https://..."]</code></p>
+        <p>דף נחיתה מלא: <code>[summer_challenge_2026]</code> — כפתור וואטסאפ מוגדר כברירת מחדל</p>
+        <p>עם קישור לקורס נוסף: <code>[summer_challenge_2026 join_url="https://..."]</code></p>
         <p>קיר בלבד: <code>[live_tips_wall campaign="summer-2026"]</code></p>
     </div>
     <?php

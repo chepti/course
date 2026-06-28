@@ -63,15 +63,19 @@ add_shortcode('live_tips_wall', 'ltw_live_tips_wall_shortcode');
 
 function ltw_summer_challenge_shortcode($atts) {
     $atts = shortcode_atts([
-        'campaign'  => 'summer-2026',
-        'join_url'  => '',
-        'join_text' => 'להצטרפות לאתגר',
+        'campaign'       => 'summer-2026',
+        'join_url'       => '',
+        'join_text'      => 'להצטרפות לאתגר',
+        'whatsapp_url'   => LTW_DEFAULT_WHATSAPP,
+        'whatsapp_text'  => 'להצטרפות לקבוצת התמיכה בוואטסאפ',
     ], $atts);
 
     ltw_enqueue_wall_assets($atts['campaign']);
 
     $join_url = esc_url($atts['join_url']);
     $join_text = esc_html($atts['join_text']);
+    $whatsapp_url = esc_url($atts['whatsapp_url']);
+    $whatsapp_text = esc_html($atts['whatsapp_text']);
 
     ob_start();
     ?>
@@ -101,13 +105,14 @@ function ltw_summer_challenge_shortcode($atts) {
                 מתחילים היום, <strong>28.6.26</strong> עד <strong>16.7.26</strong> — י״ג תמוז עד ב׳ אב.
             </p>
 
-            <?php if ($join_url) : ?>
-                <p class="ltw-cta-wrap">
+            <div class="ltw-cta-wrap ltw-cta-group">
+                <?php if ($join_url) : ?>
                     <a href="<?php echo $join_url; ?>" class="ltw-cta" target="_blank" rel="noopener"><?php echo $join_text; ?></a>
-                </p>
-            <?php else : ?>
-                <p class="ltw-cta-placeholder">[הוסיפו join_url="..." לשורטקוד לקישור ההצטרפות]</p>
-            <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($whatsapp_url) : ?>
+                    <a href="<?php echo $whatsapp_url; ?>" class="ltw-cta ltw-cta-whatsapp" target="_blank" rel="noopener"><?php echo $whatsapp_text; ?></a>
+                <?php endif; ?>
+            </div>
 
             <p class="ltw-share-hint">אפשר להעביר הלאה — למורים שייהנו מההזדמנות 💚</p>
         </div>

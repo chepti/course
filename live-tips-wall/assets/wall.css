@@ -86,6 +86,14 @@
   margin: 24px 0 16px;
 }
 
+.ltw-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
 .ltw-cta {
   display: inline-block;
   padding: 14px 32px;
@@ -102,6 +110,15 @@
 .ltw-cta:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(42, 140, 140, 0.45);
+}
+
+.ltw-cta-whatsapp {
+  background: linear-gradient(45deg, #25d366, #128c7e);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.ltw-cta-whatsapp:hover {
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
 }
 
 .ltw-cta-placeholder {

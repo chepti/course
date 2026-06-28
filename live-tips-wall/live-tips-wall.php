@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Live Tips Wall
  * Description: דף נחיתה לאתגר הקיץ וקיר טיפים חי — פתקים צבעוניים עם דירוג כוכבים, ללא הרשמה. פרסום מיידי + הסתרה לאדמין.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Chepti
  */
 
@@ -10,7 +10,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LTW_VERSION', '1.0.0');
+define('LTW_VERSION', '1.0.1');
+define('LTW_DEFAULT_WHATSAPP', 'https://chat.whatsapp.com/Gl65KQDZUApFdpXiwniKMD');
 define('LTW_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('LTW_PLUGIN_URL', plugin_dir_url(__FILE__));
 
