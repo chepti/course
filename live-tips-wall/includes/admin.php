@@ -83,7 +83,8 @@ function ltw_admin_page() {
                 <thead>
                     <tr>
                         <th>תאריך</th>
-                        <th>שם</th>
+                        <th>קמפיין</th>
+                        <th>שם (מקור)</th>
                         <th>טיפ</th>
                         <th>כוכבים</th>
                         <th>סטטוס</th>
@@ -93,20 +94,30 @@ function ltw_admin_page() {
                 <tbody>
                     <?php foreach ($tips as $tip) :
                         $name = ltw_format_display_name($tip['display_name'], (bool) $tip['initials_only']);
-                        if ($name === '') {
-                            $name = '—';
-                        }
+                        $raw_name = trim($tip['display_name']);
+                        $is_hidden = ($tip['status'] === 'hidden');
                         ?>
-                        <tr data-id="<?php echo (int) $tip['id']; ?>" class="<?php echo $tip['status'] === 'hidden' ? 'ltw-row-hidden' : ''; ?>">
+                        <tr data-id="<?php echo (int) $tip['id']; ?>" class="<?php echo $is_hidden ? 'ltw-row-hidden' : ''; ?>">
                             <td><?php echo esc_html($tip['created_at']); ?></td>
-                            <td><?php echo esc_html($name); ?></td>
+                            <td><code><?php echo esc_html($tip['campaign']); ?></code></td>
+                            <td>
+                                <?php echo esc_html($name !== '' ? $name : '—'); ?>
+                                <?php if ($raw_name !== '' && $name !== $raw_name) : ?>
+                                    <br><small>מקור: <?php echo esc_html($raw_name); ?></small>
+                                <?php elseif ($raw_name === '') : ?>
+                                    <br><small>חסר שם</small>
+                                <?php endif; ?>
+                            </td>
                             <td>
                                 <span class="ltw-color-dot" style="background:<?php echo esc_attr($tip['color']); ?>"></span>
                                 <?php echo esc_html($tip['tip_text']); ?>
                             </td>
                             <td><?php echo str_repeat('★', (int) $tip['stars']); ?></td>
                             <td class="ltw-status-cell">
-                                <?php echo $tip['status'] === 'hidden' ? 'מוסתר' : 'גלוי'; ?>
+                                <?php echo $is_hidden ? 'מוסתר' : 'גלוי'; ?>
+                                <?php if (!$is_hidden && $tip['status'] !== 'visible' && $tip['status'] !== '') : ?>
+                                    <br><small><code><?php echo esc_html($tip['status']); ?></code></small>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <button type="button"

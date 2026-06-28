@@ -23,8 +23,15 @@
       headers: headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
       credentials: 'same-origin',
+      cache: 'no-store',
     }).then(function (res) {
-      return res.json().then(function (data) {
+      return res.text().then(function (text) {
+        var data;
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch (e) {
+          throw new Error('bad_json');
+        }
         if (!res.ok) {
           var err = new Error((data && data.message) || 'error');
           err.code = data && data.code;
@@ -54,8 +61,8 @@
     var charCurrent = qs('.ltw-char-current', form);
     var knownIds = {};
     var pollTimer = null;
+    var pollTick = 0;
 
-    // i18n labels
     var map = {
       '.ltw-form-ask': 'formAsk',
       '.ltw-form-title': 'formTitle',
@@ -138,37 +145,69 @@
       }
     }
 
-    function loadTips(since) {
-      var q = 'tips?campaign=' + encodeURIComponent(campaign);
-      if (since) {
-        q += '&since=' + since;
+    function tipsQuery(since, bust) {
+      var q = 'tips?campaign=' + encodeURIComponent(campaign) + '&since=' + (since || 0);
+      if (bust) {
+        q += '&_=' + Date.now();
       }
-      return api(q).then(function (data) {
+      return q;
+    }
+
+    function updateEmptyState() {
+      if (emptyEl) {
+        emptyEl.hidden = wall.children.length > 0;
+      }
+    }
+
+    function renderTipsList(tips, animate) {
+      tips.slice().reverse().forEach(function (t) {
+        prependNote(t, animate);
+      });
+      updateEmptyState();
+    }
+
+    function rebuildWall(tips) {
+      wall.innerHTML = '';
+      knownIds = {};
+      renderTipsList(tips, false);
+    }
+
+    function loadTips(since, full) {
+      return api(tipsQuery(since, full)).then(function (data) {
         var tips = (data && data.tips) || [];
+        if (full) {
+          rebuildWall(tips);
+          return;
+        }
         if (!since) {
-          tips.slice().reverse().forEach(function (t) {
-            prependNote(t, false);
-          });
+          renderTipsList(tips, false);
         } else {
           tips.forEach(function (t) {
             prependNote(t, true);
           });
-        }
-        if (emptyEl) {
-          emptyEl.hidden = wall.children.length > 0;
+          updateEmptyState();
         }
       });
+    }
+
+    function maxNoteId() {
+      var maxId = 0;
+      qsa('.ltw-note', wall).forEach(function (n) {
+        var id = parseInt(n.dataset.id, 10);
+        if (id > maxId) maxId = id;
+      });
+      return maxId;
     }
 
     function startPoll() {
       if (pollTimer) clearInterval(pollTimer);
       pollTimer = setInterval(function () {
-        var maxId = 0;
-        qsa('.ltw-note', wall).forEach(function (n) {
-          var id = parseInt(n.dataset.id, 10);
-          if (id > maxId) maxId = id;
-        });
-        loadTips(maxId).catch(function () {});
+        pollTick += 1;
+        if (pollTick % 4 === 0) {
+          loadTips(0, true).catch(function () {});
+          return;
+        }
+        loadTips(maxNoteId(), false).catch(function () {});
       }, cfg.pollMs || 15000);
     }
 
@@ -269,9 +308,11 @@
         });
     });
 
-    loadTips(0).then(startPoll).catch(function () {
-      if (emptyEl) emptyEl.hidden = false;
-    });
+    loadTips(0, true)
+      .then(startPoll)
+      .catch(function () {
+        updateEmptyState();
+      });
   }
 
   document.addEventListener('DOMContentLoaded', function () {

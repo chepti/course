@@ -18,14 +18,17 @@ add_action('rest_api_init', function () {
             ],
         ],
         'callback' => function (WP_REST_Request $request) {
+            nocache_headers();
             $campaign = $request->get_param('campaign');
             $since = (int) $request->get_param('since');
             $include_hidden = current_user_can('manage_options')
                 && $request->get_param('admin') === '1';
 
-            return rest_ensure_response([
+            $response = rest_ensure_response([
                 'tips' => ltw_get_tips($campaign, $since, $include_hidden),
             ]);
+            $response->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            return $response;
         },
     ]);
 

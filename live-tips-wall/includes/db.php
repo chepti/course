@@ -58,27 +58,19 @@ function ltw_get_tips($campaign, $since_id = 0, $include_hidden = false) {
     $table = LTW_TABLE_NAME;
     $campaign = sanitize_key($campaign);
 
-    if ($include_hidden && current_user_can('manage_options')) {
-        $rows = $wpdb->get_results($wpdb->prepare(
-            "SELECT id, tip_text, display_name, initials_only, stars, color, status, created_at
-             FROM $table
-             WHERE campaign = %s AND id > %d
-             ORDER BY id DESC
-             LIMIT 200",
-            $campaign,
-            $since_id
-        ), ARRAY_A);
-    } else {
-        $rows = $wpdb->get_results($wpdb->prepare(
-            "SELECT id, tip_text, display_name, initials_only, stars, color, status, created_at
-             FROM $table
-             WHERE campaign = %s AND status = 'visible' AND id > %d
-             ORDER BY id DESC
-             LIMIT 200",
-            $campaign,
-            $since_id
-        ), ARRAY_A);
-    }
+    $status_sql = $include_hidden && current_user_can('manage_options')
+        ? '1=1'
+        : "(status = 'visible' OR status = '' OR status IS NULL)";
+
+    $rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT id, tip_text, display_name, initials_only, stars, color, status, created_at
+         FROM $table
+         WHERE campaign = %s AND {$status_sql} AND id > %d
+         ORDER BY id DESC
+         LIMIT 200",
+        $campaign,
+        $since_id
+    ), ARRAY_A);
 
     return array_map('ltw_map_tip_row', $rows ?: []);
 }
