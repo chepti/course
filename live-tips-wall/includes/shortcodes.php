@@ -25,6 +25,7 @@ function ltw_live_tips_wall_shortcode($atts) {
             <aside class="ltw-form-aside" aria-labelledby="ltw-form-title">
                 <div class="ltw-form-card">
                     <span class="ltw-pin" aria-hidden="true">📌</span>
+                    <p class="ltw-form-ask"></p>
                     <h3 id="ltw-form-title" class="ltw-form-title"></h3>
                     <p class="ltw-form-hint"></p>
                     <form class="ltw-form" novalidate>
@@ -40,7 +41,7 @@ function ltw_live_tips_wall_shortcode($atts) {
                                 <input type="text" name="name" maxlength="50" autocomplete="name" required placeholder="">
                             </label>
                             <label class="ltw-check ltw-check-mini" title="">
-                                <input type="checkbox" name="initials_only" checked>
+                                <input type="checkbox" name="initials_only">
                                 <span class="ltw-label-initials"></span>
                             </label>
                         </div>
@@ -126,6 +127,11 @@ function ltw_summer_challenge_shortcode($atts) {
         </div>
 
         <?php echo ltw_live_tips_wall_shortcode(['campaign' => $atts['campaign']]); ?>
+
+        <footer class="ltw-signature">
+            <span class="ltw-signature-line"></span>
+            <p class="ltw-signature-name">חפציה בן ארצי</p>
+        </footer>
     </div>
     <?php
     return ob_get_clean();

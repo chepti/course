@@ -57,6 +57,7 @@
 
     // i18n labels
     var map = {
+      '.ltw-form-ask': 'formAsk',
       '.ltw-form-title': 'formTitle',
       '.ltw-form-hint': 'formHint',
       '.ltw-label-tip': 'tipLabel',
@@ -248,7 +249,6 @@
             prependNote(data.tip, true);
           }
           form.reset();
-          qs('input[name="initials_only"]', form).checked = true;
           qs('input[name="stars"][value="5"]', form).checked = true;
           if (charCurrent) charCurrent.textContent = '0';
           refreshStars();
