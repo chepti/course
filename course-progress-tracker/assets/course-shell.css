@@ -117,23 +117,6 @@
   font-weight: 600;
 }
 
-.course-topnav-blocked {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  color: #5a6b7a;
-  background: #f1f4f6;
-  border: 1px solid var(--shell-line);
-  padding: 7px 12px;
-  border-radius: 999px;
-  transition: background-color .18s, color .18s;
-}
-.course-topnav-blocked:hover { background: var(--shell-accent); color: #fff; }
-
 /* ---------- Hero banner ---------- */
 
 .course-hero {
@@ -168,6 +151,26 @@
   line-height: 1.15;
   text-shadow: 0 2px 12px rgba(0, 0, 0, .4);
 }
+.course-hero-blocked {
+  position: absolute;
+  bottom: 14px;
+  left: 20px;          /* physical left — bottom-left corner of the hero */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  color: rgba(255,255,255,.85);
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 5px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+  transition: background .18s, color .18s;
+  white-space: nowrap;
+}
+.course-hero-blocked:hover { background: rgba(0,0,0,.6); color: #fff; }
 
 /* ---------- Intro ---------- */
 

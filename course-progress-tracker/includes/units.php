@@ -119,7 +119,13 @@ function cpt_render_unit_shell($slug, $body) {
         if ($title) {
             $html .= '<h1 class="course-hero-title">' . esc_html($title) . '</h1>';
         }
-        $html .= '</div></header>';
+        $html .= '</div>';
+        $blocked_url = function_exists('cpt_blocked_videos_url') ? cpt_blocked_videos_url() : '';
+        if ($blocked_url) {
+            $html .= '<a class="course-hero-blocked" href="' . esc_url($blocked_url) . '" target="_blank" rel="noopener">'
+                   . '<span aria-hidden="true">🎬</span> סרטונים לחסומים</a>';
+        }
+        $html .= '</header>';
     }
 
     if ($intro !== '') {

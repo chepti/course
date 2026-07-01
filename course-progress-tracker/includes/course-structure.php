@@ -64,8 +64,6 @@ function cpt_render_course_topnav($current) {
         $html .= '</a></li>';
     }
     $html .= '</ul>';
-    $html .= '<a class="course-topnav-blocked" href="' . esc_url(cpt_blocked_videos_url()) . '">';
-    $html .= '<span aria-hidden="true">🎬</span> סרטונים לחסומים</a>';
     $html .= '</nav>';
     return $html;
 }
