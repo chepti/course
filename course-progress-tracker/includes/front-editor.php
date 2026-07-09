@@ -38,6 +38,7 @@ add_action('wp_enqueue_scripts', function () {
         'hasData'      => $data ? 1 : 0,
         'sidebarTitle' => $data ? (isset($data['sidebar_title']) ? $data['sidebar_title'] : '') : '',
         'sections'     => $sections,
+        'blockedUrl'   => $data ? (isset($data['blocked_url']) ? $data['blocked_url'] : '') : '',
         'editUrl'      => admin_url('admin.php?page=cpt-content-editor&unit=' . $slug),
     ]);
 });
@@ -65,6 +66,24 @@ add_action('wp_ajax_cpt_fe_save_section', function () {
 
     cpt_save_unit_content($slug, $data);
     wp_send_json_success(['rendered' => cpt_build_section_html($found)]);
+});
+
+/**
+ * Save the blocked-videos URL at unit level (appears in the hero banner).
+ */
+add_action('wp_ajax_cpt_fe_save_blocked_url', function () {
+    if (!current_user_can('manage_options')) { wp_send_json_error(['message' => 'אין הרשאה'], 403); }
+    check_ajax_referer('cpt_fe', 'nonce');
+
+    $slug = sanitize_text_field(wp_unslash($_POST['slug'] ?? ''));
+    $url  = esc_url_raw(wp_unslash($_POST['url'] ?? ''));
+
+    $data = cpt_get_unit_content($slug);
+    if (!$data) { wp_send_json_error(['message' => 'לא נמצא תוכן'], 404); }
+
+    $data['blocked_url'] = $url;
+    cpt_save_unit_content($slug, $data);
+    wp_send_json_success(['url' => $url]);
 });
 
 /**

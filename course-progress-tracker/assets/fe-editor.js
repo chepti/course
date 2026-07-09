@@ -131,6 +131,39 @@
         });
     }
 
+    function editBlockedUrl() {
+        var current = cptFE.blockedUrl || '';
+        var val = window.prompt('קישור לסרטונים לחסומים (יופיע בבאנר היחידה; ריק = הסרת הכפתור):', current);
+        if (val === null) { return; }
+        val = val.trim();
+        post('cpt_fe_save_blocked_url', { slug: cptFE.slug, url: val }).then(function (res) {
+            if (res && res.success) {
+                cptFE.blockedUrl = val;
+                var heroBtn = document.querySelector('.course-hero-blocked');
+                if (val) {
+                    if (heroBtn) {
+                        heroBtn.href = val;
+                    } else {
+                        var hero = document.querySelector('.course-hero');
+                        if (hero) {
+                            var a = document.createElement('a');
+                            a.className = 'course-hero-blocked';
+                            a.href = val;
+                            a.target = '_blank';
+                            a.rel = 'noopener';
+                            a.innerHTML = '<span aria-hidden="true">🎬</span> סרטונים לחסומים';
+                            hero.appendChild(a);
+                        }
+                    }
+                } else {
+                    if (heroBtn) { heroBtn.remove(); }
+                }
+            } else {
+                alert('שמירה נכשלה');
+            }
+        });
+    }
+
     function editSidebarTitle() {
         var current = cptFE.sidebarTitle || '';
         var val = window.prompt('כותרת הסיידבר:', current);
@@ -166,8 +199,15 @@
         title.innerHTML = 'כותרת צד';
         title.addEventListener('click', function (e) { e.preventDefault(); editSidebarTitle(); });
 
+        var blocked = document.createElement('button');
+        blocked.type = 'button';
+        blocked.className = 'cpt-fe-bar-btn cpt-fe-bar-btn-sec';
+        blocked.innerHTML = '📺 סרטונים לחסומים';
+        blocked.addEventListener('click', function (e) { e.preventDefault(); editBlockedUrl(); });
+
         bar.appendChild(edit);
         bar.appendChild(title);
+        bar.appendChild(blocked);
         document.body.appendChild(bar);
     }
 

@@ -76,6 +76,7 @@ function cpt_content_editor_page() {
         $data = [
             'sidebar_title' => sanitize_text_field(wp_unslash($_POST['sidebar_title'] ?? '')),
             'primary_color' => sanitize_hex_color($_POST['primary_color'] ?? '') ?: '#2a8c8c',
+            'blocked_url'   => esc_url_raw(wp_unslash($_POST['unit_blocked_url'] ?? '')),
             'sections'      => [],
         ];
         $built_idx = []; // POST row index for each built section (for reorder mapping)
@@ -85,11 +86,12 @@ function cpt_content_editor_page() {
             $sid = sanitize_key($sid);
             if ($sid === '') { continue; }
             $data['sections'][] = [
-                'id'     => $sid,
-                'title'  => sanitize_text_field(wp_unslash($_POST['sec_title'][$i] ?? '')),
-                'parent' => sanitize_key($_POST['sec_parent'][$i] ?? ''),
-                'videos' => cpt_parse_videos_textarea($_POST['sec_videos'][$i] ?? ''),
-                'html'   => cpt_kses_section_html($_POST['sec_html'][$i] ?? ''),
+                'id'          => $sid,
+                'title'       => sanitize_text_field(wp_unslash($_POST['sec_title'][$i] ?? '')),
+                'parent'      => sanitize_key($_POST['sec_parent'][$i] ?? ''),
+                'videos'      => cpt_parse_videos_textarea($_POST['sec_videos'][$i] ?? ''),
+                'html'        => cpt_kses_section_html($_POST['sec_html'][$i] ?? ''),
+                'blocked_url' => esc_url_raw(wp_unslash($_POST['sec_blocked_url'][$i] ?? '')),
             ];
             $built_idx[] = $i;
         }
@@ -101,11 +103,12 @@ function cpt_content_editor_page() {
                 $notice = '<div class="notice notice-error"><p>⚠️ הפרק החדש לא נשמר: המזהה "' . esc_html($raw_nid) . '" אינו תקין. יש להשתמש באנגלית בלבד (אותיות, מספרים, קו תחתון, מקף).</p></div>';
             } else {
                 $data['sections'][] = [
-                    'id'     => $nid,
-                    'title'  => sanitize_text_field(wp_unslash($_POST['new_title'] ?? '')),
-                    'parent' => sanitize_key($_POST['new_parent'] ?? ''),
-                    'videos' => cpt_parse_videos_textarea($_POST['new_videos'] ?? ''),
-                    'html'   => cpt_kses_section_html($_POST['new_html'] ?? ''),
+                    'id'          => $nid,
+                    'title'       => sanitize_text_field(wp_unslash($_POST['new_title'] ?? '')),
+                    'parent'      => sanitize_key($_POST['new_parent'] ?? ''),
+                    'videos'      => cpt_parse_videos_textarea($_POST['new_videos'] ?? ''),
+                    'html'        => cpt_kses_section_html($_POST['new_html'] ?? ''),
+                    'blocked_url' => esc_url_raw(wp_unslash($_POST['new_blocked_url'] ?? '')),
                 ];
                 $built_idx[] = -1;
             }
@@ -223,7 +226,12 @@ function cpt_content_editor_form($slug) {
     echo '<input type="hidden" name="unit_slug" value="' . esc_attr($slug) . '">';
 
     echo '<table class="form-table"><tr><th>כותרת הסיידבר</th><td><input type="text" name="sidebar_title" class="regular-text" style="width:100%;max-width:560px" value="' . esc_attr($data['sidebar_title']) . '"></td></tr>';
-    echo '<tr><th>צבע ראשי</th><td><input type="color" name="primary_color" value="' . esc_attr($data['primary_color']) . '"></td></tr></table>';
+    echo '<tr><th>צבע ראשי</th><td><input type="color" name="primary_color" value="' . esc_attr($data['primary_color']) . '"></td></tr>';
+    echo '<tr><th>סרטונים לחסומים (קישור ליחידה)</th><td>'
+       . '<input type="url" name="unit_blocked_url" class="regular-text" style="width:100%;max-width:480px" '
+       . 'placeholder="https://..." value="' . esc_attr(isset($data['blocked_url']) ? $data['blocked_url'] : '') . '">'
+       . '<br><small style="color:#888">קישור שיופיע ככפתור 🎬 בפינת הבאנר העליון (ריק = ללא כפתור).</small>'
+       . '</td></tr></table>';
 
     echo '<h2>פרקים</h2>';
     echo '<div class="description" style="background:#f6f7f7;border-right:4px solid #2271b1;padding:10px 14px;margin:10px 0;max-width:760px">';
@@ -249,7 +257,8 @@ function cpt_content_editor_form($slug) {
     echo '<tr><th>סרטונים (בסוף)</th><td><textarea name="new_videos" rows="2" style="width:100%;max-width:560px" placeholder="https://youtu.be/XXXX | כותרת הסרטון"></textarea></td></tr>';
     echo '<tr><th>תוכן</th><td>';
     wp_editor('', 'new_html', ['textarea_name' => 'new_html', 'textarea_rows' => 8, 'media_buttons' => true]);
-    echo '</td></tr></table>';
+    echo '</td></tr>';
+    echo '</table>';
 
     echo '<p><button type="submit" name="cpt_save_content" value="1" class="button button-primary button-hero">💾 שמירת התוכן</button></p>';
     echo '</form>';
