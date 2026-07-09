@@ -165,6 +165,7 @@
         }
 
         updateProgressDetail(progressMap, state.completed_sections);
+        propagateParentNavCompletion(progressMap, state.completed_sections);
 
         // Debug: always log to console so we can diagnose circle issues
         /* eslint-disable no-console */
@@ -201,11 +202,47 @@
         if (!navItem) return;
         var container = navItem.closest('.nav-item');
         if (!container) return;
-        if (progress >= 100) {
+        var isComplete = progress >= 100;
+        var wasComplete = container.classList.contains('completed');
+        if (wasComplete === isComplete) return;
+        if (isComplete) {
             container.classList.add('completed');
         } else {
             container.classList.remove('completed');
         }
+    }
+
+    /** פרק-אב מקבל וי כשכל תתי-הפרקים הושלמו (יחידה 2 ודומות). */
+    function propagateParentNavCompletion(progressMap, completed) {
+        progressMap = progressMap || {};
+        completed = Array.isArray(completed) ? completed : [];
+        function isDone(id) {
+            return (progressMap[id] >= 100) || completed.indexOf(id) !== -1;
+        }
+        document.querySelectorAll('#nav > .nav-item').forEach(function (navItem) {
+            var mainItem = navItem.querySelector(':scope > .main-item[data-section]');
+            if (!mainItem) return;
+            var mainId = mainItem.getAttribute('data-section');
+            var subs = navItem.querySelectorAll('.sub-item[data-section]');
+            if (!subs.length) return;
+            var subIds = [];
+            subs.forEach(function (sub) { subIds.push(sub.getAttribute('data-section')); });
+            if (subIds.length && subIds.every(isDone)) {
+                updateNavIndicator(mainId, 100);
+            } else if (!isDone(mainId)) {
+                var sum = 0;
+                var count = 0;
+                subIds.forEach(function (id) {
+                    if (progressMap[id] !== undefined && progressMap[id] !== null) {
+                        sum += progressMap[id];
+                        count++;
+                    }
+                });
+                if (count) {
+                    updateNavIndicator(mainId, Math.round(sum / count));
+                }
+            }
+        });
     }
 
     function restoreManualCheckbox(sectionId) {
@@ -670,15 +707,13 @@
 
     function init() {
         if (!POST_ID || !AJAX_URL) return;
-        console.log('Course Tracker v3.10.0 init - post_id:', POST_ID); // eslint-disable-line no-console
+        console.log('Course Tracker v3.10.12 init - post_id:', POST_ID); // eslint-disable-line no-console
 
         initShellLoader();
         initShellChrome();
 
-        // Re-apply indicators when section HTML swaps in (logged-in only)
-        observeContent(function () {
-            setTimeout(function () { if (lastState) { applyState(lastState); } }, 300);
-        });
+        // Re-apply indicators when section HTML swaps in (debounced — avoids flicker)
+        observeContent(scheduleApplyState);
 
         if (cpt_tracker_data.logged_in) {
             if (cpt_tracker_data.initial_state) {
@@ -689,16 +724,24 @@
             return;
         }
 
-        // Guest page (or guest-cached HTML): confirm live session before view-only mode.
+        // דף אורח (לעיתים ממטמון): בדיקת סשן חיה — בלי reload אינסופי.
         bootstrapSession().then(function () {
-            // Logged in but page was cached for guests — reload for tracker scripts + state.
-            window.location.reload();
+            startTracking();
         }).catch(function () {
             showGuestBanner();
         });
     }
 
     var lastState = {};
+    var applyStateTimer = null;
+
+    function scheduleApplyState() {
+        if (!lastState || !lastState.section_progress) return;
+        clearTimeout(applyStateTimer);
+        applyStateTimer = setTimeout(function () {
+            applyState(lastState);
+        }, 350);
+    }
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);

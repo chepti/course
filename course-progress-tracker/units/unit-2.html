@@ -509,22 +509,21 @@
     
     <script>
     (function() {
-        function onReady(callback) {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', callback);
-            } else {
-                callback();
-            }
-        }
-
-        onReady(() => {
-            const container = document.querySelector('#interactive-unit-container');
-            if (!container) { return; }
-
             const copyIcon = `<svg xmlns="http://www.w.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M4 1.5H3a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-11a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1h1v-1z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/></svg>`;
             const checkIcon = `<svg xmlns="http://www.w.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/></svg>`;
 
-            const content = {
+            window.cptUnitConfig = {
+                defaultSection: 'overview',
+                activeMode: 'self',
+                hasActiveStrip: true,
+                autoOpenFirstSub: false,
+                copyIcons: 'inline',
+                freshWrapperCheck: true,
+                copyIcon: copyIcon,
+                checkIcon: checkIcon
+            };
+
+            window.cptUnitContent = {
               overview: `
                 <div class="content-section" data-track-section="overview">
                     <h1>מבט על</h1>
@@ -816,7 +815,7 @@
                     <div class="button-wrapper">
                       <a href="https://openstuff.co.il/upload/" target="_blank" class="styled-button" data-track-click>איך מעלים לחומר פתוח? מדריך, סרטון ושאלות נפוצות</a>
                     </div>
-                    <div style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid #4A90E2; border-radius: 4px;">
+                    <div class="task-done-box" style="margin: 20px 0; padding: 15px; background: #f0f7ff; border-right: 4px solid #4A90E2; border-radius: 4px;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: bold;">
                             <input type="checkbox" data-track-manual style="width: 20px; height: 20px; cursor: pointer;">
                             <span>העליתי לחומר פתוח</span>
@@ -826,167 +825,6 @@
                 </div>
               `
             };
-            
-            let isMobileView = window.innerWidth <= 800;
-            const timers = {};
-            const contentArea = container.querySelector('#content-area');
-            const progressIndicator = container.querySelector('.progress-indicator');
-
-            container.addEventListener('click', function(e) {
-                const copyButton = e.target.closest('.copy-button');
-                if (copyButton) {
-                    const promptContainer = copyButton.closest('.prompt-container');
-                    if (promptContainer) {
-                        const promptText = promptContainer.querySelector('pre').innerText;
-                        navigator.clipboard.writeText(promptText).then(() => {
-                            copyButton.innerHTML = checkIcon;
-                            setTimeout(() => {
-                                copyButton.innerHTML = copyIcon;
-                            }, 2000);
-                        }).catch(err => {
-                            console.error('Failed to copy text: ', err);
-                        });
-                    }
-                }
-            });
-
-            function updateProgress() {
-                const allItems = container.querySelectorAll('.main-item, .sub-item');
-                const completedItems = container.querySelectorAll('.nav-item.completed');
-                const percentage = allItems.length > 0 ? (completedItems.length / allItems.length) * 100 : 0;
-                if(progressIndicator) progressIndicator.style.width = `${percentage}%`;
-            }
-
-            // Removed setItemCompleted - completion is now handled by course-tracker.js based on actual progress
-
-            function handleMainItemClick(e) {
-                const mainItem = e.currentTarget;
-                const navItem = mainItem.closest('.nav-item');
-                const section = mainItem.dataset.section;
-                const subItemsContainer = navItem.querySelector('.sub-items');
-
-                // Remove active class from all items
-                container.querySelectorAll('.main-item, .sub-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                // Add active class to clicked item
-                mainItem.classList.add('active');
-                
-                // Add has-active class to content area
-                if(contentArea) {
-                    contentArea.closest('#content').classList.add('has-active');
-                }
-
-                if (subItemsContainer) {
-                    subItemsContainer.classList.toggle('active');
-                }
-
-                if (content[section]) {
-                    const contentHTML = content[section];
-                    if (isMobileView) {
-                        let wrapper = navItem.querySelector(':scope > .section-wrapper');
-                        if (!wrapper) {
-                            wrapper = document.createElement('div');
-                            wrapper.className = 'section-wrapper';
-                            navItem.appendChild(wrapper);
-                        }
-                        
-                        const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
-                        
-                        container.querySelectorAll('.section-wrapper.active').forEach(w => {
-                            if (w !== wrapper) w.classList.remove('active');
-                        });
-
-                        wrapper.innerHTML = contentHTML;
-                        
-                        if(shouldShow) {
-                            setTimeout(() => wrapper.classList.add('active'), 10);
-                        } else {
-                            wrapper.classList.remove('active');
-                        }
-                    } else {
-                        if(contentArea) contentArea.innerHTML = contentHTML;
-                    }
-                }
-
-                // Completion is handled by course-tracker.js
-            }
-            
-            function handleSubItemClick(e) {
-                e.stopPropagation();
-                const subItem = e.currentTarget;
-                const section = subItem.dataset.section;
-                const navItem = subItem.closest('.nav-item');
-                const contentHTML = content[section];
-
-                // Remove active class from all items
-                container.querySelectorAll('.main-item, .sub-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                // Add active class to clicked item
-                subItem.classList.add('active');
-                
-                // Add has-active class to content area
-                if(contentArea) {
-                    contentArea.closest('#content').classList.add('has-active');
-                }
-
-                if (isMobileView) {
-                    const mainNavItem = navItem.closest('.sub-items').closest('.nav-item');
-                    let wrapper = mainNavItem.querySelector('.section-wrapper');
-                    if (!wrapper) {
-                        wrapper = document.createElement('div');
-                        wrapper.className = 'section-wrapper';
-                        mainNavItem.appendChild(wrapper);
-                    }
-                    const shouldShow = !wrapper.classList.contains('active') || wrapper.innerHTML !== contentHTML;
-
-                    container.querySelectorAll('.section-wrapper.active').forEach(w => {
-                        if (w !== wrapper) w.classList.remove('active');
-                    });
-                    
-                    wrapper.innerHTML = contentHTML;
-
-                    if (shouldShow) {
-                         setTimeout(() => wrapper.classList.add('active'), 10);
-                    } else {
-                        wrapper.classList.remove('active');
-                    }
-                } else {
-                    if(contentArea) contentArea.innerHTML = contentHTML;
-                }
-                // Completion is handled by course-tracker.js
-            }
-            
-            function initializeView() {
-                container.querySelectorAll('.main-item').forEach(header => header.addEventListener('click', handleMainItemClick));
-                container.querySelectorAll('.sub-item').forEach(header => header.addEventListener('click', handleSubItemClick));
-
-                if (!isMobileView) {
-                    const overviewItem = container.querySelector('.main-item[data-section="overview"]');
-                    if (overviewItem) {
-                        overviewItem.click();
-                        overviewItem.classList.add('active');
-                        if(contentArea) {
-                            contentArea.closest('#content').classList.add('has-active');
-                        }
-                    }
-                }
-            }
-
-            function handleResize() {
-                const newIsMobile = window.innerWidth <= 800;
-                if(newIsMobile !== isMobileView) {
-                    isMobileView = newIsMobile;
-                    container.querySelectorAll('.section-wrapper').forEach(w => w.remove());
-                    if(contentArea) contentArea.innerHTML = '';
-                    initializeView();
-                }
-            }
-
-            initializeView();
-            window.addEventListener('resize', handleResize);
-        });
     })();
     </script>
     

@@ -48,6 +48,9 @@ function cpt_course_unit_shortcode($atts) {
     // when it exists; otherwise fall back to the hand-authored unit file.
     $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
     $body = $data ? cpt_render_unit_from_data($data) : file_get_contents($file);
+    if (!$data && function_exists('cpt_replace_done_button_tokens')) {
+        $body = cpt_replace_done_button_tokens($body);
+    }
 
     if (apply_filters('cpt_require_login_for_units', false) && !is_user_logged_in()) {
         $login_url = wp_login_url(get_permalink());
