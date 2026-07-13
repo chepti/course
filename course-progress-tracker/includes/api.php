@@ -31,6 +31,17 @@ function cpt_rest_permission() {
     return is_user_logged_in();
 }
 
+/**
+ * PHP-8-safe numeric validator for REST args.
+ * WordPress calls validate_callback with 3 args ($value, $request, $param);
+ * passing the built-in 'is_numeric' directly throws ArgumentCountError under
+ * PHP 8 ("expects exactly 1 argument, 3 given"), which crashes /state with a
+ * raw 500 before our try/catch can run. This wrapper accepts the extra args.
+ */
+function cpt_validate_numeric($value) {
+    return is_numeric($value);
+}
+
 add_action('rest_api_init', function () {
 
     // Full state of a unit for the current user - one call instead of four
@@ -38,7 +49,7 @@ add_action('rest_api_init', function () {
         'methods' => 'GET',
         'permission_callback' => 'cpt_rest_permission',
         'args' => [
-            'post_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
+            'post_id' => ['required' => true, 'validate_callback' => 'cpt_validate_numeric'],
         ],
         'callback' => function (WP_REST_Request $request) {
             try {
@@ -97,7 +108,7 @@ add_action('rest_api_init', function () {
         'methods' => 'POST',
         'permission_callback' => 'cpt_rest_permission',
         'args' => [
-            'post_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
+            'post_id' => ['required' => true, 'validate_callback' => 'cpt_validate_numeric'],
             'section_id' => ['required' => true],
             'activity_type' => ['required' => true],
         ],
@@ -170,7 +181,7 @@ add_action('rest_api_init', function () {
         'methods' => 'POST',
         'permission_callback' => 'cpt_rest_permission',
         'args' => [
-            'post_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
+            'post_id' => ['required' => true, 'validate_callback' => 'cpt_validate_numeric'],
             'section_id' => ['required' => true],
         ],
         'callback' => function (WP_REST_Request $request) {
@@ -198,7 +209,7 @@ add_action('rest_api_init', function () {
         'methods' => 'GET',
         'permission_callback' => 'cpt_rest_permission',
         'args' => [
-            'post_id' => ['required' => true, 'validate_callback' => 'is_numeric'],
+            'post_id' => ['required' => true, 'validate_callback' => 'cpt_validate_numeric'],
         ],
         'callback' => function (WP_REST_Request $request) {
             $user_id = get_current_user_id();
