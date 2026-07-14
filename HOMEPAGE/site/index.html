@@ -235,10 +235,30 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 .badge svg.lucide{width:15px;height:15px}
 
 /* מדיה בכרטיס */
-.card-img{width:100%;max-height:320px;object-fit:cover;display:block;border-radius:24px 24px 0 0}
 .card-embed{width:100%;aspect-ratio:16/9;border:none;border-radius:14px;margin-top:14px;background:#000}
 .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .cta-row .modal-cta{margin-top:0}
+
+/* כרטיס עם תמונה — פריסה של תמונה מוכלת בצד + טקסט בצד השני */
+.card-split{display:flex;align-items:stretch}
+.card-media-col{
+  flex:0 0 42%;max-width:42%;
+  background:linear-gradient(160deg,#fff7ea,#f1e2c6);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;
+}
+.card-media-col .card-img{
+  width:100%;height:auto;max-height:70vh;object-fit:contain;display:block;
+  border-radius:12px;box-shadow:0 4px 16px rgba(74,56,38,.18);background:#fff;
+}
+.card-body-col{flex:1 1 auto;min-width:0}
+@media (max-width:640px){
+  .card-split{flex-direction:column}
+  .card-media-col{flex-basis:auto;max-width:100%;max-height:42vh;padding:16px}
+  .card-media-col .card-img{max-height:38vh}
+}
+
+/* מדיה עליונה (וידאו/לוטי בלי תמונה) */
+.card-topmedia{display:block}
 
 /* רשימת קישורים */
 .links-head{display:flex;align-items:center;gap:8px;margin:16px 0 6px}
@@ -377,7 +397,8 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
     <button id="btn-add-stat" type="button" class="chip"><i data-lucide="plus"></i> הוסיפי מספר</button>
 
     <label>תמונה</label>
-    <div id="paste-zone" tabindex="0">📋 הדביקי תמונה (Ctrl+V), גררי לכאן, או לחצי לבחירת קובץ</div>
+    <div id="paste-zone" tabindex="0">📋 לחצי כאן ואז הדביקי תמונה (Ctrl+V) — או גררי קובץ לכאן</div>
+    <button type="button" id="btn-choose-file" class="chip" style="margin-top:6px"><i data-lucide="upload"></i> בחרי קובץ מהמחשב</button>
     <input type="file" id="f-file" accept="image/*" style="display:none">
     <input type="url" id="f-image" dir="ltr" placeholder="או הדביקי כתובת תמונה https://..." style="margin-top:6px">
     <div id="img-preview"></div>
@@ -827,37 +848,55 @@ function toEmbedUrl(url) {
   return null;
 }
 
-// כרטיס מורכב — מרכיב יחד רק את מה שקיים בנקודה
-function openCard(hs) {
-  let media = '';
-  if (hs.image) media += `<img class="card-img" src="${esc(hs.image)}" alt="">`;
+// וידאו/לוטי כ-HTML של מדיה
+function mediaHTML(hs) {
+  let m = '';
   if (hs.video) {
     const embed = toEmbedUrl(hs.video);
-    if (embed) media += `<iframe class="modal-frame" src="${esc(embed)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
-    else media += `<video class="modal-video" src="${esc(hs.video)}" controls autoplay playsinline></video>`;
+    if (embed) m += `<iframe class="modal-frame" src="${esc(embed)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
+    else m += `<video class="modal-video" src="${esc(hs.video)}" controls autoplay playsinline></video>`;
   }
-  if (hs.lottie) media += `<lottie-player class="modal-lottie" src="${esc(hs.lottie)}" background="transparent" speed="1" autoplay loop></lottie-player>`;
+  if (hs.lottie) m += `<lottie-player class="modal-lottie" src="${esc(hs.lottie)}" background="transparent" speed="1" autoplay loop></lottie-player>`;
+  return m;
+}
 
-  let html = media;
-  html += '<div class="modal-inner">';
-  html += catBadge(hs.category);
-  html += `<h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
-  if (hs.description) html += `<p>${esc(hs.description)}</p>`;
+// גוף הכרטיס (טקסט): תגית, כותרת, תיאור, מספרים, הטמעה, כפתור
+function cardBodyHTML(hs) {
+  let b = catBadge(hs.category);
+  b += `<h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
+  if (hs.description) b += `<p>${esc(hs.description)}</p>`;
   if (hs.stats && hs.stats.length) {
-    html += '<div class="stat-row">';
+    b += '<div class="stat-row">';
     hs.stats.forEach(st => {
       if (!st || (!st.value && !st.label)) return;
-      html += `<div class="stat"><div class="stat-num">${esc(st.value)}</div><div class="stat-unit">${esc(st.label)}</div></div>`;
+      b += `<div class="stat"><div class="stat-num">${esc(st.value)}</div><div class="stat-unit">${esc(st.label)}</div></div>`;
     });
-    html += '</div>';
+    b += '</div>';
   }
-  if (hs.embed) html += `<iframe class="card-embed" src="${esc(hs.embed)}" allowfullscreen></iframe>`;
+  if (hs.embed) b += `<iframe class="card-embed" src="${esc(hs.embed)}" allowfullscreen></iframe>`;
   if (hs.link) {
     const label = hs.linkLabel || 'פתחו את הפריט';
-    html += `<div class="cta-row"><a class="modal-cta" href="${esc(hs.link)}" target="_blank" rel="noopener">${esc(label)} ↗</a></div>`;
+    b += `<div class="cta-row"><a class="modal-cta" href="${esc(hs.link)}" target="_blank" rel="noopener">${esc(label)} ↗</a></div>`;
   }
-  html += '</div>';
-  openModal(html, !!(media || hs.embed));
+  return b;
+}
+
+// כרטיס מורכב — עם תמונה: פריסת צד-בצד (תמונה מוכלת + טקסט). בלי תמונה: מדיה למעלה + טקסט.
+function openCard(hs) {
+  const body = cardBodyHTML(hs);
+  const media = mediaHTML(hs);
+  let html;
+  if (hs.image) {
+    html =
+      `<div class="card-split">` +
+        `<div class="card-media-col"><img class="card-img" src="${esc(hs.image)}" alt="">${media}</div>` +
+        `<div class="card-body-col modal-inner">${body}</div>` +
+      `</div>`;
+    openModal(html, true);
+  } else {
+    html = (media ? `<div class="card-topmedia">${media}</div>` : '') + `<div class="modal-inner">${body}</div>`;
+    openModal(html, !!(media || hs.embed));
+  }
 }
 
 // רשימת קישורים נגישה — מקובצת לפי קטגוריה, כל פריט פותח כרטיס
@@ -1304,19 +1343,24 @@ function renderImgPreview() {
   }
 }
 const pasteZone = $('paste-zone');
-pasteZone.addEventListener('paste', async e => {
-  const items = (e.clipboardData && e.clipboardData.items) || [];
-  for (const it of items) {
-    if (it.type && it.type.startsWith('image/')) { e.preventDefault(); await applyImageFile(it.getAsFile()); return; }
-  }
-});
-pasteZone.addEventListener('click', () => $('f-file').click());
+// לחיצה על המסגרת רק ממקדת אותה (לא פותחת חלון קבצים) — כדי לאפשר Ctrl+V
+pasteZone.addEventListener('click', () => pasteZone.focus());
 pasteZone.addEventListener('dragover', e => { e.preventDefault(); pasteZone.classList.add('drag'); });
 pasteZone.addEventListener('dragleave', () => pasteZone.classList.remove('drag'));
 pasteZone.addEventListener('drop', async e => {
   e.preventDefault(); pasteZone.classList.remove('drag');
   if (e.dataTransfer.files && e.dataTransfer.files[0]) await applyImageFile(e.dataTransfer.files[0]);
 });
+// הדבקה מכל מקום כשהפאנל פתוח (רק אם יש תמונה בלוח — לא מפריע להדבקת טקסט)
+document.addEventListener('paste', async e => {
+  if (!selectedHs || !$('edit-panel').classList.contains('open')) return;
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  for (const it of items) {
+    if (it.type && it.type.startsWith('image/')) { e.preventDefault(); await applyImageFile(it.getAsFile()); return; }
+  }
+});
+// כפתור נפרד לבחירת קובץ מהמחשב
+$('btn-choose-file').onclick = () => $('f-file').click();
 $('f-file').addEventListener('change', async () => {
   if ($('f-file').files[0]) await applyImageFile($('f-file').files[0]);
   $('f-file').value = '';
