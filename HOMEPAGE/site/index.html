@@ -244,6 +244,37 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 .links-head{display:flex;align-items:center;gap:8px;margin:16px 0 6px}
 .links-list .link-item{cursor:pointer}
 
+/* כרטיסי סטטיסטיקה (מספרים גדולים) */
+.stat-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.stat{flex:1 1 92px;min-width:92px;text-align:center;background:rgba(255,255,255,.62);
+  border:1px solid var(--chip-border);border-radius:16px;padding:13px 10px}
+.stat-num{font-size:30px;font-weight:900;color:var(--terra-deep);line-height:1;font-variant-numeric:tabular-nums}
+.stat-unit{font-size:13px;color:var(--ink-soft);margin-top:5px}
+
+/* עורך סטטיסטיקות בפאנל */
+.stat-edit-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.stat-edit-row .st-val{flex:0 0 76px}
+.stat-edit-row .st-lab{flex:1}
+.stat-edit-row .st-rm{border:none;background:#fbe9e2;color:#a33c14;border-radius:8px;
+  width:32px;height:34px;cursor:pointer;flex:0 0 auto;font-family:inherit}
+#btn-add-stat{margin-top:4px;font-size:13px;padding:6px 14px}
+
+/* היררכיית נקודות */
+.tier-small .hs-dot{width:36px;height:36px;font-size:18px}
+.tier-small .hs-ic svg.lucide{width:19px;height:19px}
+.tier-small .hs-ic.emoji-ic{font-size:18px}
+.tier-small .hs-label{font-size:12px;padding:2px 10px}
+.hs-title{
+  background:var(--chip-bg);backdrop-filter:blur(8px);
+  border:1px solid var(--chip-border);border-radius:14px;
+  padding:7px 18px;font-size:20px;font-weight:900;white-space:nowrap;letter-spacing:-.01em;
+  box-shadow:0 3px 14px rgba(74,56,38,.2);cursor:pointer;
+  display:flex;align-items:center;gap:8px;color:var(--ink);
+}
+.hs-title svg.lucide{width:20px;height:20px;color:var(--terra-deep)}
+.hs-title .emoji-ic{font-size:20px}
+.edit-on .hotspot.tier-title .hs-title{border-style:dashed;border-color:var(--leaf);cursor:move}
+
 /* ——— טוסט ——— */
 #toast{
   position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-16px);
@@ -329,10 +360,21 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
     </div>
   </div>
 
+  <label>היררכיה</label>
+  <select id="f-tier">
+    <option value="normal">נקודה רגילה</option>
+    <option value="small">נקודה קטנה</option>
+    <option value="title">כותרת אזור (בלי עיגול)</option>
+  </select>
+
   <!-- כרטיס תוכן -->
   <div class="kind-card">
     <label>קטגוריה</label>
     <select id="f-category"></select>
+
+    <label>מספרים גדולים (מספר + יחידה)</label>
+    <div id="stats-editor"></div>
+    <button id="btn-add-stat" type="button" class="chip"><i data-lucide="plus"></i> הוסיפי מספר</button>
 
     <label>תמונה</label>
     <div id="paste-zone" tabindex="0">📋 הדביקי תמונה (Ctrl+V), גררי לכאן, או לחצי לבחירת קובץ</div>
@@ -497,6 +539,8 @@ function normalizeHotspot(hs) {
   }
   if (!hs.image && hs.preview) hs.image = hs.preview;
   hs.category = hs.category || '';
+  hs.tier = hs.tier || 'normal';
+  if (!Array.isArray(hs.stats)) hs.stats = [];
   delete hs.type; delete hs.content; delete hs.preview;
   return hs;
 }
@@ -621,37 +665,43 @@ function buildHotspotEls() {
   layer.innerHTML = '';
   currentSpace.hotspots.forEach(hs => {
     const el = document.createElement('div');
-    el.className = 'hotspot';
-    el.innerHTML = '<button class="hs-dot" aria-label=""></button><span class="hs-label"></span>';
-    el.querySelector('.hs-dot').innerHTML = iconHTML(hs.icon, 'hs-ic');
-    el.querySelector('.hs-label').textContent = hs.title || '';
-    el.querySelector('.hs-dot').setAttribute('aria-label', hs.title || 'נקודה');
+    el.className = 'hotspot tier-' + (hs.tier || 'normal');
+    if (hs.tier === 'title') {
+      el.innerHTML = '<div class="hs-title"></div>';
+      const t = el.querySelector('.hs-title');
+      t.innerHTML = (hs.icon ? iconHTML(hs.icon, 'hs-ic') + ' ' : '') + `<span>${esc(hs.title || '')}</span>`;
+    } else {
+      el.innerHTML = '<button class="hs-dot" aria-label=""></button><span class="hs-label"></span>';
+      el.querySelector('.hs-dot').innerHTML = iconHTML(hs.icon, 'hs-ic');
+      el.querySelector('.hs-label').textContent = hs.title || '';
+      el.querySelector('.hs-dot').setAttribute('aria-label', hs.title || 'נקודה');
+    }
     hs._el = el;
     layer.appendChild(el);
 
-    const dot = el.querySelector('.hs-dot');
-    dot.addEventListener('pointerdown', e => {
+    const hit = el.querySelector('.hs-dot') || el.querySelector('.hs-title');
+    hit.addEventListener('pointerdown', e => {
       e.stopPropagation();
       if (editMode) {
         draggingHs = hs; dragMoved = false;
-        dot.setPointerCapture(e.pointerId);
+        hit.setPointerCapture(e.pointerId);
       }
     });
-    dot.addEventListener('pointermove', e => {
+    hit.addEventListener('pointermove', e => {
       if (editMode && draggingHs === hs) {
         dragMoved = true;
         const ll = screenToLatLon(e.clientX, e.clientY);
         if (ll) { hs.lat = ll.lat; hs.lon = ll.lon; markDirty(); updateVideoWall(hs); }
       }
     });
-    dot.addEventListener('pointerup', e => {
+    hit.addEventListener('pointerup', e => {
       e.stopPropagation();
       if (editMode) {
         if (!dragMoved) openPanel(hs);
         draggingHs = null;
       }
     });
-    dot.addEventListener('click', e => {
+    hit.addEventListener('click', e => {
       e.stopPropagation();
       if (!editMode) activateHotspot(hs);
     });
@@ -739,8 +789,13 @@ function rebuildVideoWall(hs) {
 }
 
 // ————————————————— פעולות נקודה —————————————————
+function cardHasContent(hs) {
+  return !!(hs.description || hs.image || hs.link || hs.embed || hs.video || hs.lottie ||
+    (hs.stats && hs.stats.length));
+}
 function activateHotspot(hs) {
   if (hs.kind === 'room') { if (hs.target) switchSpace(hs.target); return; }
+  if (hs.tier === 'title' && !cardHasContent(hs)) return; // כותרת אזור בלי תוכן — לא פותחת כלום
   openCard(hs);   // כרטיס תוכן, וגם וידאו-בסצנה (נפתח בגדול)
 }
 
@@ -788,6 +843,14 @@ function openCard(hs) {
   html += catBadge(hs.category);
   html += `<h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
   if (hs.description) html += `<p>${esc(hs.description)}</p>`;
+  if (hs.stats && hs.stats.length) {
+    html += '<div class="stat-row">';
+    hs.stats.forEach(st => {
+      if (!st || (!st.value && !st.label)) return;
+      html += `<div class="stat"><div class="stat-num">${esc(st.value)}</div><div class="stat-unit">${esc(st.label)}</div></div>`;
+    });
+    html += '</div>';
+  }
   if (hs.embed) html += `<iframe class="card-embed" src="${esc(hs.embed)}" allowfullscreen></iframe>`;
   if (hs.link) {
     const label = hs.linkLabel || 'פתחו את הפריט';
@@ -801,7 +864,7 @@ function openCard(hs) {
 $('btn-links').onclick = () => {
   const all = [];
   DATA.spaces.forEach(s => (s.hotspots || []).forEach(h => {
-    if (h.kind === 'room') return;
+    if (h.kind === 'room' || h.tier === 'title') return;
     all.push(h);
   }));
   let html = '<div class="modal-inner"><h2><i data-lucide="map"></i> כל מה שיש בבית</h2>';
@@ -985,8 +1048,8 @@ function addHotspotAt(ll) {
     lon: Math.round(ll.lon * 10) / 10,
     lat: Math.round(ll.lat * 10) / 10,
     icon: 'map-pin', title: 'נקודה חדשה', description: '',
-    kind: 'card', category: '', image: '', link: '', linkLabel: '',
-    embed: '', video: '', lottie: ''
+    kind: 'card', tier: 'normal', category: '', stats: [],
+    image: '', link: '', linkLabel: '', embed: '', video: '', lottie: ''
   };
   currentSpace.hotspots.push(hs);
   addMode = false;
@@ -1052,6 +1115,7 @@ function openPanel(hs) {
   $('f-title').value = hs.title || '';
   $('f-icon').value = hs.icon || '';
   $('f-kind').value = hs.kind || 'card';
+  $('f-tier').value = hs.tier || 'normal';
   $('f-category').value = hs.category || '';
   $('f-desc').value = hs.description || '';
   $('f-link').value = hs.link || '';
@@ -1064,6 +1128,7 @@ function openPanel(hs) {
   $('f-w').value = hs.w || 30;
   $('f-h').value = hs.h || 17;
   renderImgPreview();
+  renderStatsEditor();
   syncKindUI();
   $('edit-panel').classList.add('open');
 }
@@ -1125,6 +1190,40 @@ $('f-category').addEventListener('change', () => {
   selectedHs.category = $('f-category').value;
   markDirty();
 });
+
+$('f-tier').addEventListener('change', () => {
+  if (!selectedHs) return;
+  selectedHs.tier = $('f-tier').value;
+  markDirty();
+  buildHotspotEls();                       // המבנה משתנה (כותרת/קטן) — לבנות מחדש
+  if (selectedHs._el) selectedHs._el.classList.add('hs-selected');
+});
+
+// עורך המספרים הגדולים
+function renderStatsEditor() {
+  const box = $('stats-editor');
+  box.innerHTML = '';
+  if (!selectedHs) return;
+  (selectedHs.stats || []).forEach((st, i) => {
+    const row = document.createElement('div');
+    row.className = 'stat-edit-row';
+    row.innerHTML =
+      `<input type="text" class="st-val" placeholder="250" value="${esc(st.value)}">` +
+      `<input type="text" class="st-lab" placeholder="סרטונים" value="${esc(st.label)}">` +
+      `<button type="button" class="st-rm">✕</button>`;
+    row.querySelector('.st-val').addEventListener('input', e => { selectedHs.stats[i].value = e.target.value; markDirty(); });
+    row.querySelector('.st-lab').addEventListener('input', e => { selectedHs.stats[i].label = e.target.value; markDirty(); });
+    row.querySelector('.st-rm').addEventListener('click', () => { selectedHs.stats.splice(i, 1); renderStatsEditor(); markDirty(); });
+    box.appendChild(row);
+  });
+}
+$('btn-add-stat').onclick = () => {
+  if (!selectedHs) return;
+  if (!Array.isArray(selectedHs.stats)) selectedHs.stats = [];
+  selectedHs.stats.push({ value: '', label: '' });
+  renderStatsEditor();
+  markDirty();
+};
 
 $('f-kind').addEventListener('change', () => {
   if (!selectedHs) return;
