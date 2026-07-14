@@ -207,6 +207,43 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 #btn-delete:hover{background:#f6d9cc}
 #btn-close-panel{border:none;background:none;font-size:22px;cursor:pointer;color:var(--ink-soft)}
 
+/* מקטעי הפאנל לפי סוג */
+.kind-card,.kind-room,.kind-videowall{display:none}
+#edit-panel[data-kind="card"] .kind-card{display:block}
+#edit-panel[data-kind="room"] .kind-room{display:block}
+#edit-panel[data-kind="videowall"] .kind-videowall{display:block}
+
+/* הדבקת/גרירת תמונה */
+#paste-zone{
+  border:2px dashed var(--chip-border);border-radius:14px;padding:16px 12px;
+  text-align:center;font-size:13px;color:var(--ink-soft);cursor:pointer;
+  background:#fffdf8;transition:border-color .2s,color .2s;
+}
+#paste-zone:focus,#paste-zone.drag{outline:none;border-color:var(--terra);color:var(--terra-deep);background:#fff7ee}
+#img-preview{margin-top:8px}
+#img-preview img{max-width:100%;border-radius:12px;display:block;box-shadow:0 2px 10px rgba(74,56,38,.18)}
+#img-preview .rm{margin-top:6px;font-size:12px;color:#a33c14;cursor:pointer;background:none;border:none;font-family:inherit}
+
+/* תגית קטגוריה */
+.badge{
+  display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;
+  padding:4px 12px;border-radius:999px;margin-bottom:10px;
+  color:var(--c,#7a6a55);
+  background:color-mix(in srgb, var(--c,#7a6a55) 14%, transparent);
+  border:1px solid color-mix(in srgb, var(--c,#7a6a55) 34%, transparent);
+}
+.badge svg.lucide{width:15px;height:15px}
+
+/* מדיה בכרטיס */
+.card-img{width:100%;max-height:320px;object-fit:cover;display:block;border-radius:24px 24px 0 0}
+.card-embed{width:100%;aspect-ratio:16/9;border:none;border-radius:14px;margin-top:14px;background:#000}
+.cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.cta-row .modal-cta{margin-top:0}
+
+/* רשימת קישורים */
+.links-head{display:flex;align-items:center;gap:8px;margin:16px 0 6px}
+.links-list .link-item{cursor:pointer}
+
 /* ——— טוסט ——— */
 #toast{
   position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-16px);
@@ -272,7 +309,7 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 </div>
 <div id="edit-hint" class="chip"></div>
 
-<div id="edit-panel">
+<div id="edit-panel" data-kind="card">
   <h3><span>עריכת נקודה</span><button id="btn-close-panel"><i data-lucide="x"></i></button></h3>
   <label>כותרת</label>
   <input type="text" id="f-title">
@@ -280,44 +317,71 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
     <div>
       <label>אייקון</label>
       <input type="text" id="f-icon" maxlength="24" placeholder="radio / 📻">
-      <div class="type-hint">שם אייקון Lucide (למשל radio, book-open, heart) או אימוג'י.</div>
+      <div class="type-hint">שם Lucide (radio, book-open…) או אימוג'י.</div>
     </div>
     <div>
-      <label>סוג</label>
-      <select id="f-type">
-        <option value="modal">חלון מידע</option>
-        <option value="link">קישור חיצוני</option>
-        <option value="video">וידאו (חלון)</option>
-        <option value="image">תמונה</option>
-        <option value="embed">הטמעה (iframe)</option>
-        <option value="room">מעבר לחלל אחר</option>
-        <option value="videowall">וידאו חי בתוך הסצנה</option>
-        <option value="lottie">אנימציית Lottie</option>
+      <label>מה זה?</label>
+      <select id="f-kind">
+        <option value="card">כרטיס תוכן</option>
+        <option value="room">דלת — מעבר לחלל</option>
+        <option value="videowall">וידאו חי בסצנה</option>
       </select>
     </div>
   </div>
-  <label>תיאור</label>
-  <textarea id="f-desc"></textarea>
-  <div id="f-content-wrap">
-    <label id="f-content-label">קישור / תוכן</label>
-    <input type="url" id="f-content" dir="ltr" placeholder="https://...">
-    <select id="f-room" style="display:none"></select>
-    <div class="type-hint" id="f-type-hint"></div>
-  </div>
-  <div id="f-preview-wrap">
-    <label>תמונת תצוגה מקדימה (URL, לא חובה)</label>
-    <input type="url" id="f-preview" dir="ltr" placeholder="https://.../image.jpg">
-  </div>
-  <div class="row" id="f-size-wrap" style="display:none">
-    <div>
-      <label>רוחב (מעלות)</label>
-      <input type="number" id="f-w" min="5" max="120" step="1">
+
+  <!-- כרטיס תוכן -->
+  <div class="kind-card">
+    <label>קטגוריה</label>
+    <select id="f-category"></select>
+
+    <label>תמונה</label>
+    <div id="paste-zone" tabindex="0">📋 הדביקי תמונה (Ctrl+V), גררי לכאן, או לחצי לבחירת קובץ</div>
+    <input type="file" id="f-file" accept="image/*" style="display:none">
+    <input type="url" id="f-image" dir="ltr" placeholder="או הדביקי כתובת תמונה https://..." style="margin-top:6px">
+    <div id="img-preview"></div>
+
+    <label>תיאור</label>
+    <textarea id="f-desc"></textarea>
+
+    <label>קישור לפריט (כפתור בכרטיס — לא זורק החוצה אוטומטית)</label>
+    <input type="url" id="f-link" dir="ltr" placeholder="https://...">
+    <input type="text" id="f-linklabel" placeholder="טקסט הכפתור (ברירת מחדל: פתחו את הפריט)" style="margin-top:6px">
+
+    <label>הטמעה בתוך הכרטיס (iframe, לא חובה)</label>
+    <input type="url" id="f-embed" dir="ltr" placeholder="https://...">
+
+    <div class="row">
+      <div>
+        <label>וידאו (לא חובה)</label>
+        <input type="url" id="f-video" dir="ltr" placeholder="יוטיוב / MP4">
+      </div>
+      <div>
+        <label>Lottie (לא חובה)</label>
+        <input type="url" id="f-lottie" dir="ltr" placeholder=".json / .lottie">
+      </div>
     </div>
-    <div>
-      <label>גובה (מעלות)</label>
-      <input type="number" id="f-h" min="5" max="90" step="1">
+  </div>
+
+  <!-- דלת -->
+  <div class="kind-room">
+    <label>לאן הדלת מובילה</label>
+    <select id="f-room"></select>
+    <div class="type-hint">לחיצה על דלת עוברת חלק לחלל אחר, בלי חלונית.</div>
+  </div>
+
+  <!-- וידאו בסצנה -->
+  <div class="kind-videowall">
+    <label>קישור לקובץ MP4</label>
+    <input type="url" id="f-vwurl" dir="ltr" placeholder="https://.../movie.mp4">
+    <div class="type-hint">מוקרן על משטח בתוך הסצנה (מושתק, בלופ). לחיצה פותחת אותו בגדול.</div>
+    <div class="row">
+      <div><label>רוחב°</label><input type="number" id="f-w" min="5" max="120" step="1"></div>
+      <div><label>גובה°</label><input type="number" id="f-h" min="5" max="90" step="1"></div>
     </div>
   </div>
+
+  <div class="type-hint" id="f-kind-hint" style="margin-top:12px"></div>
+
   <div class="panel-actions">
     <button id="btn-delete" class="chip"><i data-lucide="trash-2"></i> מחיקה</button>
     <button id="btn-done" class="chip"><i data-lucide="check"></i> סיום</button>
@@ -400,6 +464,43 @@ function drawIcons() {
   if (window.lucide && lucide.createIcons) lucide.createIcons();
 }
 
+// ————————————————— קטגוריות —————————————————
+const CATEGORIES = {
+  pwa:        { label: 'אפליקציית PWA', icon: 'smartphone', color: '#3b82f6' },
+  appsscript: { label: 'Apps Script',   icon: 'code',       color: '#22a06b' },
+  tool:       { label: 'כלי דיגיטלי',   icon: 'wand-2',     color: '#0ea5e9' },
+  portfolio:  { label: 'תיק עבודות',    icon: 'briefcase',  color: '#b95d2c' },
+  game:       { label: 'משחק למידה',    icon: 'gamepad-2',  color: '#8b5cf6' },
+  content:    { label: 'חומר והדרכה',   icon: 'book-open',  color: '#7a8b5c' },
+  family:     { label: 'פינה משפחתית',  icon: 'heart',      color: '#e05a7d' }
+};
+function catBadge(catKey) {
+  const c = CATEGORIES[catKey];
+  if (!c) return '';
+  return `<span class="badge" style="--c:${c.color}"><i data-lucide="${c.icon}"></i> ${esc(c.label)}</span>`;
+}
+
+// מיפוי סכימה ישנה (type/content) לחדשה (kind + שדות)
+function normalizeHotspot(hs) {
+  if (!hs.kind) {
+    if (hs.type === 'room') { hs.kind = 'room'; hs.target = hs.target || hs.content || ''; }
+    else if (hs.type === 'videowall') { hs.kind = 'videowall'; hs.video = hs.video || hs.content || ''; }
+    else {
+      hs.kind = 'card';
+      if (hs.type === 'link') hs.link = hs.link || hs.content || '';
+      else if (hs.type === 'embed') hs.embed = hs.embed || hs.content || '';
+      else if (hs.type === 'video') hs.video = hs.video || hs.content || '';
+      else if (hs.type === 'lottie') hs.lottie = hs.lottie || hs.content || '';
+      else if (hs.type === 'image') hs.image = hs.image || hs.content || '';
+      else if (hs.content && /^https?:/i.test(hs.content)) hs.link = hs.content; // modal עם קישור
+    }
+  }
+  if (!hs.image && hs.preview) hs.image = hs.preview;
+  hs.category = hs.category || '';
+  delete hs.type; delete hs.content; delete hs.preview;
+  return hs;
+}
+
 // ————————————————— אתחול —————————————————
 async function boot() {
   try {
@@ -410,8 +511,11 @@ async function boot() {
     return;
   }
 
+  DATA.spaces.forEach(s => (s.hotspots || []).forEach(normalizeHotspot));
+
   initThree();
   buildSpaceNav();
+  buildCategorySelect();
   drawIcons();   // אייקוני הממשק הקבועים (מותג, כפתורים, טעינה)
 
   const contact = DATA.settings || {};
@@ -559,7 +663,7 @@ function buildHotspotEls() {
 function refreshHotspotVisibility() {
   currentSpace.hotspots.forEach(hs => {
     if (!hs._el) return;
-    const hideInView = hs.type === 'videowall' && !editMode;
+    const hideInView = hs.kind === 'videowall' && !editMode;
     hs._el.style.display = hideInView ? 'none' : '';
   });
 }
@@ -591,11 +695,11 @@ function clearVideoWalls() {
 }
 function buildVideoWalls() {
   clearVideoWalls();
-  currentSpace.hotspots.filter(h => h.type === 'videowall' && h.content).forEach(createVideoWall);
+  currentSpace.hotspots.filter(h => h.kind === 'videowall' && h.video).forEach(createVideoWall);
 }
 function createVideoWall(hs) {
   const video = document.createElement('video');
-  video.src = hs.content;
+  video.src = hs.video;
   video.crossOrigin = 'anonymous';
   video.muted = true; video.loop = true; video.playsInline = true;
   video.setAttribute('playsinline', '');
@@ -616,7 +720,7 @@ function createVideoWall(hs) {
   videoWalls.push({ mesh, video, hs });
 }
 function updateVideoWall(hs) {
-  if (hs.type !== 'videowall') return;
+  if (hs.kind !== 'videowall') return;
   const w = videoWalls.find(v => v.hs === hs);
   if (w) {
     w.mesh.position.copy(latLonToVec(hs.lat, hs.lon, 440));
@@ -631,35 +735,13 @@ function rebuildVideoWall(hs) {
     try { w.video.pause(); } catch (e) {}
     videoWalls.splice(idx, 1);
   }
-  if (hs.type === 'videowall' && hs.content) createVideoWall(hs);
+  if (hs.kind === 'videowall' && hs.video) createVideoWall(hs);
 }
 
 // ————————————————— פעולות נקודה —————————————————
 function activateHotspot(hs) {
-  switch (hs.type) {
-    case 'link':
-      if (hs.content) window.open(hs.content, '_blank', 'noopener');
-      else openInfoModal(hs);
-      break;
-    case 'room':
-      if (hs.content) switchSpace(hs.content);
-      break;
-    case 'video':
-    case 'videowall':
-      openVideoModal(hs);
-      break;
-    case 'image':
-      openImageModal(hs);
-      break;
-    case 'embed':
-      openEmbedModal(hs);
-      break;
-    case 'lottie':
-      openLottieModal(hs);
-      break;
-    default:
-      openInfoModal(hs);
-  }
+  if (hs.kind === 'room') { if (hs.target) switchSpace(hs.target); return; }
+  openCard(hs);   // כרטיס תוכן, וגם וידאו-בסצנה (נפתח בגדול)
 }
 
 // ————————————————— מודאלים —————————————————
@@ -682,16 +764,6 @@ function esc(s) {
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 }
 
-function openInfoModal(hs) {
-  let html = '';
-  if (hs.preview) html += `<img class="modal-preview" src="${esc(hs.preview)}" alt="">`;
-  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
-  if (hs.description) html += `<p>${esc(hs.description)}</p>`;
-  if (hs.content) html += `<a class="modal-cta" href="${esc(hs.content)}" target="_blank" rel="noopener">לצפייה ←</a>`;
-  html += '</div>';
-  openModal(html);
-}
-
 function toEmbedUrl(url) {
   const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/);
   if (yt) return 'https://www.youtube.com/embed/' + yt[1] + '?autoplay=1&rel=0';
@@ -700,64 +772,63 @@ function toEmbedUrl(url) {
   return null;
 }
 
-function openVideoModal(hs) {
-  const url = hs.content || '';
-  const embed = toEmbedUrl(url);
-  let html = '';
-  if (embed) {
-    html += `<iframe class="modal-frame" src="${esc(embed)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
-  } else if (url) {
-    html += `<video class="modal-video" src="${esc(url)}" controls autoplay playsinline></video>`;
+// כרטיס מורכב — מרכיב יחד רק את מה שקיים בנקודה
+function openCard(hs) {
+  let media = '';
+  if (hs.image) media += `<img class="card-img" src="${esc(hs.image)}" alt="">`;
+  if (hs.video) {
+    const embed = toEmbedUrl(hs.video);
+    if (embed) media += `<iframe class="modal-frame" src="${esc(embed)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
+    else media += `<video class="modal-video" src="${esc(hs.video)}" controls autoplay playsinline></video>`;
   }
-  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
+  if (hs.lottie) media += `<lottie-player class="modal-lottie" src="${esc(hs.lottie)}" background="transparent" speed="1" autoplay loop></lottie-player>`;
+
+  let html = media;
+  html += '<div class="modal-inner">';
+  html += catBadge(hs.category);
+  html += `<h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
   if (hs.description) html += `<p>${esc(hs.description)}</p>`;
-  html += '</div>';
-  openModal(html, true);
-}
-
-function openImageModal(hs) {
-  let html = '';
-  const img = hs.content || hs.preview;
-  if (img) html += `<img class="modal-preview" style="max-height:65vh" src="${esc(img)}" alt="${esc(hs.title)}">`;
-  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
-  if (hs.description) html += `<p>${esc(hs.description)}</p>`;
-  html += '</div>';
-  openModal(html, true);
-}
-
-function openEmbedModal(hs) {
-  let html = `<iframe class="modal-frame" style="aspect-ratio:auto;height:72vh" src="${esc(hs.content)}" allowfullscreen></iframe>`;
-  openModal(html, true);
-}
-
-function openLottieModal(hs) {
-  let html = '';
-  if (hs.content) {
-    html += `<lottie-player class="modal-lottie" src="${esc(hs.content)}" background="transparent" speed="1" autoplay loop></lottie-player>`;
+  if (hs.embed) html += `<iframe class="card-embed" src="${esc(hs.embed)}" allowfullscreen></iframe>`;
+  if (hs.link) {
+    const label = hs.linkLabel || 'פתחו את הפריט';
+    html += `<div class="cta-row"><a class="modal-cta" href="${esc(hs.link)}" target="_blank" rel="noopener">${esc(label)} ↗</a></div>`;
   }
-  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
-  if (hs.description) html += `<p>${esc(hs.description)}</p>`;
   html += '</div>';
-  openModal(html);
+  openModal(html, !!(media || hs.embed));
 }
 
-// רשימת קישורים נגישה
+// רשימת קישורים נגישה — מקובצת לפי קטגוריה, כל פריט פותח כרטיס
 $('btn-links').onclick = () => {
-  let html = '<div class="modal-inner"><h2><i data-lucide="map"></i> כל מה שיש בבית</h2><ul class="links-list">';
-  DATA.spaces.forEach(s => {
-    html += `<li class="group">${esc(s.title)}</li>`;
-    s.hotspots.filter(h => h.type !== 'room').forEach(h => {
-      const desc = h.description ? `<small>${esc(h.description)}</small>` : '';
-      if ((h.type === 'link' || h.type === 'embed') && h.content) {
-        html += `<li><a href="${esc(h.content)}" target="_blank" rel="noopener">${iconHTML(h.icon)} <b>${esc(h.title)}</b> ${desc}</a></li>`;
-      } else {
-        html += `<li><span class="noaction">${iconHTML(h.icon)} <b>${esc(h.title)}</b> ${desc}</span></li>`;
-      }
+  const all = [];
+  DATA.spaces.forEach(s => (s.hotspots || []).forEach(h => {
+    if (h.kind === 'room') return;
+    all.push(h);
+  }));
+  let html = '<div class="modal-inner"><h2><i data-lucide="map"></i> כל מה שיש בבית</h2>';
+  const order = Object.keys(CATEGORIES).concat(['']);
+  order.forEach(catKey => {
+    const items = all.filter(h => (h.category || '') === catKey);
+    if (!items.length) return;
+    html += `<div class="links-head">${catKey ? catBadge(catKey) : '<b>שונות</b>'}</div><ul class="links-list">`;
+    items.forEach(h => {
+      const desc = h.description ? `<small>${esc(h.description.split('\n')[0])}</small>` : '';
+      html += `<li class="link-item" data-hs="${esc(h.id)}">${iconHTML(h.icon)} <b>${esc(h.title)}</b> ${desc}</li>`;
     });
+    html += '</ul>';
   });
-  html += '</ul></div>';
+  html += '</div>';
   openModal(html);
 };
+
+// לחיצה על פריט ברשימה פותחת את הכרטיס שלו (לא זורק החוצה)
+$('modal-body').addEventListener('click', e => {
+  const li = e.target.closest('.link-item');
+  if (!li) return;
+  const id = li.dataset.hs;
+  let found = null;
+  DATA.spaces.forEach(s => (s.hotspots || []).forEach(h => { if (h.id === id) found = h; }));
+  if (found) openCard(found);
+});
 
 // ————————————————— שליטה במצלמה —————————————————
 function bindControls() {
@@ -914,7 +985,8 @@ function addHotspotAt(ll) {
     lon: Math.round(ll.lon * 10) / 10,
     lat: Math.round(ll.lat * 10) / 10,
     icon: 'map-pin', title: 'נקודה חדשה', description: '',
-    type: 'modal', content: '', preview: ''
+    kind: 'card', category: '', image: '', link: '', linkLabel: '',
+    embed: '', video: '', lottie: ''
   };
   currentSpace.hotspots.push(hs);
   addMode = false;
@@ -957,16 +1029,21 @@ addEventListener('beforeunload', e => {
 });
 
 // ————— פאנל עריכה —————
-const typeHints = {
-  modal: 'חלון עם כותרת, תיאור ותמונה. אם יש קישור — יופיע כפתור "לצפייה".',
-  link: 'לחיצה פותחת את הקישור בטאב חדש.',
-  video: 'קישור יוטיוב / וימאו / קובץ MP4 — ייפתח בחלון צף.',
-  image: 'קישור לתמונה שתוצג בגדול.',
-  embed: 'כתובת של עמוד שיוטמע בתוך חלון (iframe).',
-  room: 'בחרי לאיזה חלל עוברים בלחיצה.',
-  videowall: 'קישור ישיר לקובץ MP4 — יוקרן על משטח בתוך הסצנה (מושתק, בלופ). לחיצה עליו פותחת אותו בגדול עם קול.',
-  lottie: 'קישור לאנימציית Lottie (קובץ ‎.json או ‎.lottie מ-LottieFiles) — תרוץ בלופ בתוך חלון.'
+const kindHints = {
+  card: 'כרטיס נפתח עם כל מה שתמלאי — תמונה, תיאור, הטמעה, ווידאו/Lottie. קישור מופיע ככפתור, לא זורק החוצה מיד.',
+  room: 'דלת — מעבר חלק לחלל אחר, בלי חלונית.',
+  videowall: 'וידאו שמוקרן בתוך הסצנה עצמה.'
 };
+
+function buildCategorySelect() {
+  const sel = $('f-category');
+  sel.innerHTML = '<option value="">— ללא קטגוריה —</option>';
+  Object.keys(CATEGORIES).forEach(k => {
+    const o = document.createElement('option');
+    o.value = k; o.textContent = CATEGORIES[k].label;
+    sel.appendChild(o);
+  });
+}
 
 function openPanel(hs) {
   selectedHs = hs;
@@ -974,13 +1051,20 @@ function openPanel(hs) {
   if (hs._el) hs._el.classList.add('hs-selected');
   $('f-title').value = hs.title || '';
   $('f-icon').value = hs.icon || '';
+  $('f-kind').value = hs.kind || 'card';
+  $('f-category').value = hs.category || '';
   $('f-desc').value = hs.description || '';
-  $('f-type').value = hs.type || 'modal';
-  $('f-content').value = hs.content || '';
-  $('f-preview').value = hs.preview || '';
+  $('f-link').value = hs.link || '';
+  $('f-linklabel').value = hs.linkLabel || '';
+  $('f-embed').value = hs.embed || '';
+  $('f-video').value = hs.video || '';
+  $('f-lottie').value = hs.lottie || '';
+  $('f-image').value = (hs.image && hs.image.indexOf('data:') !== 0) ? hs.image : '';
+  $('f-vwurl').value = hs.video || '';
   $('f-w').value = hs.w || 30;
   $('f-h').value = hs.h || 17;
-  syncTypeUI();
+  renderImgPreview();
+  syncKindUI();
   $('edit-panel').classList.add('open');
 }
 function closePanel() {
@@ -991,18 +1075,11 @@ function closePanel() {
 $('btn-close-panel').onclick = closePanel;
 $('btn-done').onclick = closePanel;
 
-function syncTypeUI() {
-  const t = $('f-type').value;
-  $('f-type-hint').textContent = typeHints[t] || '';
-  const isRoom = t === 'room';
-  $('f-content').style.display = isRoom ? 'none' : '';
-  $('f-room').style.display = isRoom ? '' : 'none';
-  $('f-size-wrap').style.display = t === 'videowall' ? 'flex' : 'none';
-  $('f-content-label').textContent =
-    t === 'room' ? 'לאן עוברים' :
-    t === 'videowall' ? 'קישור לקובץ MP4' :
-    t === 'lottie' ? 'קישור לקובץ Lottie' : 'קישור / תוכן';
-  if (isRoom) {
+function syncKindUI() {
+  const k = $('f-kind').value;
+  $('edit-panel').setAttribute('data-kind', k);
+  $('f-kind-hint').textContent = kindHints[k] || '';
+  if (k === 'room') {
     const sel = $('f-room');
     sel.innerHTML = '';
     DATA.spaces.filter(s => s.id !== currentSpace.id).forEach(s => {
@@ -1010,43 +1087,69 @@ function syncTypeUI() {
       o.value = s.id; o.textContent = s.title;
       sel.appendChild(o);
     });
-    if (selectedHs && selectedHs.content) sel.value = selectedHs.content;
-    if (selectedHs) { selectedHs.content = sel.value; }
+    if (selectedHs && selectedHs.target) sel.value = selectedHs.target;
+    if (selectedHs) selectedHs.target = sel.value;
   }
 }
 
-['f-title', 'f-icon', 'f-desc', 'f-content', 'f-preview'].forEach(id => {
+function refreshDot() {
+  if (!selectedHs || !selectedHs._el) return;
+  selectedHs._el.querySelector('.hs-dot').innerHTML = iconHTML(selectedHs.icon, 'hs-ic');
+  selectedHs._el.querySelector('.hs-label').textContent = selectedHs.title || '';
+  drawIcons();
+}
+
+// שדות טקסט של הכרטיס
+[
+  ['f-title', 'title'], ['f-icon', 'icon'], ['f-desc', 'description'],
+  ['f-link', 'link'], ['f-linklabel', 'linkLabel'], ['f-embed', 'embed'],
+  ['f-video', 'video'], ['f-lottie', 'lottie']
+].forEach(([id, key]) => {
   $(id).addEventListener('input', () => {
     if (!selectedHs) return;
-    selectedHs.title = $('f-title').value;
-    selectedHs.icon = $('f-icon').value;
-    selectedHs.description = $('f-desc').value;
-    if ($('f-type').value !== 'room') selectedHs.content = $('f-content').value;
-    selectedHs.preview = $('f-preview').value;
-    if (selectedHs._el) {
-      selectedHs._el.querySelector('.hs-dot').innerHTML = iconHTML(selectedHs.icon, 'hs-ic');
-      selectedHs._el.querySelector('.hs-label').textContent = selectedHs.title || '';
-      drawIcons();
-    }
+    selectedHs[key] = $(id).value;
+    if (key === 'title' || key === 'icon') refreshDot();
     markDirty();
   });
 });
-$('f-content').addEventListener('change', () => {
-  if (selectedHs && selectedHs.type === 'videowall') rebuildVideoWall(selectedHs);
-});
-$('f-type').addEventListener('change', () => {
+
+$('f-image').addEventListener('input', () => {
   if (!selectedHs) return;
-  selectedHs.type = $('f-type').value;
-  syncTypeUI();
+  selectedHs.image = $('f-image').value;
+  renderImgPreview();
+  markDirty();
+});
+
+$('f-category').addEventListener('change', () => {
+  if (!selectedHs) return;
+  selectedHs.category = $('f-category').value;
+  markDirty();
+});
+
+$('f-kind').addEventListener('change', () => {
+  if (!selectedHs) return;
+  selectedHs.kind = $('f-kind').value;
+  syncKindUI();
   markDirty();
   rebuildVideoWall(selectedHs);
   refreshHotspotVisibility();
 });
+
 $('f-room').addEventListener('change', () => {
   if (!selectedHs) return;
-  selectedHs.content = $('f-room').value;
+  selectedHs.target = $('f-room').value;
   markDirty();
 });
+
+$('f-vwurl').addEventListener('input', () => {
+  if (!selectedHs) return;
+  selectedHs.video = $('f-vwurl').value;
+  markDirty();
+});
+$('f-vwurl').addEventListener('change', () => {
+  if (selectedHs && selectedHs.kind === 'videowall') rebuildVideoWall(selectedHs);
+});
+
 ['f-w', 'f-h'].forEach(id => {
   $(id).addEventListener('change', () => {
     if (!selectedHs) return;
@@ -1056,12 +1159,83 @@ $('f-room').addEventListener('change', () => {
     rebuildVideoWall(selectedHs);
   });
 });
+
+// ——— תמונה: הדבקה / גרירה / קובץ ———
+function fileToResizedDataURL(file, maxDim, quality) {
+  maxDim = maxDim || 1280; quality = quality || 0.82;
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (Math.max(w, h) > maxDim) { const s = maxDim / Math.max(w, h); w = Math.round(w * s); h = Math.round(h * s); }
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = reject; img.src = fr.result;
+    };
+    fr.onerror = reject; fr.readAsDataURL(file);
+  });
+}
+async function applyImageFile(file) {
+  if (!selectedHs || !file || !file.type.startsWith('image/')) return;
+  try {
+    const data = await fileToResizedDataURL(file);
+    selectedHs.image = data;
+    $('f-image').value = '';
+    renderImgPreview();
+    markDirty();
+    toast('תמונה נוספה 🖼️');
+  } catch (e) { toast('לא הצלחתי לקרוא את התמונה', true); }
+}
+function renderImgPreview() {
+  const box = $('img-preview');
+  if (selectedHs && selectedHs.image) {
+    box.innerHTML = `<img src="${esc(selectedHs.image)}" alt=""><button class="rm" type="button">הסירי תמונה ✕</button>`;
+    box.querySelector('.rm').onclick = () => {
+      selectedHs.image = '';
+      $('f-image').value = '';
+      renderImgPreview();
+      markDirty();
+    };
+  } else {
+    box.innerHTML = '';
+  }
+}
+const pasteZone = $('paste-zone');
+pasteZone.addEventListener('paste', async e => {
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  for (const it of items) {
+    if (it.type && it.type.startsWith('image/')) { e.preventDefault(); await applyImageFile(it.getAsFile()); return; }
+  }
+});
+pasteZone.addEventListener('click', () => $('f-file').click());
+pasteZone.addEventListener('dragover', e => { e.preventDefault(); pasteZone.classList.add('drag'); });
+pasteZone.addEventListener('dragleave', () => pasteZone.classList.remove('drag'));
+pasteZone.addEventListener('drop', async e => {
+  e.preventDefault(); pasteZone.classList.remove('drag');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) await applyImageFile(e.dataTransfer.files[0]);
+});
+$('f-file').addEventListener('change', async () => {
+  if ($('f-file').files[0]) await applyImageFile($('f-file').files[0]);
+  $('f-file').value = '';
+});
+
 $('btn-delete').onclick = () => {
   if (!selectedHs) return;
   if (!confirm('למחוק את "' + (selectedHs.title || 'הנקודה') + '"?')) return;
-  const i = currentSpace.hotspots.indexOf(selectedHs);
+  const doomed = selectedHs;
+  const i = currentSpace.hotspots.indexOf(doomed);
   if (i > -1) currentSpace.hotspots.splice(i, 1);
-  rebuildVideoWall(selectedHs);
+  const wi = videoWalls.findIndex(v => v.hs === doomed);
+  if (wi > -1) {
+    const w = videoWalls[wi];
+    scene.remove(w.mesh); w.mesh.geometry.dispose(); w.mesh.material.dispose();
+    try { w.video.pause(); } catch (e) {}
+    videoWalls.splice(wi, 1);
+  }
   closePanel();
   markDirty();
   buildHotspotEls();
