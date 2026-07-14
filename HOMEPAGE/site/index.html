@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>הבית של חופית</title>
-<meta name="description" content="ברוכים הבאים לבית הדיגיטלי של חופית בן ארצי — פורטפוליו אינטראקטיבי בסביבת 360.">
+<title>הבית של חפציה</title>
+<meta name="description" content="ברוכים הבאים לבית הדיגיטלי של חפציה בן ארצי — פורטפוליו אינטראקטיבי בסביבת 360.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.4/dist/lottie-player.js"></script>
 <style>
 :root{
   --cream:#faf3e7; --ink:#4a3826; --ink-soft:#7a6a55;
@@ -20,12 +22,20 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{
-  font-family:'Heebo',sans-serif;background:var(--cream);color:var(--ink);
+  font-family:'Varela Round','Heebo',sans-serif;background:var(--cream);color:var(--ink);
   user-select:none;-webkit-user-select:none;touch-action:none;
 }
 #pano{position:fixed;inset:0;cursor:grab}
 #pano.dragging{cursor:grabbing}
 #pano.add-mode{cursor:crosshair}
+
+/* ——— אייקונים (Lucide) ——— */
+.chip [data-lucide],.chip svg.lucide{width:19px;height:19px;stroke-width:2px;flex:0 0 auto}
+.emoji-ic{font-size:19px;line-height:1}
+.hs-ic svg.lucide{width:26px;height:26px;stroke-width:1.9px;color:var(--terra-deep)}
+.hs-ic.emoji-ic{font-size:26px}
+.modal-inner h2 svg.lucide{width:26px;height:26px;stroke-width:2px;color:var(--terra-deep)}
+.links-list svg.lucide{width:18px;height:18px;color:var(--terra-deep);vertical-align:-3px}
 
 /* ——— שכבת נקודות ——— */
 #hotspot-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden}
@@ -101,7 +111,10 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
   transition:opacity .7s ease;
 }
 #loader.hidden{opacity:0;pointer-events:none}
-#loader .big{font-size:46px;animation:float 2.2s ease-in-out infinite}
+#loader .big{font-size:46px;animation:float 2.2s ease-in-out infinite;line-height:0}
+#loader .big svg.lucide{width:66px;height:66px;color:var(--terra);stroke-width:1.7px}
+#loader lottie-player{width:150px;height:150px}
+#modal-close svg.lucide,#btn-close-panel svg.lucide{width:19px;height:19px}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
 #loader .title{font-size:26px;font-weight:900}
 #loader .sub{color:var(--ink-soft);font-size:15px}
@@ -144,6 +157,7 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 .modal-cta:hover{background:var(--terra-deep)}
 .modal-frame{width:100%;aspect-ratio:16/9;border:none;display:block;border-radius:24px 24px 0 0;background:#000}
 .modal-video{width:100%;max-height:60vh;display:block;border-radius:24px 24px 0 0;background:#000}
+.modal-lottie{width:100%;height:340px;display:block;background:linear-gradient(180deg,#fff7ea,#f4e7cf);border-radius:24px 24px 0 0}
 .links-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:14px}
 .links-list .group{font-weight:900;font-size:17px;margin-top:12px;color:var(--ink)}
 .links-list a,.links-list .noaction{
@@ -228,44 +242,45 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 <div id="hotspot-layer"></div>
 <div id="fade"></div>
 
-<div id="brand" class="chip">🏡 הבית של חופית</div>
+<div id="brand" class="chip"><i data-lucide="house"></i> הבית של חפציה</div>
 <nav id="space-nav"></nav>
 
-<button id="btn-links" class="chip">🗺️ <span class="txt">כל הקישורים</span></button>
-<a id="btn-contact" class="chip" href="#" target="_blank" rel="noopener">💬 <span class="txt">ממהרים? דברו איתי</span></a>
+<button id="btn-links" class="chip"><i data-lucide="map"></i> <span class="txt">כל הקישורים</span></button>
+<a id="btn-contact" class="chip" href="#" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> <span class="txt">ממהרים? דברו איתי</span></a>
 
-<div id="hint" class="chip hidden">🖐️ גררו כדי להסתכל מסביב</div>
+<div id="hint" class="chip hidden"><i data-lucide="move"></i> גררו כדי להסתכל מסביב</div>
 
 <div id="loader">
-  <div class="big">🏡</div>
-  <div class="title">הבית של חופית</div>
+  <div class="big"><i data-lucide="house"></i></div>
+  <div class="title">הבית של חפציה</div>
   <div class="sub">רק רגע, מסדרים את הכריות על הספה...</div>
 </div>
 
 <!-- מודאל -->
 <div id="modal-backdrop">
   <div id="modal">
-    <button id="modal-close">✕</button>
+    <button id="modal-close"><i data-lucide="x"></i></button>
     <div id="modal-body"></div>
   </div>
 </div>
 
 <!-- אדמין -->
 <div id="admin-bar">
-  <button id="btn-edit-toggle" class="chip">🛠️ מצב עריכה</button>
-  <button id="btn-add" class="chip" style="display:none">➕ נקודה חדשה</button>
-  <button id="btn-save" class="chip" style="display:none">💾 שמירה</button>
+  <button id="btn-edit-toggle" class="chip"><i data-lucide="pencil-ruler"></i> מצב עריכה</button>
+  <button id="btn-add" class="chip" style="display:none"><i data-lucide="plus"></i> נקודה חדשה</button>
+  <button id="btn-save" class="chip" style="display:none"><i data-lucide="save"></i> שמירה</button>
 </div>
 <div id="edit-hint" class="chip"></div>
 
 <div id="edit-panel">
-  <h3><span>עריכת נקודה</span><button id="btn-close-panel">✕</button></h3>
+  <h3><span>עריכת נקודה</span><button id="btn-close-panel"><i data-lucide="x"></i></button></h3>
   <label>כותרת</label>
   <input type="text" id="f-title">
   <div class="row">
     <div>
-      <label>אייקון (אימוג'י)</label>
-      <input type="text" id="f-icon" maxlength="4">
+      <label>אייקון</label>
+      <input type="text" id="f-icon" maxlength="24" placeholder="radio / 📻">
+      <div class="type-hint">שם אייקון Lucide (למשל radio, book-open, heart) או אימוג'י.</div>
     </div>
     <div>
       <label>סוג</label>
@@ -276,7 +291,8 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
         <option value="image">תמונה</option>
         <option value="embed">הטמעה (iframe)</option>
         <option value="room">מעבר לחלל אחר</option>
-        <option value="videowall">🎬 וידאו חי בתוך הסצנה</option>
+        <option value="videowall">וידאו חי בתוך הסצנה</option>
+        <option value="lottie">אנימציית Lottie</option>
       </select>
     </div>
   </div>
@@ -303,11 +319,12 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
     </div>
   </div>
   <div class="panel-actions">
-    <button id="btn-delete" class="chip">🗑️ מחיקה</button>
-    <button id="btn-done" class="chip">✔️ סיום</button>
+    <button id="btn-delete" class="chip"><i data-lucide="trash-2"></i> מחיקה</button>
+    <button id="btn-done" class="chip"><i data-lucide="check"></i> סיום</button>
   </div>
   <div class="type-hint" style="margin-top:14px">
-    💡 אפשר לגרור את הנקודה על המסך כדי למקם אותה מחדש.
+    <i data-lucide="lightbulb" style="width:15px;height:15px;vertical-align:-3px"></i>
+    אפשר לגרור את הנקודה על המסך כדי למקם אותה מחדש.
   </div>
 </div>
 
@@ -370,6 +387,19 @@ function screenToLatLon(clientX, clientY) {
   return hits.length ? vecToLatLon(hits[0].point) : null;
 }
 
+// ————————————————— אייקונים —————————————————
+// שדה האייקון תומך גם בשם Lucide (ASCII) וגם באימוג'י (תווים לא-ASCII)
+function iconIsEmoji(s) { return !!s && /[^\x00-\x7F]/.test(s); }
+function iconHTML(name, cls) {
+  cls = cls || '';
+  if (!name) name = 'map-pin';
+  if (iconIsEmoji(name)) return `<span class="${cls} emoji-ic">${esc(name)}</span>`;
+  return `<i data-lucide="${esc(name)}" class="${cls}"></i>`;
+}
+function drawIcons() {
+  if (window.lucide && lucide.createIcons) lucide.createIcons();
+}
+
 // ————————————————— אתחול —————————————————
 async function boot() {
   try {
@@ -382,6 +412,7 @@ async function boot() {
 
   initThree();
   buildSpaceNav();
+  drawIcons();   // אייקוני הממשק הקבועים (מותג, כפתורים, טעינה)
 
   const contact = DATA.settings || {};
   if (contact.contactUrl) $('btn-contact').href = contact.contactUrl;
@@ -488,7 +519,7 @@ function buildHotspotEls() {
     const el = document.createElement('div');
     el.className = 'hotspot';
     el.innerHTML = '<button class="hs-dot" aria-label=""></button><span class="hs-label"></span>';
-    el.querySelector('.hs-dot').textContent = hs.icon || '📍';
+    el.querySelector('.hs-dot').innerHTML = iconHTML(hs.icon, 'hs-ic');
     el.querySelector('.hs-label').textContent = hs.title || '';
     el.querySelector('.hs-dot').setAttribute('aria-label', hs.title || 'נקודה');
     hs._el = el;
@@ -521,6 +552,7 @@ function buildHotspotEls() {
       if (!editMode) activateHotspot(hs);
     });
   });
+  drawIcons();
   refreshHotspotVisibility();
 }
 
@@ -622,6 +654,9 @@ function activateHotspot(hs) {
     case 'embed':
       openEmbedModal(hs);
       break;
+    case 'lottie':
+      openLottieModal(hs);
+      break;
     default:
       openInfoModal(hs);
   }
@@ -632,6 +667,7 @@ function openModal(html, wide) {
   $('modal').classList.toggle('wide', !!wide);
   $('modal-body').innerHTML = html;
   $('modal-backdrop').classList.add('open');
+  drawIcons();
 }
 function closeModal() {
   $('modal-backdrop').classList.remove('open');
@@ -649,7 +685,7 @@ function esc(s) {
 function openInfoModal(hs) {
   let html = '';
   if (hs.preview) html += `<img class="modal-preview" src="${esc(hs.preview)}" alt="">`;
-  html += `<div class="modal-inner"><h2>${esc(hs.icon)} ${esc(hs.title)}</h2>`;
+  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
   if (hs.description) html += `<p>${esc(hs.description)}</p>`;
   if (hs.content) html += `<a class="modal-cta" href="${esc(hs.content)}" target="_blank" rel="noopener">לצפייה ←</a>`;
   html += '</div>';
@@ -673,7 +709,7 @@ function openVideoModal(hs) {
   } else if (url) {
     html += `<video class="modal-video" src="${esc(url)}" controls autoplay playsinline></video>`;
   }
-  html += `<div class="modal-inner"><h2>${esc(hs.icon)} ${esc(hs.title)}</h2>`;
+  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
   if (hs.description) html += `<p>${esc(hs.description)}</p>`;
   html += '</div>';
   openModal(html, true);
@@ -683,7 +719,7 @@ function openImageModal(hs) {
   let html = '';
   const img = hs.content || hs.preview;
   if (img) html += `<img class="modal-preview" style="max-height:65vh" src="${esc(img)}" alt="${esc(hs.title)}">`;
-  html += `<div class="modal-inner"><h2>${esc(hs.icon)} ${esc(hs.title)}</h2>`;
+  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
   if (hs.description) html += `<p>${esc(hs.description)}</p>`;
   html += '</div>';
   openModal(html, true);
@@ -694,17 +730,28 @@ function openEmbedModal(hs) {
   openModal(html, true);
 }
 
+function openLottieModal(hs) {
+  let html = '';
+  if (hs.content) {
+    html += `<lottie-player class="modal-lottie" src="${esc(hs.content)}" background="transparent" speed="1" autoplay loop></lottie-player>`;
+  }
+  html += `<div class="modal-inner"><h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
+  if (hs.description) html += `<p>${esc(hs.description)}</p>`;
+  html += '</div>';
+  openModal(html);
+}
+
 // רשימת קישורים נגישה
 $('btn-links').onclick = () => {
-  let html = '<div class="modal-inner"><h2>🗺️ כל מה שיש בבית</h2><ul class="links-list">';
+  let html = '<div class="modal-inner"><h2><i data-lucide="map"></i> כל מה שיש בבית</h2><ul class="links-list">';
   DATA.spaces.forEach(s => {
     html += `<li class="group">${esc(s.title)}</li>`;
     s.hotspots.filter(h => h.type !== 'room').forEach(h => {
       const desc = h.description ? `<small>${esc(h.description)}</small>` : '';
       if ((h.type === 'link' || h.type === 'embed') && h.content) {
-        html += `<li><a href="${esc(h.content)}" target="_blank" rel="noopener">${esc(h.icon)} <b>${esc(h.title)}</b> ${desc}</a></li>`;
+        html += `<li><a href="${esc(h.content)}" target="_blank" rel="noopener">${iconHTML(h.icon)} <b>${esc(h.title)}</b> ${desc}</a></li>`;
       } else {
-        html += `<li><span class="noaction">${esc(h.icon)} <b>${esc(h.title)}</b> ${desc}</span></li>`;
+        html += `<li><span class="noaction">${iconHTML(h.icon)} <b>${esc(h.title)}</b> ${desc}</span></li>`;
       }
     });
   });
@@ -866,7 +913,7 @@ function addHotspotAt(ll) {
     id: 'hs' + Date.now().toString(36),
     lon: Math.round(ll.lon * 10) / 10,
     lat: Math.round(ll.lat * 10) / 10,
-    icon: '📍', title: 'נקודה חדשה', description: '',
+    icon: 'map-pin', title: 'נקודה חדשה', description: '',
     type: 'modal', content: '', preview: ''
   };
   currentSpace.hotspots.push(hs);
@@ -917,7 +964,8 @@ const typeHints = {
   image: 'קישור לתמונה שתוצג בגדול.',
   embed: 'כתובת של עמוד שיוטמע בתוך חלון (iframe).',
   room: 'בחרי לאיזה חלל עוברים בלחיצה.',
-  videowall: 'קישור ישיר לקובץ MP4 — יוקרן על משטח בתוך הסצנה (מושתק, בלופ). לחיצה עליו פותחת אותו בגדול עם קול.'
+  videowall: 'קישור ישיר לקובץ MP4 — יוקרן על משטח בתוך הסצנה (מושתק, בלופ). לחיצה עליו פותחת אותו בגדול עם קול.',
+  lottie: 'קישור לאנימציית Lottie (קובץ ‎.json או ‎.lottie מ-LottieFiles) — תרוץ בלופ בתוך חלון.'
 };
 
 function openPanel(hs) {
@@ -952,7 +1000,8 @@ function syncTypeUI() {
   $('f-size-wrap').style.display = t === 'videowall' ? 'flex' : 'none';
   $('f-content-label').textContent =
     t === 'room' ? 'לאן עוברים' :
-    t === 'videowall' ? 'קישור לקובץ MP4' : 'קישור / תוכן';
+    t === 'videowall' ? 'קישור לקובץ MP4' :
+    t === 'lottie' ? 'קישור לקובץ Lottie' : 'קישור / תוכן';
   if (isRoom) {
     const sel = $('f-room');
     sel.innerHTML = '';
@@ -975,8 +1024,9 @@ function syncTypeUI() {
     if ($('f-type').value !== 'room') selectedHs.content = $('f-content').value;
     selectedHs.preview = $('f-preview').value;
     if (selectedHs._el) {
-      selectedHs._el.querySelector('.hs-dot').textContent = selectedHs.icon || '📍';
+      selectedHs._el.querySelector('.hs-dot').innerHTML = iconHTML(selectedHs.icon, 'hs-ic');
       selectedHs._el.querySelector('.hs-label').textContent = selectedHs.title || '';
+      drawIcons();
     }
     markDirty();
   });

@@ -32,6 +32,13 @@ scp -F "T:\.ssh\config" HOMEPAGE\site\img\*.jpg hostinger:/home/u630483490/publi
 | מעבר לחלל אחר | מעבר חלק עם פייד |
 | וידאו חי בסצנה | קובץ MP4 מוקרן על משטח בתוך הפנורמה (מושתק, בלופ) — אשליית תנועה. לחיצה פותחת בגדול עם קול |
 
+## עיצוב
+
+- גופן: Varela Round (Google Fonts).
+- אייקונים: Lucide (CDN). שדה האייקון בכל נקודה מקבל שם Lucide (למשל `radio`, `book-open`, `heart-handshake`) או אימוג'י — המערכת מזהה אוטומטית (ASCII = Lucide, אחרת אימוג'י).
+- Lottie: נגן `@lottiefiles/lottie-player` (CDN) לסוג נקודה "אנימציית Lottie" (‎.json/‎.lottie).
+- יצירת קשר: וואטסאפ ל-054-4477081 (`https://wa.me/972544477081`).
+
 ## טכני
 
 - מנוע: Three.js r128, ספרה עם טקסטורת equirectangular.
