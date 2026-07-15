@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<base href="/home/">
 <title>הבית של חפציה</title>
 <meta name="description" content="ברוכים הבאים לבית הדיגיטלי של חפציה בן ארצי — פורטפוליו אינטראקטיבי בסביבת 360.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏡</text></svg>">
@@ -317,6 +318,28 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 .hs-title .emoji-ic{font-size:20px}
 .edit-on .hotspot.tier-title .hs-title{border-style:dashed;border-color:var(--leaf);cursor:move}
 
+/* אב-ילד: תג ספירת ילדים על נקודת-האב */
+.hs-kids{
+  position:absolute;top:-7px;left:-7px;min-width:21px;height:21px;padding:0 5px;
+  border-radius:999px;background:var(--terra);color:#fff;font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;line-height:1;
+  box-shadow:0 2px 6px rgba(0,0,0,.28);border:2px solid var(--cream);z-index:2;
+}
+.hotspot.expanded .hs-kids{background:var(--terra-deep)}
+.hs-title{position:relative}
+/* סימון קשר בזמן עריכה (הורה⇄ילדים) */
+.hotspot.hs-related .hs-dot,.hotspot.hs-related .hs-title{outline:3px dashed var(--leaf);outline-offset:3px}
+/* הופעת ילדים */
+@keyframes popIn{0%{transform:translate(-50%,-50%) scale(.3);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.hotspot.child-anim{animation:popIn .28s ease-out}
+
+/* עורך קשרים בפאנל */
+#parent-box,#children-box{display:none}
+#children-list{display:flex;flex-wrap:wrap;gap:6px}
+.child-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.7);
+  border:1px solid var(--chip-border);border-radius:999px;padding:4px 6px 4px 12px;font-size:13px;cursor:pointer}
+.child-chip .det{border:none;background:#fbe9e2;color:#a33c14;border-radius:50%;width:20px;height:20px;cursor:pointer;font-family:inherit;line-height:1}
+
 /* ——— טוסט ——— */
 #toast{
   position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-16px);
@@ -424,6 +447,15 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
       <div><label>מרחב</label><select id="f-space"></select></div>
     </div>
 
+    <div id="parent-box">
+      <label>שייכת לנקודה גדולה</label>
+      <select id="f-parent"></select>
+    </div>
+    <div id="children-box">
+      <label>נקודות ילדים (מוצגות בלחיצה על נקודה זו)</label>
+      <div id="children-list"></div>
+    </div>
+
     <!-- כרטיס תוכן -->
     <div class="kind-card">
       <div class="row">
@@ -522,6 +554,7 @@ let currentSpace = null;
 let isAdmin = false, nonce = '', editMode = false, addMode = false, dirty = false;
 let selectedHs = null;
 let editingSpace = null;
+let expandedParents = new Set();
 
 // Three.js
 let scene, camera, renderer, sphereMesh, texLoader;
@@ -617,6 +650,7 @@ function normalizeHotspot(hs) {
   if (!hs.image && hs.preview) hs.image = hs.preview;
   hs.category = hs.category || '';
   hs.tier = hs.tier || 'normal';
+  hs.parent = hs.parent || '';
   hs.date = hs.date || '';
   if (!Array.isArray(hs.stats)) hs.stats = [];
   delete hs.type; delete hs.content; delete hs.preview;
@@ -641,7 +675,9 @@ async function boot() {
   drawIcons();   // אייקוני הממשק הקבועים (מותג, כפתורים, טעינה)
 
   const contact = DATA.settings || {};
-  if (contact.contactUrl) $('btn-contact').href = contact.contactUrl;
+  // ברירת מחדל וואטסאפ — משתמשים בערך מהנתונים רק אם זה קישור http(s) תקין (לא mailto ישן)
+  const DEFAULT_CONTACT = 'https://wa.me/972544477081';
+  $('btn-contact').href = /^https?:\/\//.test(contact.contactUrl || '') ? contact.contactUrl : DEFAULT_CONTACT;
   if (contact.contactLabel) $('btn-contact').querySelector('.txt').textContent = contact.contactLabel;
 
   const params = new URLSearchParams(location.search);
@@ -710,6 +746,7 @@ async function switchSpace(id, instant) {
   currentSpace = space;
   lon = (typeof space.startLon === 'number') ? space.startLon : 0;
   lat = 0;
+  expandedParents.clear();
   closePanel();
   buildHotspotEls();
   buildVideoWalls();
@@ -758,6 +795,14 @@ function buildHotspotEls() {
     layer.appendChild(el);
 
     const hit = el.querySelector('.hs-dot') || el.querySelector('.hs-title');
+    // תג ספירת ילדים על נקודת-אב
+    const kids = childrenOf(hs);
+    if (kids.length) {
+      const badge = document.createElement('span');
+      badge.className = 'hs-kids';
+      badge.textContent = kids.length;
+      hit.appendChild(badge);
+    }
     hit.addEventListener('pointerdown', e => {
       e.stopPropagation();
       if (editMode) {
@@ -788,12 +833,28 @@ function buildHotspotEls() {
   refreshHotspotVisibility();
 }
 
+function childrenOf(hs) { return currentSpace.hotspots.filter(h => h.parent === hs.id); }
+function hasChildren(hs) { return currentSpace.hotspots.some(h => h.parent === hs.id); }
+
 function refreshHotspotVisibility() {
   currentSpace.hotspots.forEach(hs => {
     if (!hs._el) return;
-    const hideInView = hs.kind === 'videowall' && !editMode;
-    hs._el.style.display = hideInView ? 'none' : '';
+    let hide = false;
+    if (hs.kind === 'videowall' && !editMode) hide = true;
+    // ילד מוסתר בתצוגה עד שההורה נפתח (בעריכה הכל גלוי כדי למקם)
+    if (!editMode && hs.parent) hide = !expandedParents.has(hs.parent);
+    hs._el.style.display = hide ? 'none' : '';
+    hs._el.classList.toggle('expanded', expandedParents.has(hs.id));
+    if (!editMode && hs.parent && expandedParents.has(hs.parent) && !hide) {
+      hs._el.classList.remove('child-anim'); void hs._el.offsetWidth; hs._el.classList.add('child-anim');
+    }
   });
+}
+
+function toggleChildren(hs) {
+  if (expandedParents.has(hs.id)) expandedParents.delete(hs.id);
+  else expandedParents.add(hs.id);
+  refreshHotspotVisibility();
 }
 
 function updateHotspotPositions() {
@@ -873,6 +934,8 @@ function cardHasContent(hs) {
 }
 function activateHotspot(hs) {
   if (hs.kind === 'room') { if (hs.target) switchSpace(hs.target); return; }
+  // נקודת-אב עם ילדים: לחיצה פותחת/סוגרת את הילדים (לא כרטיס)
+  if (hasChildren(hs)) { toggleChildren(hs); return; }
   if (hs.tier === 'title' && !cardHasContent(hs)) return; // כותרת אזור בלי תוכן — לא פותחת כלום
   openCard(hs);   // כרטיס תוכן, וגם וידאו-בסצנה (נפתח בגדול)
 }
@@ -1148,7 +1211,7 @@ function addHotspotAt(ll) {
     lon: Math.round(ll.lon * 10) / 10,
     lat: Math.round(ll.lat * 10) / 10,
     icon: 'map-pin', title: 'נקודה חדשה', description: '',
-    kind: 'card', tier: 'normal', category: '', date: '', stats: [],
+    kind: 'card', tier: 'normal', parent: '', category: '', date: '', stats: [],
     image: '', link: '', linkLabel: '', embed: '', video: '', lottie: ''
   };
   currentSpace.hotspots.push(hs);
@@ -1233,8 +1296,52 @@ function openPanel(hs) {
   renderImgPreview();
   renderStatsEditor();
   syncKindUI();
+  updateRelationUI();
+  highlightRelated();
   $('edit-panel').classList.add('open');
   $('space-panel').classList.remove('open');
+}
+
+// שדות אב-ילד בפאנל
+function updateRelationUI() {
+  if (!selectedHs) return;
+  // בורר "שייכת לנקודה גדולה" — רק לנקודות קטנות
+  const showParent = selectedHs.tier === 'small';
+  $('parent-box').style.display = showParent ? 'block' : 'none';
+  if (showParent) {
+    const sel = $('f-parent');
+    sel.innerHTML = '<option value="">— עצמאית —</option>';
+    currentSpace.hotspots.filter(h => h !== selectedHs && h.tier !== 'small').forEach(h => {
+      const o = document.createElement('option');
+      o.value = h.id; o.textContent = (h.title || h.id);
+      sel.appendChild(o);
+    });
+    sel.value = selectedHs.parent || '';
+  }
+  // רשימת ילדים — לכל נקודה שיש לה ילדים
+  const kids = childrenOf(selectedHs);
+  $('children-box').style.display = kids.length ? 'block' : 'none';
+  const box = $('children-list');
+  box.innerHTML = '';
+  kids.forEach(k => {
+    const chip = document.createElement('span');
+    chip.className = 'child-chip';
+    chip.innerHTML = `<span>${esc(k.title || 'ללא שם')}</span><button class="det" type="button" title="ניתוק">✕</button>`;
+    chip.querySelector('span').onclick = () => openPanel(k);
+    chip.querySelector('.det').onclick = () => { k.parent = ''; markDirty(); buildHotspotEls(); updateRelationUI(); highlightRelated(); };
+    box.appendChild(chip);
+  });
+}
+
+function highlightRelated() {
+  document.querySelectorAll('.hotspot.hs-related').forEach(el => el.classList.remove('hs-related'));
+  if (!selectedHs) return;
+  // סמן את ההורה ואת הילדים של הנקודה הנבחרת
+  if (selectedHs.parent) {
+    const p = currentSpace.hotspots.find(h => h.id === selectedHs.parent);
+    if (p && p._el) p._el.classList.add('hs-related');
+  }
+  childrenOf(selectedHs).forEach(k => { if (k._el) k._el.classList.add('hs-related'); });
 }
 function buildSpaceMoveSelect() {
   const sel = $('f-space');
@@ -1299,6 +1406,15 @@ function refreshDot() {
   });
 });
 
+// שיוך לנקודת-אב
+$('f-parent').addEventListener('change', () => {
+  if (!selectedHs) return;
+  selectedHs.parent = $('f-parent').value;
+  markDirty();
+  buildHotspotEls();
+  highlightRelated();
+});
+
 // העברת נקודה למרחב אחר
 $('f-space').addEventListener('change', () => {
   if (!selectedHs) return;
@@ -1306,12 +1422,14 @@ $('f-space').addEventListener('change', () => {
   if (targetId === currentSpace.id) return;
   const target = getSpace(targetId);
   if (!target) return;
+  childrenOf(selectedHs).forEach(k => k.parent = '');   // ילדים שנשארים מתנתקים
   const i = currentSpace.hotspots.indexOf(selectedHs);
   if (i > -1) currentSpace.hotspots.splice(i, 1);
   // הסרת קיר וידאו אם יש
   const wi = videoWalls.findIndex(v => v.hs === selectedHs);
   if (wi > -1) { const w = videoWalls[wi]; scene.remove(w.mesh); w.mesh.geometry.dispose(); w.mesh.material.dispose(); try { w.video.pause(); } catch (e) {} videoWalls.splice(wi, 1); }
   target.hotspots.push(selectedHs);
+  selectedHs.parent = '';   // בחלל החדש אין הורה מקושר
   markDirty();
   closePanel();
   buildHotspotEls();
@@ -1337,9 +1455,12 @@ $('f-category').addEventListener('change', () => {
 $('f-tier').addEventListener('change', () => {
   if (!selectedHs) return;
   selectedHs.tier = $('f-tier').value;
+  if (selectedHs.tier !== 'small') selectedHs.parent = '';   // רק קטנה יכולה להיות ילד
   markDirty();
   buildHotspotEls();                       // המבנה משתנה (כותרת/קטן) — לבנות מחדש
   if (selectedHs._el) selectedHs._el.classList.add('hs-selected');
+  updateRelationUI();
+  highlightRelated();
 });
 
 // עורך המספרים הגדולים
@@ -1475,6 +1596,7 @@ $('btn-delete').onclick = () => {
   if (!selectedHs) return;
   if (!confirm('למחוק את "' + (selectedHs.title || 'הנקודה') + '"?')) return;
   const doomed = selectedHs;
+  childrenOf(doomed).forEach(k => k.parent = '');   // ניתוק ילדים
   const i = currentSpace.hotspots.indexOf(doomed);
   if (i > -1) currentSpace.hotspots.splice(i, 1);
   const wi = videoWalls.findIndex(v => v.hs === doomed);
