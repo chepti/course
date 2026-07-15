@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <base href="/home/">
-<title>הבית של חפציה</title>
+<title>דף הבית של חפציה</title>
 <meta name="description" content="ברוכים הבאים לבית הדיגיטלי של חפציה בן ארצי — פורטפוליו אינטראקטיבי בסביבת 360.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -381,7 +381,7 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 <div id="hotspot-layer"></div>
 <div id="fade"></div>
 
-<div id="brand" class="chip"><i data-lucide="house"></i> הבית של חפציה</div>
+<div id="brand" class="chip"><i data-lucide="house"></i> דף הבית של חפציה</div>
 <nav id="space-nav"></nav>
 
 <button id="btn-links" class="chip"><i data-lucide="map"></i> <span class="txt">כל הקישורים</span></button>
@@ -391,7 +391,7 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 
 <div id="loader">
   <div class="big"><i data-lucide="house"></i></div>
-  <div class="title">הבית של חפציה</div>
+  <div class="title">דף הבית של חפציה</div>
   <div class="sub">רק רגע, מסדרים את הכריות על הספה...</div>
 </div>
 
@@ -535,6 +535,9 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
   <div class="panel-body">
     <label>שם המרחב</label>
     <input type="text" id="sp-title">
+    <label>כתובת קצרה (בסוף הקישור)</label>
+    <input type="text" id="sp-slug" dir="ltr" placeholder="works" autocomplete="off" spellcheck="false">
+    <div class="type-hint" id="sp-slug-hint">הקישור יהיה: ?space=works</div>
     <label>תמונת רקע 360°</label>
     <div id="sp-paste" tabindex="0">📋 הדביקי (Ctrl+V) או גררי תמונת פנורמה</div>
     <div id="sp-preview"></div>
@@ -679,9 +682,17 @@ async function boot() {
   initThree();
   buildSpaceNav();
   buildCategorySelect();
-  drawIcons();   // אייקוני הממשק הקבועים (מותג, כפתורים, טעינה)
 
   const contact = DATA.settings || {};
+  if (contact.siteTitle) {
+    document.title = contact.siteTitle;
+    const brand = $('brand');
+    if (brand) brand.innerHTML = '<i data-lucide="house"></i> ' + contact.siteTitle;
+    const loaderTitle = $('loader') && $('loader').querySelector('.title');
+    if (loaderTitle) loaderTitle.textContent = contact.siteTitle;
+  }
+  drawIcons();   // אייקוני הממשק הקבועים (מותג, כפתורים, טעינה)
+
   // ברירת מחדל וואטסאפ — משתמשים בערך מהנתונים רק אם זה קישור http(s) תקין (לא mailto ישן)
   const DEFAULT_CONTACT = 'https://wa.me/972544477081';
   $('btn-contact').href = /^https?:\/\//.test(contact.contactUrl || '') ? contact.contactUrl : DEFAULT_CONTACT;
@@ -1045,7 +1056,7 @@ function openCard(hs) {
 $('btn-links').onclick = () => {
   const all = [];
   DATA.spaces.forEach(s => (s.hotspots || []).forEach(h => {
-    if (h.kind === 'room' || h.tier === 'title') return;
+    if (h.kind === 'room' || h.tier === 'title' || h.tier === 'small') return;  // נקודות קטנות לא מעמיסות את הרשימה
     all.push(h);
   }));
   let html = '<div class="modal-inner"><h2><i data-lucide="map"></i> כל מה שיש בבית</h2>';
@@ -1659,9 +1670,52 @@ $('btn-delete').onclick = () => {
 
 // ————————————————— ניהול מרחבים —————————————————
 $('btn-space').onclick = () => openSpacePanel(currentSpace);
+function slugifySpaceId(raw) {
+  return String(raw || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+}
+function updateSlugHint(id) {
+  const hint = $('sp-slug-hint');
+  if (!hint) return;
+  hint.textContent = id ? ('הקישור יהיה: ?space=' + id) : 'אותיות באנגלית, מספרים, מקף או קו תחתון';
+}
+function renameSpaceId(sp, nextId) {
+  const oldId = sp.id;
+  const id = slugifySpaceId(nextId);
+  if (!id) return { ok: false, reason: 'empty' };
+  if (id === oldId) return { ok: true, id };
+  if (DATA.spaces.some(s => s.id === id)) return { ok: false, reason: 'taken' };
+  sp.id = id;
+  DATA.spaces.forEach(s => {
+    s.hotspots.forEach(h => {
+      if (h.kind === 'room' && h.target === oldId) h.target = id;
+    });
+  });
+  if (DATA.settings && DATA.settings.startSpace === oldId) DATA.settings.startSpace = id;
+  if (textures[oldId]) {
+    textures[id] = textures[oldId];
+    delete textures[oldId];
+  }
+  if (currentSpace && currentSpace.id === id) {
+    const url = new URL(location);
+    url.searchParams.set('space', id);
+    history.replaceState(null, '', url);
+  }
+  return { ok: true, id };
+}
+
 $('btn-add-space').onclick = async () => {
+  const suggested = slugifySpaceId(prompt('כתובת קצרה למרחב החדש (באנגלית, למשל works):', '') || '');
+  let id = suggested;
+  if (!id || DATA.spaces.some(s => s.id === id)) {
+    id = 'sp' + Date.now().toString(36);
+  }
   const sp = {
-    id: 'sp' + Date.now().toString(36),
+    id,
     title: 'מרחב חדש',
     image: '',
     startLon: 0,
@@ -1672,13 +1726,17 @@ $('btn-add-space').onclick = async () => {
   buildSpaceNav();
   await switchSpace(sp.id);
   openSpacePanel(sp);
-  toast('מרחב חדש נוצר — הוסיפי תמונת רקע 360°');
+  toast(suggested && suggested === id
+    ? ('מרחב חדש נוצר — הקישור: ?space=' + id)
+    : 'מרחב חדש נוצר — הוסיפי תמונת רקע 360° (אפשר לערוך את הכתובת הקצרה)');
 };
 
 function openSpacePanel(sp) {
   editingSpace = sp;
   closePanel();
   $('sp-title').value = sp.title || '';
+  $('sp-slug').value = sp.id || '';
+  updateSlugHint(sp.id || '');
   $('sp-image').value = (sp.image && sp.image.indexOf('data:') !== 0) ? sp.image : '';
   $('sp-extra').classList.remove('show');
   renderSpacePreview();
@@ -1697,6 +1755,29 @@ $('sp-title').addEventListener('input', () => {
   editingSpace.title = $('sp-title').value;
   markDirty();
   buildSpaceNav();
+});
+$('sp-slug').addEventListener('input', () => {
+  if (!editingSpace) return;
+  const typed = $('sp-slug').value.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  if (typed !== $('sp-slug').value) $('sp-slug').value = typed;
+  updateSlugHint(slugifySpaceId(typed) || editingSpace.id);
+});
+$('sp-slug').addEventListener('change', () => {
+  if (!editingSpace) return;
+  const prev = editingSpace.id;
+  const result = renameSpaceId(editingSpace, $('sp-slug').value);
+  if (!result.ok) {
+    $('sp-slug').value = editingSpace.id;
+    updateSlugHint(editingSpace.id);
+    toast(result.reason === 'taken' ? 'הכתובת כבר בשימוש במרחב אחר' : 'צריך כתובת קצרה באנגלית', true);
+    return;
+  }
+  $('sp-slug').value = result.id;
+  updateSlugHint(result.id);
+  if (result.id === prev) return;
+  markDirty();
+  buildSpaceNav();
+  toast('הכתובת עודכנה: ?space=' + result.id);
 });
 $('sp-image').addEventListener('input', () => {
   if (!editingSpace) return;
