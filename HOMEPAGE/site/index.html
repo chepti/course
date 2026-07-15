@@ -633,6 +633,7 @@ const CATEGORIES = {
   tool:       { label: 'כלי דיגיטלי',   icon: 'wand-2',     color: '#0ea5e9' },
   portfolio:  { label: 'תיק עבודות',    icon: 'briefcase',  color: '#b95d2c' },
   game:       { label: 'משחק למידה',    icon: 'gamepad-2',  color: '#8b5cf6' },
+  teaching:   { label: 'חומרי הוראה',   icon: 'notebook-pen', color: '#e0913b' },
   content:    { label: 'חומר והדרכה',   icon: 'book-open',  color: '#7a8b5c' },
   family:     { label: 'פינה משפחתית',  icon: 'heart',      color: '#e05a7d' }
 };
@@ -669,6 +670,7 @@ function normalizeHotspot(hs) {
 
 // ————————————————— אתחול —————————————————
 async function boot() {
+  drawIcons();   // להציג את אייקון הבית במסך הטעינה מיד (לפני שהנתונים נטענים)
   try {
     const res = await fetch('data.json?ts=' + Date.now(), { cache: 'no-store' });
     DATA = await res.json();
