@@ -264,6 +264,9 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 .card-embed{width:100%;aspect-ratio:16/9;border:none;border-radius:14px;margin-top:14px;background:#000}
 .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .cta-row .modal-cta{margin-top:0}
+.cta-row button.modal-cta{font-family:inherit;cursor:pointer}
+.cta-kids{background:var(--leaf);border-color:#5f6f45;box-shadow:0 6px 18px rgba(122,139,92,.4)}
+.cta-kids:hover{background:#5f6f45;box-shadow:0 9px 24px rgba(95,111,69,.5)}
 
 /* כרטיס עם תמונה — פריסה של תמונה מוכלת בצד + טקסט בצד השני */
 .card-split{display:flex;align-items:stretch}
@@ -938,7 +941,9 @@ function cardHasContent(hs) {
 }
 function activateHotspot(hs) {
   if (hs.kind === 'room') { if (hs.target) switchSpace(hs.target); return; }
-  // נקודת-אב עם ילדים: לחיצה פותחת/סוגרת את הילדים (לא כרטיס)
+  // נקודת-אב עם תוכן משלה: פותחת כרטיס (שיכיל כפתור להצגת תת-הנקודות)
+  if (hasChildren(hs) && cardHasContent(hs)) { openCard(hs); return; }
+  // נקודת-אב בלי תוכן משלה: לחיצה ישר פותחת/סוגרת את תת-הנקודות
   if (hasChildren(hs)) { toggleChildren(hs); return; }
   if (hs.tier === 'title' && !cardHasContent(hs)) return; // כותרת אזור בלי תוכן — לא פותחת כלום
   openCard(hs);   // כרטיס תוכן, וגם וידאו-בסצנה (נפתח בגדול)
@@ -1002,9 +1007,18 @@ function cardBodyHTML(hs) {
     b += '</div>';
   }
   if (hs.embed) b += `<iframe class="card-embed" src="${esc(hs.embed)}" allowfullscreen></iframe>`;
-  if (hs.link) {
-    const label = hs.linkLabel || 'פתחו את הפריט';
-    b += `<div class="cta-row"><a class="modal-cta" href="${esc(hs.link)}" target="_blank" rel="noopener">${esc(label)} ↗</a></div>`;
+  const kidCount = childrenOf(hs).length;
+  if (hs.link || kidCount) {
+    b += '<div class="cta-row">';
+    if (hs.link) {
+      const label = hs.linkLabel || 'פתחו את הפריט';
+      b += `<a class="modal-cta" href="${esc(hs.link)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
+    }
+    if (kidCount) {
+      const open = expandedParents.has(hs.id);
+      b += `<button class="modal-cta cta-kids" data-hs="${esc(hs.id)}">${open ? 'הסתרת' : 'הצגת'} ${kidCount} פריטים</button>`;
+    }
+    b += '</div>';
   }
   return b;
 }
@@ -1052,6 +1066,14 @@ $('btn-links').onclick = () => {
 
 // לחיצה על פריט ברשימה פותחת את הכרטיס שלו (לא זורק החוצה)
 $('modal-body').addEventListener('click', e => {
+  // כפתור "הצגת/הסתרת פריטים" בתוך כרטיס נקודת-אב
+  const kb = e.target.closest('.cta-kids');
+  if (kb) {
+    const hs = currentSpace.hotspots.find(h => h.id === kb.dataset.hs);
+    closeModal();
+    if (hs) toggleChildren(hs);
+    return;
+  }
   const li = e.target.closest('.link-item');
   if (!li) return;
   const id = li.dataset.hs;
