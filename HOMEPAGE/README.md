@@ -14,6 +14,8 @@
 
 הקישור ליצירת קשר נכפה בקוד לוואטסאפ (`DEFAULT_CONTACT`) כל עוד `settings.contactUrl` אינו קישור http(s) — כי אין עורך הגדרות בפאנל ושמירות של אדמין עלולות להחזיר ערך ישן.
 
+`site/home.htaccess` נפרס כ-`~/public_html/home/.htaccess` — מונע cache של קבצי ‎.html (no-cache) כדי שעדכוני קוד יופיעו מיד בלי צורך ב-hard refresh.
+
 ## פריסה
 
 ```powershell
