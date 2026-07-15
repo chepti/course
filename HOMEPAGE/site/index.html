@@ -150,11 +150,13 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 .modal-inner h2{font-size:24px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:10px}
 .modal-inner p{color:var(--ink-soft);font-size:16px;line-height:1.7;white-space:pre-wrap}
 .modal-cta{
-  display:inline-block;margin-top:18px;background:var(--terra);color:#fff;
-  border-radius:999px;padding:11px 26px;font-weight:700;text-decoration:none;
-  font-size:16px;transition:background .2s;
+  display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+  background:var(--terra);color:#fff;border:2px solid var(--terra-deep);
+  border-radius:999px;padding:13px 30px;font-weight:900;text-decoration:none;
+  font-size:17px;box-shadow:0 6px 18px rgba(217,119,66,.45);
+  transition:transform .15s ease, box-shadow .2s, background .2s;
 }
-.modal-cta:hover{background:var(--terra-deep)}
+.modal-cta:hover{background:var(--terra-deep);transform:translateY(-2px);box-shadow:0 9px 24px rgba(185,93,44,.5)}
 .modal-frame{width:100%;aspect-ratio:16/9;border:none;display:block;border-radius:24px 24px 0 0;background:#000}
 .modal-video{width:100%;max-height:60vh;display:block;border-radius:24px 24px 0 0;background:#000}
 .modal-lottie{width:100%;height:340px;display:block;background:linear-gradient(180deg,#fff7ea,#f4e7cf);border-radius:24px 24px 0 0}
@@ -172,7 +174,9 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 #admin-bar{
   position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
   z-index:25;display:none;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;
+  max-width:94vw;
 }
+#admin-bar .chip{font-size:14px;padding:8px 14px}
 #admin-bar.show{display:flex}
 #admin-bar .chip.on{background:var(--leaf);color:#fff}
 #btn-save.dirty{background:var(--terra);color:#fff;animation:beat 1.6s infinite}
@@ -183,29 +187,43 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 }
 #edit-hint.show{display:block}
 
-#edit-panel{
+#edit-panel,#space-panel{
   position:fixed;top:0;right:0;height:100%;width:340px;max-width:92vw;z-index:45;
   background:var(--cream);box-shadow:-6px 0 30px rgba(74,56,38,.3);
   transform:translateX(105%);transition:transform .3s ease;
-  overflow:auto;padding:22px 20px 40px;user-select:text;-webkit-user-select:text;
+  overflow:auto;user-select:text;-webkit-user-select:text;
+  display:flex;flex-direction:column;
 }
-#edit-panel.open{transform:translateX(0)}
-#edit-panel h3{font-size:19px;font-weight:900;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
-#edit-panel label{display:block;font-size:13px;font-weight:700;margin:12px 0 4px;color:var(--ink-soft)}
+#edit-panel.open,#space-panel.open{transform:translateX(0)}
+.panel-top{
+  position:sticky;top:0;z-index:3;background:var(--cream);
+  padding:18px 20px 12px;border-bottom:1px solid var(--chip-border);
+}
+.panel-head{font-size:18px;font-weight:900;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.panel-head button{border:none;background:none;cursor:pointer;color:var(--ink-soft);padding:4px}
+.panel-head button svg.lucide{width:20px;height:20px}
+.panel-body{padding:6px 20px 40px}
+#edit-panel label,#space-panel label{display:block;font-size:13px;font-weight:700;margin:12px 0 4px;color:var(--ink-soft)}
 #edit-panel input[type=text],#edit-panel input[type=url],#edit-panel input[type=number],
-#edit-panel textarea,#edit-panel select{
+#edit-panel textarea,#edit-panel select,
+#space-panel input[type=text],#space-panel input[type=url]{
   width:100%;border:1px solid var(--chip-border);border-radius:12px;
   padding:9px 12px;font-family:inherit;font-size:15px;background:#fffdf8;color:var(--ink);
 }
 #edit-panel textarea{min-height:84px;resize:vertical}
-#edit-panel .row{display:flex;gap:10px}
-#edit-panel .row>div{flex:1}
+#edit-panel .row,#space-panel .row{display:flex;gap:10px;align-items:center}
+#edit-panel .row>div,#space-panel .row>div{flex:1}
 .type-hint{font-size:12px;color:var(--ink-soft);margin-top:4px;line-height:1.5}
-.panel-actions{display:flex;gap:10px;margin-top:22px}
-.panel-actions .chip{flex:1;justify-content:center}
-#btn-delete{background:#fbe9e2;color:#a33c14;border-color:#e7b8a4}
-#btn-delete:hover{background:#f6d9cc}
-#btn-close-panel{border:none;background:none;font-size:22px;cursor:pointer;color:var(--ink-soft)}
+.panel-actions{display:flex;gap:10px}
+.panel-actions .chip{justify-content:center}
+#btn-done,#btn-done-space{flex:1}
+#btn-delete,#btn-delete-space{background:#fbe9e2;color:#a33c14;border-color:#e7b8a4;flex:0 0 auto}
+#btn-delete:hover,#btn-delete-space:hover{background:#f6d9cc}
+.linkbtn{background:none;border:none;color:var(--terra-deep);font-family:inherit;font-size:13px;
+  font-weight:700;cursor:pointer;padding:4px 0;margin-top:4px}
+#img-extra,#sp-extra{display:none;margin-top:8px}
+#img-extra.show,#sp-extra.show{display:block}
+#img-extra .chip,#sp-extra .chip{flex:0 0 auto;font-size:14px;padding:8px 14px}
 
 /* מקטעי הפאנל לפי סוג */
 .kind-card,.kind-room,.kind-videowall{display:none}
@@ -213,16 +231,16 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 #edit-panel[data-kind="room"] .kind-room{display:block}
 #edit-panel[data-kind="videowall"] .kind-videowall{display:block}
 
-/* הדבקת/גרירת תמונה */
-#paste-zone{
-  border:2px dashed var(--chip-border);border-radius:14px;padding:16px 12px;
+/* הדבקת/גרירת תמונה — קומפקטי */
+#paste-zone,#sp-paste{
+  border:2px dashed var(--chip-border);border-radius:12px;padding:10px 12px;
   text-align:center;font-size:13px;color:var(--ink-soft);cursor:pointer;
   background:#fffdf8;transition:border-color .2s,color .2s;
 }
-#paste-zone:focus,#paste-zone.drag{outline:none;border-color:var(--terra);color:var(--terra-deep);background:#fff7ee}
-#img-preview{margin-top:8px}
-#img-preview img{max-width:100%;border-radius:12px;display:block;box-shadow:0 2px 10px rgba(74,56,38,.18)}
-#img-preview .rm{margin-top:6px;font-size:12px;color:#a33c14;cursor:pointer;background:none;border:none;font-family:inherit}
+#paste-zone:focus,#paste-zone.drag,#sp-paste:focus,#sp-paste.drag{outline:none;border-color:var(--terra);color:var(--terra-deep);background:#fff7ee}
+#img-preview,#sp-preview{margin-top:8px}
+#img-preview img,#sp-preview img{max-width:100%;max-height:140px;object-fit:contain;border-radius:12px;display:block;box-shadow:0 2px 10px rgba(74,56,38,.18)}
+#img-preview .rm,#sp-preview .rm{margin-top:6px;font-size:12px;color:#a33c14;cursor:pointer;background:none;border:none;font-family:inherit}
 
 /* תגית קטגוריה */
 .badge{
@@ -233,6 +251,10 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
   border:1px solid color-mix(in srgb, var(--c,#7a6a55) 34%, transparent);
 }
 .badge svg.lucide{width:15px;height:15px}
+.card-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.card-meta .badge{margin-bottom:0}
+.card-date{display:inline-flex;align-items:center;gap:5px;font-size:13px;color:var(--ink-soft);font-weight:500}
+.card-date svg.lucide{width:14px;height:14px}
 
 /* מדיה בכרטיס */
 .card-embed{width:100%;aspect-ratio:16/9;border:none;border-radius:14px;margin-top:14px;background:#000}
@@ -355,103 +377,136 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 <!-- אדמין -->
 <div id="admin-bar">
   <button id="btn-edit-toggle" class="chip"><i data-lucide="pencil-ruler"></i> מצב עריכה</button>
-  <button id="btn-add" class="chip" style="display:none"><i data-lucide="plus"></i> נקודה חדשה</button>
+  <button id="btn-add" class="chip" style="display:none"><i data-lucide="plus"></i> נקודה</button>
+  <button id="btn-space" class="chip" style="display:none"><i data-lucide="settings"></i> מרחב</button>
+  <button id="btn-add-space" class="chip" style="display:none"><i data-lucide="door-open"></i> מרחב חדש</button>
   <button id="btn-save" class="chip" style="display:none"><i data-lucide="save"></i> שמירה</button>
 </div>
 <div id="edit-hint" class="chip"></div>
 
 <div id="edit-panel" data-kind="card">
-  <h3><span>עריכת נקודה</span><button id="btn-close-panel"><i data-lucide="x"></i></button></h3>
-  <label>כותרת</label>
-  <input type="text" id="f-title">
-  <div class="row">
-    <div>
-      <label>אייקון</label>
-      <input type="text" id="f-icon" maxlength="24" placeholder="radio / 📻">
-      <div class="type-hint">שם Lucide (radio, book-open…) או אימוג'י.</div>
+  <div class="panel-top">
+    <div class="panel-head">
+      <span>עריכת נקודה</span>
+      <button id="btn-close-panel"><i data-lucide="x"></i></button>
     </div>
-    <div>
-      <label>מה זה?</label>
-      <select id="f-kind">
-        <option value="card">כרטיס תוכן</option>
-        <option value="room">דלת — מעבר לחלל</option>
-        <option value="videowall">וידאו חי בסצנה</option>
-      </select>
+    <div class="panel-actions">
+      <button id="btn-delete" class="chip" title="מחיקה"><i data-lucide="trash-2"></i></button>
+      <button id="btn-done" class="chip"><i data-lucide="check"></i> סיום</button>
     </div>
   </div>
 
-  <label>היררכיה</label>
-  <select id="f-tier">
-    <option value="normal">נקודה רגילה</option>
-    <option value="small">נקודה קטנה</option>
-    <option value="title">כותרת אזור (בלי עיגול)</option>
-  </select>
+  <div class="panel-body">
+    <label>כותרת</label>
+    <input type="text" id="f-title">
 
-  <!-- כרטיס תוכן -->
-  <div class="kind-card">
-    <label>קטגוריה</label>
-    <select id="f-category"></select>
-
-    <label>מספרים גדולים (מספר + יחידה)</label>
-    <div id="stats-editor"></div>
-    <button id="btn-add-stat" type="button" class="chip"><i data-lucide="plus"></i> הוסיפי מספר</button>
-
-    <label>תמונה</label>
-    <div id="paste-zone" tabindex="0">📋 לחצי כאן ואז הדביקי תמונה (Ctrl+V) — או גררי קובץ לכאן</div>
-    <button type="button" id="btn-choose-file" class="chip" style="margin-top:6px"><i data-lucide="upload"></i> בחרי קובץ מהמחשב</button>
-    <input type="file" id="f-file" accept="image/*" style="display:none">
-    <input type="url" id="f-image" dir="ltr" placeholder="או הדביקי כתובת תמונה https://..." style="margin-top:6px">
-    <div id="img-preview"></div>
-
-    <label>תיאור</label>
-    <textarea id="f-desc"></textarea>
-
-    <label>קישור לפריט (כפתור בכרטיס — לא זורק החוצה אוטומטית)</label>
-    <input type="url" id="f-link" dir="ltr" placeholder="https://...">
-    <input type="text" id="f-linklabel" placeholder="טקסט הכפתור (ברירת מחדל: פתחו את הפריט)" style="margin-top:6px">
-
-    <label>הטמעה בתוך הכרטיס (iframe, לא חובה)</label>
-    <input type="url" id="f-embed" dir="ltr" placeholder="https://...">
+    <div class="row">
+      <div><label>אייקון</label><input type="text" id="f-icon" maxlength="24" placeholder="radio / 📻"></div>
+      <div>
+        <label>מה זה?</label>
+        <select id="f-kind">
+          <option value="card">כרטיס תוכן</option>
+          <option value="room">דלת — מעבר לחלל</option>
+          <option value="videowall">וידאו בסצנה</option>
+        </select>
+      </div>
+    </div>
 
     <div class="row">
       <div>
-        <label>וידאו (לא חובה)</label>
-        <input type="url" id="f-video" dir="ltr" placeholder="יוטיוב / MP4">
+        <label>היררכיה</label>
+        <select id="f-tier">
+          <option value="normal">נקודה רגילה</option>
+          <option value="small">נקודה קטנה</option>
+          <option value="title">כותרת אזור</option>
+        </select>
       </div>
-      <div>
-        <label>Lottie (לא חובה)</label>
-        <input type="url" id="f-lottie" dir="ltr" placeholder=".json / .lottie">
+      <div><label>מרחב</label><select id="f-space"></select></div>
+    </div>
+
+    <!-- כרטיס תוכן -->
+    <div class="kind-card">
+      <div class="row">
+        <div><label>קטגוריה</label><select id="f-category"></select></div>
+        <div><label>תאריך</label><input type="text" id="f-date" placeholder="14 ביולי 2026"></div>
+      </div>
+
+      <label>מספרים גדולים</label>
+      <div id="stats-editor"></div>
+      <button id="btn-add-stat" type="button" class="chip"><i data-lucide="plus"></i> מספר</button>
+
+      <label>תמונה</label>
+      <div id="paste-zone" tabindex="0">📋 הדביקי (Ctrl+V) או גררי לכאן</div>
+      <div id="img-preview"></div>
+      <button type="button" id="img-more" class="linkbtn">עוד אפשרויות ▾</button>
+      <div id="img-extra">
+        <div class="row">
+          <button type="button" id="btn-choose-file" class="chip"><i data-lucide="upload"></i> קובץ</button>
+          <input type="url" id="f-image" dir="ltr" placeholder="כתובת תמונה">
+        </div>
+      </div>
+      <input type="file" id="f-file" accept="image/*" style="display:none">
+
+      <label>תיאור</label>
+      <textarea id="f-desc"></textarea>
+
+      <label>קישור לפריט</label>
+      <input type="url" id="f-link" dir="ltr" placeholder="https://...">
+      <input type="text" id="f-linklabel" placeholder="טקסט הכפתור" style="margin-top:6px">
+
+      <label>הטמעה</label>
+      <input type="url" id="f-embed" dir="ltr" placeholder="https://...">
+
+      <div class="row">
+        <div><label>וידאו</label><input type="url" id="f-video" dir="ltr" placeholder="יוטיוב / MP4"></div>
+        <div><label>Lottie</label><input type="url" id="f-lottie" dir="ltr" placeholder=".json"></div>
+      </div>
+    </div>
+
+    <!-- דלת -->
+    <div class="kind-room">
+      <label>לאן הדלת מובילה</label>
+      <select id="f-room"></select>
+    </div>
+
+    <!-- וידאו בסצנה -->
+    <div class="kind-videowall">
+      <label>קישור MP4</label>
+      <input type="url" id="f-vwurl" dir="ltr" placeholder="https://.../movie.mp4">
+      <div class="row">
+        <div><label>רוחב°</label><input type="number" id="f-w" min="5" max="120" step="1"></div>
+        <div><label>גובה°</label><input type="number" id="f-h" min="5" max="90" step="1"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- דלת -->
-  <div class="kind-room">
-    <label>לאן הדלת מובילה</label>
-    <select id="f-room"></select>
-    <div class="type-hint">לחיצה על דלת עוברת חלק לחלל אחר, בלי חלונית.</div>
-  </div>
-
-  <!-- וידאו בסצנה -->
-  <div class="kind-videowall">
-    <label>קישור לקובץ MP4</label>
-    <input type="url" id="f-vwurl" dir="ltr" placeholder="https://.../movie.mp4">
-    <div class="type-hint">מוקרן על משטח בתוך הסצנה (מושתק, בלופ). לחיצה פותחת אותו בגדול.</div>
-    <div class="row">
-      <div><label>רוחב°</label><input type="number" id="f-w" min="5" max="120" step="1"></div>
-      <div><label>גובה°</label><input type="number" id="f-h" min="5" max="90" step="1"></div>
+<!-- פאנל מרחב -->
+<div id="space-panel">
+  <div class="panel-top">
+    <div class="panel-head">
+      <span>עריכת מרחב</span>
+      <button id="btn-close-space"><i data-lucide="x"></i></button>
+    </div>
+    <div class="panel-actions">
+      <button id="btn-delete-space" class="chip" title="מחיקת מרחב"><i data-lucide="trash-2"></i></button>
+      <button id="btn-done-space" class="chip"><i data-lucide="check"></i> סיום</button>
     </div>
   </div>
-
-  <div class="type-hint" id="f-kind-hint" style="margin-top:12px"></div>
-
-  <div class="panel-actions">
-    <button id="btn-delete" class="chip"><i data-lucide="trash-2"></i> מחיקה</button>
-    <button id="btn-done" class="chip"><i data-lucide="check"></i> סיום</button>
-  </div>
-  <div class="type-hint" style="margin-top:14px">
-    <i data-lucide="lightbulb" style="width:15px;height:15px;vertical-align:-3px"></i>
-    אפשר לגרור את הנקודה על המסך כדי למקם אותה מחדש.
+  <div class="panel-body">
+    <label>שם המרחב</label>
+    <input type="text" id="sp-title">
+    <label>תמונת רקע 360°</label>
+    <div id="sp-paste" tabindex="0">📋 הדביקי (Ctrl+V) או גררי תמונת פנורמה</div>
+    <div id="sp-preview"></div>
+    <button type="button" id="sp-more" class="linkbtn">עוד אפשרויות ▾</button>
+    <div id="sp-extra">
+      <div class="row">
+        <button type="button" id="sp-choose-file" class="chip"><i data-lucide="upload"></i> קובץ</button>
+        <input type="url" id="sp-image" dir="ltr" placeholder="כתובת תמונה">
+      </div>
+    </div>
+    <input type="file" id="sp-file" accept="image/*" style="display:none">
   </div>
 </div>
 
@@ -466,6 +521,7 @@ let DATA = null;
 let currentSpace = null;
 let isAdmin = false, nonce = '', editMode = false, addMode = false, dirty = false;
 let selectedHs = null;
+let editingSpace = null;
 
 // Three.js
 let scene, camera, renderer, sphereMesh, texLoader;
@@ -561,6 +617,7 @@ function normalizeHotspot(hs) {
   if (!hs.image && hs.preview) hs.image = hs.preview;
   hs.category = hs.category || '';
   hs.tier = hs.tier || 'normal';
+  hs.date = hs.date || '';
   if (!Array.isArray(hs.stats)) hs.stats = [];
   delete hs.type; delete hs.content; delete hs.preview;
   return hs;
@@ -645,11 +702,11 @@ async function switchSpace(id, instant) {
     fade.classList.add('on');
     await new Promise(r => setTimeout(r, 460));
   }
-  const tex = await loadTexture(space);
-  if (tex) {
-    sphereMesh.material.dispose();
-    sphereMesh.material = new THREE.MeshBasicMaterial({ map: tex });
-  }
+  const tex = space.image ? await loadTexture(space) : null;
+  sphereMesh.material.dispose();
+  sphereMesh.material = tex
+    ? new THREE.MeshBasicMaterial({ map: tex })
+    : new THREE.MeshBasicMaterial({ color: 0xe8d9bd });   // מרחב בלי תמונה עדיין
   currentSpace = space;
   lon = (typeof space.startLon === 'number') ? space.startLon : 0;
   lat = 0;
@@ -862,7 +919,11 @@ function mediaHTML(hs) {
 
 // גוף הכרטיס (טקסט): תגית, כותרת, תיאור, מספרים, הטמעה, כפתור
 function cardBodyHTML(hs) {
-  let b = catBadge(hs.category);
+  let b = '';
+  if (hs.category || hs.date) {
+    b += '<div class="card-meta">' + catBadge(hs.category) +
+      (hs.date ? `<span class="card-date"><i data-lucide="calendar"></i> ${esc(hs.date)}</span>` : '') + '</div>';
+  }
   b += `<h2>${iconHTML(hs.icon)} ${esc(hs.title)}</h2>`;
   if (hs.description) b += `<p>${esc(hs.description)}</p>`;
   if (hs.stats && hs.stats.length) {
@@ -1057,23 +1118,23 @@ async function checkAdmin(force) {
   }
 }
 
+const adminButtons = ['btn-add', 'btn-space', 'btn-add-space', 'btn-save'];
 $('btn-edit-toggle').onclick = () => {
   editMode = !editMode;
   addMode = false;
   document.body.classList.toggle('edit-on', editMode);
   $('btn-edit-toggle').classList.toggle('on', editMode);
-  $('btn-add').style.display = editMode ? '' : 'none';
-  $('btn-save').style.display = editMode ? '' : 'none';
+  adminButtons.forEach(id => $(id).style.display = editMode ? '' : 'none');
   $('pano').classList.remove('add-mode');
-  setEditHint(editMode ? 'לחיצה על נקודה — עריכה · גרירה — מיקום מחדש' : '');
-  if (!editMode) closePanel();
+  setEditHint('');
+  if (!editMode) { closePanel(); closeSpacePanel(); }
   refreshHotspotVisibility();
 };
 
 $('btn-add').onclick = () => {
   addMode = !addMode;
   $('pano').classList.toggle('add-mode', addMode);
-  setEditHint(addMode ? '👆 לחצי על מקום ברקע כדי להניח שם נקודה' : 'לחיצה על נקודה — עריכה · גרירה — מיקום מחדש');
+  setEditHint(addMode ? 'לחצי היכן להוסיף נקודה' : '');
 };
 
 function setEditHint(txt) {
@@ -1087,13 +1148,13 @@ function addHotspotAt(ll) {
     lon: Math.round(ll.lon * 10) / 10,
     lat: Math.round(ll.lat * 10) / 10,
     icon: 'map-pin', title: 'נקודה חדשה', description: '',
-    kind: 'card', tier: 'normal', category: '', stats: [],
+    kind: 'card', tier: 'normal', category: '', date: '', stats: [],
     image: '', link: '', linkLabel: '', embed: '', video: '', lottie: ''
   };
   currentSpace.hotspots.push(hs);
   addMode = false;
   $('pano').classList.remove('add-mode');
-  setEditHint('לחיצה על נקודה — עריכה · גרירה — מיקום מחדש');
+  setEditHint('');
   markDirty();
   buildHotspotEls();
   openPanel(hs);
@@ -1156,6 +1217,7 @@ function openPanel(hs) {
   $('f-kind').value = hs.kind || 'card';
   $('f-tier').value = hs.tier || 'normal';
   $('f-category').value = hs.category || '';
+  $('f-date').value = hs.date || '';
   $('f-desc').value = hs.description || '';
   $('f-link').value = hs.link || '';
   $('f-linklabel').value = hs.linkLabel || '';
@@ -1166,10 +1228,23 @@ function openPanel(hs) {
   $('f-vwurl').value = hs.video || '';
   $('f-w').value = hs.w || 30;
   $('f-h').value = hs.h || 17;
+  buildSpaceMoveSelect();
+  $('img-extra').classList.remove('show');
   renderImgPreview();
   renderStatsEditor();
   syncKindUI();
   $('edit-panel').classList.add('open');
+  $('space-panel').classList.remove('open');
+}
+function buildSpaceMoveSelect() {
+  const sel = $('f-space');
+  sel.innerHTML = '';
+  DATA.spaces.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.id; o.textContent = s.title;
+    sel.appendChild(o);
+  });
+  sel.value = currentSpace.id;
 }
 function closePanel() {
   selectedHs = null;
@@ -1182,7 +1257,6 @@ $('btn-done').onclick = closePanel;
 function syncKindUI() {
   const k = $('f-kind').value;
   $('edit-panel').setAttribute('data-kind', k);
-  $('f-kind-hint').textContent = kindHints[k] || '';
   if (k === 'room') {
     const sel = $('f-room');
     sel.innerHTML = '';
@@ -1198,14 +1272,22 @@ function syncKindUI() {
 
 function refreshDot() {
   if (!selectedHs || !selectedHs._el) return;
-  selectedHs._el.querySelector('.hs-dot').innerHTML = iconHTML(selectedHs.icon, 'hs-ic');
-  selectedHs._el.querySelector('.hs-label').textContent = selectedHs.title || '';
+  const el = selectedHs._el;
+  if (selectedHs.tier === 'title') {
+    const t = el.querySelector('.hs-title');
+    if (t) t.innerHTML = (selectedHs.icon ? iconHTML(selectedHs.icon, 'hs-ic') + ' ' : '') + `<span>${esc(selectedHs.title || '')}</span>`;
+  } else {
+    const dot = el.querySelector('.hs-dot');
+    if (dot) dot.innerHTML = iconHTML(selectedHs.icon, 'hs-ic');
+    const lbl = el.querySelector('.hs-label');
+    if (lbl) lbl.textContent = selectedHs.title || '';
+  }
   drawIcons();
 }
 
 // שדות טקסט של הכרטיס
 [
-  ['f-title', 'title'], ['f-icon', 'icon'], ['f-desc', 'description'],
+  ['f-title', 'title'], ['f-icon', 'icon'], ['f-desc', 'description'], ['f-date', 'date'],
   ['f-link', 'link'], ['f-linklabel', 'linkLabel'], ['f-embed', 'embed'],
   ['f-video', 'video'], ['f-lottie', 'lottie']
 ].forEach(([id, key]) => {
@@ -1216,6 +1298,28 @@ function refreshDot() {
     markDirty();
   });
 });
+
+// העברת נקודה למרחב אחר
+$('f-space').addEventListener('change', () => {
+  if (!selectedHs) return;
+  const targetId = $('f-space').value;
+  if (targetId === currentSpace.id) return;
+  const target = getSpace(targetId);
+  if (!target) return;
+  const i = currentSpace.hotspots.indexOf(selectedHs);
+  if (i > -1) currentSpace.hotspots.splice(i, 1);
+  // הסרת קיר וידאו אם יש
+  const wi = videoWalls.findIndex(v => v.hs === selectedHs);
+  if (wi > -1) { const w = videoWalls[wi]; scene.remove(w.mesh); w.mesh.geometry.dispose(); w.mesh.material.dispose(); try { w.video.pause(); } catch (e) {} videoWalls.splice(wi, 1); }
+  target.hotspots.push(selectedHs);
+  markDirty();
+  closePanel();
+  buildHotspotEls();
+  toast('הנקודה הועברה אל "' + target.title + '" ✓');
+});
+
+// עוד אפשרויות תמונה
+$('img-more').onclick = () => $('img-extra').classList.toggle('show');
 
 $('f-image').addEventListener('input', () => {
   if (!selectedHs) return;
@@ -1351,13 +1455,14 @@ pasteZone.addEventListener('drop', async e => {
   e.preventDefault(); pasteZone.classList.remove('drag');
   if (e.dataTransfer.files && e.dataTransfer.files[0]) await applyImageFile(e.dataTransfer.files[0]);
 });
-// הדבקה מכל מקום כשהפאנל פתוח (רק אם יש תמונה בלוח — לא מפריע להדבקת טקסט)
+// הדבקה מכל מקום — מנתבת לפאנל הפתוח (רק אם יש תמונה בלוח)
 document.addEventListener('paste', async e => {
-  if (!selectedHs || !$('edit-panel').classList.contains('open')) return;
   const items = (e.clipboardData && e.clipboardData.items) || [];
-  for (const it of items) {
-    if (it.type && it.type.startsWith('image/')) { e.preventDefault(); await applyImageFile(it.getAsFile()); return; }
-  }
+  let file = null;
+  for (const it of items) { if (it.type && it.type.startsWith('image/')) { file = it.getAsFile(); break; } }
+  if (!file) return;
+  if (selectedHs && $('edit-panel').classList.contains('open')) { e.preventDefault(); await applyImageFile(file); }
+  else if (editingSpace && $('space-panel').classList.contains('open')) { e.preventDefault(); await applySpaceImageFile(file); }
 });
 // כפתור נפרד לבחירת קובץ מהמחשב
 $('btn-choose-file').onclick = () => $('f-file').click();
@@ -1382,6 +1487,114 @@ $('btn-delete').onclick = () => {
   closePanel();
   markDirty();
   buildHotspotEls();
+};
+
+// ————————————————— ניהול מרחבים —————————————————
+$('btn-space').onclick = () => openSpacePanel(currentSpace);
+$('btn-add-space').onclick = async () => {
+  const sp = {
+    id: 'sp' + Date.now().toString(36),
+    title: 'מרחב חדש',
+    image: '',
+    startLon: 0,
+    hotspots: []
+  };
+  DATA.spaces.push(sp);
+  markDirty();
+  buildSpaceNav();
+  await switchSpace(sp.id);
+  openSpacePanel(sp);
+  toast('מרחב חדש נוצר — הוסיפי תמונת רקע 360°');
+};
+
+function openSpacePanel(sp) {
+  editingSpace = sp;
+  closePanel();
+  $('sp-title').value = sp.title || '';
+  $('sp-image').value = (sp.image && sp.image.indexOf('data:') !== 0) ? sp.image : '';
+  $('sp-extra').classList.remove('show');
+  renderSpacePreview();
+  $('btn-delete-space').style.display = DATA.spaces.length > 1 ? '' : 'none';
+  $('space-panel').classList.add('open');
+}
+function closeSpacePanel() {
+  editingSpace = null;
+  $('space-panel').classList.remove('open');
+}
+$('btn-close-space').onclick = closeSpacePanel;
+$('btn-done-space').onclick = closeSpacePanel;
+
+$('sp-title').addEventListener('input', () => {
+  if (!editingSpace) return;
+  editingSpace.title = $('sp-title').value;
+  markDirty();
+  buildSpaceNav();
+});
+$('sp-image').addEventListener('input', () => {
+  if (!editingSpace) return;
+  setSpaceImage($('sp-image').value);
+});
+
+async function applySpaceImageFile(file) {
+  if (!editingSpace || !file || !file.type.startsWith('image/')) return;
+  try {
+    const data = await fileToResizedDataURL(file, 4096, 0.85);   // פנורמה — רזולוציה גבוהה
+    $('sp-image').value = '';
+    setSpaceImage(data);
+    toast('תמונת רקע נוספה 🖼️');
+  } catch (e) { toast('לא הצלחתי לקרוא את התמונה', true); }
+}
+function setSpaceImage(url) {
+  if (!editingSpace) return;
+  editingSpace.image = url;
+  delete textures[editingSpace.id];         // לבטל cache
+  markDirty();
+  renderSpacePreview();
+  if (currentSpace && currentSpace.id === editingSpace.id && url) {
+    loadTexture(editingSpace).then(tex => {
+      if (tex && currentSpace.id === editingSpace.id) {
+        sphereMesh.material.dispose();
+        sphereMesh.material = new THREE.MeshBasicMaterial({ map: tex });
+      }
+    });
+  }
+}
+function renderSpacePreview() {
+  const box = $('sp-preview');
+  if (editingSpace && editingSpace.image) {
+    box.innerHTML = `<img src="${esc(editingSpace.image)}" alt=""><button class="rm" type="button">הסירי תמונה ✕</button>`;
+    box.querySelector('.rm').onclick = () => { setSpaceImage(''); $('sp-image').value = ''; };
+  } else {
+    box.innerHTML = '';
+  }
+}
+const spPaste = $('sp-paste');
+spPaste.addEventListener('click', () => spPaste.focus());
+spPaste.addEventListener('dragover', e => { e.preventDefault(); spPaste.classList.add('drag'); });
+spPaste.addEventListener('dragleave', () => spPaste.classList.remove('drag'));
+spPaste.addEventListener('drop', async e => {
+  e.preventDefault(); spPaste.classList.remove('drag');
+  if (e.dataTransfer.files && e.dataTransfer.files[0]) await applySpaceImageFile(e.dataTransfer.files[0]);
+});
+$('sp-more').onclick = () => $('sp-extra').classList.toggle('show');
+$('sp-choose-file').onclick = () => $('sp-file').click();
+$('sp-file').addEventListener('change', async () => {
+  if ($('sp-file').files[0]) await applySpaceImageFile($('sp-file').files[0]);
+  $('sp-file').value = '';
+});
+$('btn-delete-space').onclick = async () => {
+  if (!editingSpace || DATA.spaces.length <= 1) return;
+  if (!confirm('למחוק את המרחב "' + (editingSpace.title || '') + '" וכל הנקודות בו?')) return;
+  const doomedId = editingSpace.id;
+  DATA.spaces = DATA.spaces.filter(s => s.id !== doomedId);
+  // ניקוי דלתות שהצביעו אליו
+  DATA.spaces.forEach(s => s.hotspots.forEach(h => { if (h.kind === 'room' && h.target === doomedId) h.target = ''; }));
+  delete textures[doomedId];
+  closeSpacePanel();
+  markDirty();
+  buildSpaceNav();
+  await switchSpace(DATA.spaces[0].id);
+  toast('המרחב נמחק');
 };
 
 // ————————————————— טוסט —————————————————
