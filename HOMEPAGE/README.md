@@ -18,12 +18,29 @@
 
 ## פריסה
 
+פריסה מלאה (מומלץ) מתוך תיקיית `HOMEPAGE`:
+
+```powershell
+.\deploy.ps1
+```
+
+אם ערכו תוכן בשרת דרך האדמין ואין לדרוס את `data.json`:
+
+```powershell
+.\deploy.ps1 -SkipData
+```
+
+ידנית:
+
 ```powershell
 scp -F "T:\.ssh\config" HOMEPAGE\site\index.html HOMEPAGE\site\api.php HOMEPAGE\site\data.json hostinger:/home/u630483490/public_html/home/
+scp -F "T:\.ssh\config" HOMEPAGE\site\home.htaccess hostinger:/home/u630483490/public_html/home/.htaccess
 scp -F "T:\.ssh\config" HOMEPAGE\site\img\*.jpg hostinger:/home/u630483490/public_html/home/img/
 ```
 
-שימו לב: `data.json` בשרת מתעדכן דרך ממשק העריכה — לפני דריסה שלו כדאי להוריד את הגרסה מהשרת.
+שימו לב: `data.json` בשרת מתעדכן דרך ממשק העריכה — לפני דריסה שלו כדאי להוריד את הגרסה מהשרת, או להריץ עם `-SkipData`.
+
+כלל Cursor בפרויקט (`.cursor/rules/deploy.mdc`): אחרי שינויים ב-`site/` — Git ואז פריסה מלאה לאתר.
 
 ## עריכה כאדמין
 

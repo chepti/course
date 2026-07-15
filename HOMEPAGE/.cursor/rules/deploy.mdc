@@ -1,0 +1,43 @@
+---
+description: פריסה מלאה ל-chepti.com אחרי שינויים בדף הבית 360
+alwaysApply: true
+---
+
+# פריסה לאתר (Hostinger)
+
+בסוף כל פעולה שמשנה קבצים ב-`HOMEPAGE/site/` (או שמתבקשת פריסה):
+
+1. **קודם** commit + push ל-Git (אם יש שינויים), לפי כללי המשתמש.
+2. **מיד אחר כך** פריסה מלאה לשרת — לא רק Git אם השינוי אמור להופיע באתר החי.
+
+## פקודה מועדפת
+
+מתוך תיקיית `HOMEPAGE`:
+
+```powershell
+.\deploy.ps1
+```
+
+דילוג על `data.json` רק אם ידוע שהשרת מעודכן יותר דרך ממשק האדמין:
+
+```powershell
+.\deploy.ps1 -SkipData
+```
+
+## יעד
+
+- SSH: `Host hostinger` ב-`T:\.ssh\config` (פורט 65002)
+- `UserKnownHostsFile T:/.ssh/known_hosts` (חובה — שם משתמש Windows בעברית שובר נתיב `known_hosts` ברירת מחדל)
+- נתיב מרוחק: `/home/u630483490/public_html/home/`
+- האתר: https://chepti.com/ (rewrite ל-`/home/`)
+
+## מה נפרס בפריסה מלאה
+
+- `site/index.html`, `site/api.php`, `site/data.json`
+- `site/home.htaccess` → `home/.htaccess`
+- `site/img/*.jpg`
+
+## זהירות
+
+- `data.json` בשרת עלול להתעדכן גם דרך `?admin=1`. לפני דריסה — לוודא שהעותק המקומי הוא המקור האמיתי, או להשתמש ב-`-SkipData`.
+- אחרי פריסת HTML יש no-cache ב-`.htaccess` של `/home/` — אין צורך ב-hard refresh בדרך כלל.
