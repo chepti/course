@@ -44,7 +44,10 @@ body{
   position:absolute;transform:translate(-50%,-50%);
   display:flex;flex-direction:column;align-items:center;gap:6px;
   pointer-events:auto;z-index:5;
+  opacity:.7;transition:opacity .2s ease;
 }
+.hotspot:hover{opacity:1;z-index:6}
+.edit-on .hotspot{opacity:.9}
 .hs-dot{
   width:52px;height:52px;border-radius:50%;
   background:var(--chip-bg);backdrop-filter:blur(8px);
@@ -452,8 +455,9 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
       <select id="f-parent"></select>
     </div>
     <div id="children-box">
-      <label>נקודות ילדים (מוצגות בלחיצה על נקודה זו)</label>
+      <label>נקודות שמתכנסות לכאן (מוצגות בלחיצה על נקודה זו)</label>
       <div id="children-list"></div>
+      <select id="f-add-child"></select>
     </div>
 
     <!-- כרטיס תוכן -->
@@ -1305,33 +1309,53 @@ function openPanel(hs) {
 // שדות אב-ילד בפאנל
 function updateRelationUI() {
   if (!selectedHs) return;
+  const isSmall = selectedHs.tier === 'small';
   // בורר "שייכת לנקודה גדולה" — רק לנקודות קטנות
-  const showParent = selectedHs.tier === 'small';
-  $('parent-box').style.display = showParent ? 'block' : 'none';
-  if (showParent) {
+  $('parent-box').style.display = isSmall ? 'block' : 'none';
+  if (isSmall) {
     const sel = $('f-parent');
     sel.innerHTML = '<option value="">— עצמאית —</option>';
-    currentSpace.hotspots.filter(h => h !== selectedHs && h.tier !== 'small').forEach(h => {
+    currentSpace.hotspots.filter(h => h !== selectedHs && h.tier !== 'small' && h.kind !== 'room').forEach(h => {
       const o = document.createElement('option');
       o.value = h.id; o.textContent = (h.title || h.id);
       sel.appendChild(o);
     });
     sel.value = selectedHs.parent || '';
   }
-  // רשימת ילדים — לכל נקודה שיש לה ילדים
-  const kids = childrenOf(selectedHs);
-  $('children-box').style.display = kids.length ? 'block' : 'none';
-  const box = $('children-list');
-  box.innerHTML = '';
-  kids.forEach(k => {
-    const chip = document.createElement('span');
-    chip.className = 'child-chip';
-    chip.innerHTML = `<span>${esc(k.title || 'ללא שם')}</span><button class="det" type="button" title="ניתוק">✕</button>`;
-    chip.querySelector('span').onclick = () => openPanel(k);
-    chip.querySelector('.det').onclick = () => { k.parent = ''; markDirty(); buildHotspotEls(); updateRelationUI(); highlightRelated(); };
-    box.appendChild(chip);
-  });
+  // ניהול ילדים — לנקודה גדולה (רגילה/כותרת) אפשר לצרף נקודות שיתכנסו לתוכה
+  $('children-box').style.display = isSmall ? 'none' : 'block';
+  if (!isSmall) {
+    const kids = childrenOf(selectedHs);
+    const box = $('children-list');
+    box.innerHTML = '';
+    kids.forEach(k => {
+      const chip = document.createElement('span');
+      chip.className = 'child-chip';
+      chip.innerHTML = `<span>${esc(k.title || 'ללא שם')}</span><button class="det" type="button" title="ניתוק">✕</button>`;
+      chip.querySelector('span').onclick = () => openPanel(k);
+      chip.querySelector('.det').onclick = () => { k.parent = ''; markDirty(); buildHotspotEls(); updateRelationUI(); highlightRelated(); };
+      box.appendChild(chip);
+    });
+    // בורר צירוף: כל נקודה אחרת בחלל שאינה דלת ואינה כבר ילד
+    const add = $('f-add-child');
+    add.innerHTML = '<option value="">➕ צרפי נקודה שתתכנס לכאן…</option>';
+    currentSpace.hotspots.filter(h => h !== selectedHs && h.kind !== 'room' && h.parent !== selectedHs.id && !hasChildren(h)).forEach(h => {
+      const o = document.createElement('option');
+      o.value = h.id; o.textContent = (h.title || h.id);
+      add.appendChild(o);
+    });
+    add.value = '';
+  }
 }
+
+// צירוף נקודה כילד מצד הנקודה הגדולה
+$('f-add-child').addEventListener('change', () => {
+  if (!selectedHs) return;
+  const id = $('f-add-child').value;
+  if (!id) return;
+  const child = currentSpace.hotspots.find(h => h.id === id);
+  if (child) { child.parent = selectedHs.id; child.tier = 'small'; markDirty(); buildHotspotEls(); updateRelationUI(); highlightRelated(); }
+});
 
 function highlightRelated() {
   document.querySelectorAll('.hotspot.hs-related').forEach(el => el.classList.remove('hs-related'));
