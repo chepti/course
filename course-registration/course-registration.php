@@ -844,9 +844,55 @@ function car_send_test_email() {
 }
 add_action('wp_ajax_car_send_test_email', 'car_send_test_email');
 
+// Render the post-registration success screen (WhatsApp groups + enter course)
+// Shown on /thank-you/?registered=1 regardless of payment params.
+function car_render_success_screen() {
+    $whatsapp_gold   = get_option('car_whatsapp_gold', 'https://chat.whatsapp.com/F053eDddoLoIDD2MOPUbCy');
+    $whatsapp_silver = get_option('car_whatsapp_silver', 'https://chat.whatsapp.com/CYHeVm1bnXY461koFteTff');
+    $course_url      = 'https://tikshuv.chepti.com/aia/';
+
+    return '<style>
+        @import url("https://fonts.googleapis.com/css2?family=Varela+Round&display=swap");
+        .car-success-wrapper { font-family: "Varela Round", sans-serif; max-width: 600px; margin: 40px auto; padding: 0; }
+        .car-success-container { background: linear-gradient(135deg, #4A90E2 0%, #F7D979 100%); border-radius: 20px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); text-align: right; direction: rtl; }
+        .car-success-message { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center; margin-bottom: 30px; }
+        .car-success-title { font-size: 28px; font-weight: bold; color: #4A90E2; margin: 0 0 15px 0; }
+        .car-success-text { font-size: 18px; color: #333; margin: 0 0 10px 0; line-height: 1.6; }
+        .car-enter-course-btn { display: block; margin-top: 20px; padding: 16px 20px; background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%); color: #fff; text-decoration: none; border-radius: 12px; text-align: center; font-weight: bold; font-size: 20px; box-shadow: 0 4px 15px rgba(74,144,226,0.3); }
+        .car-whatsapp-groups { background: rgba(255,255,255,0.95); border-radius: 15px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .car-whatsapp-title { font-size: 24px; font-weight: bold; color: #4A90E2; text-align: center; margin: 0 0 20px 0; }
+        .car-whatsapp-buttons { display: grid; gap: 15px; }
+        .car-whatsapp-btn { display: block; padding: 18px 20px; text-decoration: none; border-radius: 12px; text-align: center; font-weight: bold; font-size: 20px; font-family: "Varela Round", sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .car-whatsapp-gold { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); color: #000; }
+        .car-whatsapp-silver { background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%); color: #fff; }
+    </style>
+    <div class="car-success-wrapper">
+        <div class="car-success-container">
+            <div class="car-success-message">
+                <h2 class="car-success-title">רישום הושלם בהצלחה! 🎉</h2>
+                <p class="car-success-text">חשבון נפתח עבורך בהצלחה. פרטי ההתחברות נשלחו לכתובת האימייל שלך.</p>
+                <p class="car-success-text" style="font-weight:bold;">תודה, מייל נשלח אליך עם פרטי הכניסה.</p>
+                <a href="' . esc_url($course_url) . '" class="car-enter-course-btn">כניסה לקורס ▶</a>
+            </div>
+            <div class="car-whatsapp-groups">
+                <h3 class="car-whatsapp-title">הצטרפו לקבוצות הווטסאפ שלנו!</h3>
+                <div class="car-whatsapp-buttons">
+                    <a href="' . esc_url($whatsapp_gold) . '" target="_blank" rel="noopener noreferrer" class="car-whatsapp-btn car-whatsapp-gold">📱 מסלול זהב</a>
+                    <a href="' . esc_url($whatsapp_silver) . '" target="_blank" rel="noopener noreferrer" class="car-whatsapp-btn car-whatsapp-silver">📱 מסלול כסף</a>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
+
 // Thank you page shortcode
 function car_thank_you_shortcode() {
     error_log('CAR: Thank you shortcode triggered');
+
+    // מסך הצלחה אחרי הרשמה - עצמאי, לפני כל בדיקת פרמטרים או הפניה
+    if (isset($_GET['registered']) && $_GET['registered'] == '1') {
+        return car_render_success_screen();
+    }
     // Get parameters from POST first (most payment gateways use POST), then GET
     $email = '';
     $name = '';
@@ -941,11 +987,14 @@ function car_thank_you_shortcode() {
         }
     }
 
-    // Block direct access when אין מזהה תשלום
+    // Block direct access when אין מזהה תשלום (מנהלים רואים תצוגה מקדימה של הטופס)
     if (!$is_sumit) {
-        error_log('CAR: Thank you accessed without Sumit parameters, redirecting');
-        wp_safe_redirect(home_url());
-        exit;
+        if (!current_user_can('manage_options')) {
+            error_log('CAR: Thank you accessed without Sumit parameters, redirecting');
+            wp_safe_redirect(home_url());
+            exit;
+        }
+        // מנהל מחובר: ממשיכים כדי להציג את טופס הרישום לתצוגה מקדימה
     }
     
     // Debug mode - show what we received (only for admins)
@@ -1114,8 +1163,8 @@ function car_thank_you_shortcode() {
                     car_mark_payment_as_used($payment_id_to_mark);
                 }
                 
-                // Redirect למניעת רענון כפול והצגת הודעת תודה
-                $redirect_url = add_query_arg(['registered' => '1'], 'https://tikshuv.chepti.com/aia/');
+                // Redirect למניעת רענון כפול והצגת מסך התודה (נשאר ב-thank-you שבו יש shortcode)
+                $redirect_url = add_query_arg(['registered' => '1'], 'https://tikshuv.chepti.com/thank-you/');
                 wp_redirect($redirect_url);
                 exit;
             }
