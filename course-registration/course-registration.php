@@ -288,41 +288,62 @@ function car_mark_payment_as_used($payment_id) {
     }
 }
 
-// Get Sumit customer data from API
-function car_get_sumit_customer_data($customer_id, $api_key, $api_secret) {
-    // Sumit API endpoint (adjust if needed)
-    $api_url = 'https://api.sumit.co.il/v1/customers/' . urlencode($customer_id);
-    
-    $headers = [
-        'Content-Type' => 'application/json',
-    ];
-    if (!empty($api_secret)) {
-        $headers['Authorization'] = 'Basic ' . base64_encode($api_key . ':' . $api_secret);
-    } else {
-        $headers['Authorization'] = 'Bearer ' . $api_key;
-        $headers['X-API-Key'] = $api_key;
-    }
-    
-    $response = wp_remote_get($api_url, [
-        'headers' => $headers,
-        'timeout' => 10,
-    ]);
-    
-    if (is_wp_error($response)) {
+// Generic POST to the Sumit/OfficeGuy REST API with Credentials (CompanyID + APIKey).
+// Sumit's API does NOT use a secret – only APIKey + CompanyID (business id).
+function car_sumit_api_post($endpoint, $extra = []) {
+    $api_key    = get_option('car_sumit_api_key', '');
+    $company_id = get_option('car_sumit_business_id', '');
+    if (empty($api_key) || empty($company_id)) {
         return false;
     }
-    
-    $body = wp_remote_retrieve_body($response);
-    $data = json_decode($body, true);
-    
-    if ($data && isset($data['email'])) {
-        return [
-            'email' => $data['email'],
-            'name' => isset($data['name']) ? $data['name'] : (isset($data['firstName']) && isset($data['lastName']) ? $data['firstName'] . ' ' . $data['lastName'] : ''),
-        ];
+
+    $payload = array_merge([
+        'Credentials' => [
+            'CompanyID' => (int) $company_id,
+            'APIKey'    => $api_key,
+        ],
+    ], $extra);
+
+    $response = wp_remote_post('https://api.sumit.co.il' . $endpoint, [
+        'headers' => ['Content-Type' => 'application/json'],
+        'body'    => wp_json_encode($payload),
+        'timeout' => 12,
+    ]);
+
+    if (is_wp_error($response)) {
+        error_log('CAR: Sumit API transport error ' . $endpoint . ' - ' . $response->get_error_message());
+        return false;
     }
-    
-    return false;
+
+    $data = json_decode(wp_remote_retrieve_body($response), true);
+    if (!is_array($data)) {
+        error_log('CAR: Sumit API non-JSON response from ' . $endpoint);
+        return false;
+    }
+    return $data;
+}
+
+// Fetch customer email + name from a Sumit document (the paying customer on that document).
+// Returns ['email'=>..,'name'=>..] or false. Verified path: Data.Document.Customer.EmailAddress/Name, Status==0.
+function car_get_sumit_customer_from_document($document_id) {
+    if (empty($document_id)) {
+        return false;
+    }
+    $data = car_sumit_api_post('/accounting/documents/getdetails/', ['DocumentID' => (int) $document_id]);
+    if (!$data || !isset($data['Status']) || (int) $data['Status'] !== 0) {
+        $msg = (is_array($data) && isset($data['UserErrorMessage'])) ? $data['UserErrorMessage'] : 'unknown';
+        error_log('CAR: Sumit getdetails failed for document ' . $document_id . ' - ' . $msg);
+        return false;
+    }
+    $customer = isset($data['Data']['Document']['Customer']) ? $data['Data']['Document']['Customer'] : null;
+    if (!$customer || empty($customer['EmailAddress'])) {
+        error_log('CAR: Sumit document ' . $document_id . ' has no customer email');
+        return false;
+    }
+    return [
+        'email' => sanitize_email($customer['EmailAddress']),
+        'name'  => isset($customer['Name']) ? sanitize_text_field($customer['Name']) : '',
+    ];
 }
 
 // Force assign role to user (used after user creation)
@@ -949,6 +970,11 @@ function car_thank_you_shortcode() {
         $is_sumit = true;
         $sumit_customer_id = isset($_GET['OG-CustomerID']) ? sanitize_text_field($_GET['OG-CustomerID']) : sanitize_text_field($_POST['OG-CustomerID']);
         $sumit_payment_id = isset($_GET['OG-PaymentID']) ? sanitize_text_field($_GET['OG-PaymentID']) : (isset($_POST['OG-PaymentID']) ? sanitize_text_field($_POST['OG-PaymentID']) : '');
+        $sumit_document_id = isset($_GET['OG-DocumentID']) ? sanitize_text_field($_GET['OG-DocumentID']) : (isset($_POST['OG-DocumentID']) ? sanitize_text_field($_POST['OG-DocumentID']) : '');
+
+        // Diagnostic: log exactly which OfficeGuy params arrived (helps map the redirect once).
+        error_log('CAR: Sumit redirect params - CustomerID=' . $sumit_customer_id . ' PaymentID=' . $sumit_payment_id . ' DocumentID=' . $sumit_document_id . ' | all keys: ' . implode(',', array_keys(array_merge($_GET, $_POST))));
+
         if (empty($sumit_payment_id) || empty($sumit_customer_id)) {
             error_log('CAR: Sumit detected but missing IDs');
             wp_safe_redirect(home_url());
@@ -972,17 +998,20 @@ function car_thank_you_shortcode() {
             }
         }
         
-        // Try to get customer info from Sumit API if configured
+        // Try to get customer email + name automatically from Sumit (only needs API Key + Business ID).
+        // Reliable path is by DocumentID (Data.Document.Customer). If the redirect didn't include one,
+        // we fall through to the manual form below.
         $sumit_api_key = get_option('car_sumit_api_key', '');
-        $sumit_api_secret = get_option('car_sumit_api_secret', '');
-        
-        if (!empty($sumit_api_key) && !empty($sumit_api_secret) && !empty($sumit_customer_id)) {
-            $sumit_customer_data = car_get_sumit_customer_data($sumit_customer_id, $sumit_api_key, $sumit_api_secret);
-            if ($sumit_customer_data && isset($sumit_customer_data['email'])) {
-                $email = sanitize_email($sumit_customer_data['email']);
-            }
-            if ($sumit_customer_data && isset($sumit_customer_data['name'])) {
-                $name = sanitize_text_field($sumit_customer_data['name']);
+        if (!empty($sumit_api_key) && !empty($sumit_document_id) && (empty($email) || empty($name))) {
+            $sumit_customer_data = car_get_sumit_customer_from_document($sumit_document_id);
+            if ($sumit_customer_data && !empty($sumit_customer_data['email'])) {
+                if (empty($email)) {
+                    $email = $sumit_customer_data['email'];
+                }
+                if (empty($name) && !empty($sumit_customer_data['name'])) {
+                    $name = $sumit_customer_data['name'];
+                }
+                error_log('CAR: Auto-fetched customer from Sumit document ' . $sumit_document_id . ' - email=' . $email);
             }
         }
     }
