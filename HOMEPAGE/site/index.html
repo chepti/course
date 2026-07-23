@@ -405,7 +405,8 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 
 <!-- אדמין -->
 <div id="admin-bar">
-  <button id="btn-edit-toggle" class="chip"><i data-lucide="pencil-ruler"></i> מצב עריכה</button>
+  <a id="btn-admin-login" class="chip" href="/wp-login.php" style="display:none"><i data-lucide="log-in"></i> התחברות לעריכה</a>
+  <button id="btn-edit-toggle" class="chip" style="display:none"><i data-lucide="pencil-ruler"></i> מצב עריכה</button>
   <button id="btn-add" class="chip" style="display:none"><i data-lucide="plus"></i> נקודה</button>
   <button id="btn-space" class="chip" style="display:none"><i data-lucide="settings"></i> מרחב</button>
   <button id="btn-add-space" class="chip" style="display:none"><i data-lucide="door-open"></i> מרחב חדש</button>
@@ -537,7 +538,7 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
     <input type="text" id="sp-title">
     <label>כתובת קצרה (בסוף הקישור)</label>
     <input type="text" id="sp-slug" dir="ltr" placeholder="works" autocomplete="off" spellcheck="false">
-    <div class="type-hint" id="sp-slug-hint">הקישור יהיה: ?space=works</div>
+    <div class="type-hint" id="sp-slug-hint">הקישור יהיה: chepti.com/works</div>
     <label>תמונת רקע 360°</label>
     <div id="sp-paste" tabindex="0">📋 הדביקי (Ctrl+V) או גררי תמונת פנורמה</div>
     <div id="sp-preview"></div>
@@ -558,10 +559,11 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 'use strict';
 
 // ————————————————— מצב גלובלי —————————————————
-const API = 'api.php';
+const API = '/home/api.php';
 let DATA = null;
 let currentSpace = null;
 let isAdmin = false, nonce = '', editMode = false, addMode = false, dirty = false;
+let wantAdmin = false;
 let selectedHs = null;
 let editingSpace = null;
 let expandedParents = new Set();
@@ -700,8 +702,11 @@ async function boot() {
   $('btn-contact').href = /^https?:\/\//.test(contact.contactUrl || '') ? contact.contactUrl : DEFAULT_CONTACT;
   if (contact.contactLabel) $('btn-contact').querySelector('.txt').textContent = contact.contactLabel;
 
-  const params = new URLSearchParams(location.search);
-  const startId = params.get('space') || (DATA.settings && DATA.settings.startSpace) || DATA.spaces[0].id;
+  const route = parseHomeRoute();
+  wantAdmin = route.wantAdmin;
+  const startId = route.spaceId
+    || (DATA.settings && DATA.settings.startSpace)
+    || DATA.spaces[0].id;
   await switchSpace(startId, true);
 
   $('loader').classList.add('hidden');
@@ -709,9 +714,38 @@ async function boot() {
   setTimeout(() => $('hint').classList.add('hidden'), 7000);
 
   animate();
-  checkAdmin(params.has('admin'));
+  checkAdmin(wantAdmin);
   // טעינה מוקדמת של שאר החללים ברקע
   DATA.spaces.forEach(s => loadTexture(s));
+}
+
+/** כתובות קצרות: /learn /works /edit — וגם תאימות לאחור ל-?space= / ?admin=1 */
+function parseHomeRoute() {
+  const params = new URLSearchParams(location.search);
+  const parts = location.pathname.replace(/\/+$/, '').split('/').filter(Boolean);
+  if (parts[0] === 'home') parts.shift();
+
+  let wantAdmin = params.has('admin') || parts[0] === 'edit';
+  let spaceId = params.get('space');
+
+  if (!spaceId && parts.length && parts[0] !== 'edit') {
+    const candidate = parts[0].toLowerCase();
+    if (getSpace(candidate)) spaceId = candidate;
+  }
+  return { wantAdmin, spaceId };
+}
+
+function startSpaceId() {
+  return (DATA.settings && DATA.settings.startSpace) || (DATA.spaces[0] && DATA.spaces[0].id) || 'entrance';
+}
+
+function pathForSpace(id) {
+  if (!id || id === startSpaceId()) return '/';
+  return '/' + encodeURIComponent(id);
+}
+
+function publicSpaceUrl(id) {
+  return 'chepti.com' + pathForSpace(id);
 }
 
 function initThree() {
@@ -771,9 +805,10 @@ async function switchSpace(id, instant) {
   buildHotspotEls();
   buildVideoWalls();
   updateSpaceNav();
-  const url = new URL(location);
-  url.searchParams.set('space', id);
-  history.replaceState(null, '', url);
+  const next = pathForSpace(id);
+  if (location.pathname.replace(/\/+$/, '') !== next.replace(/\/+$/, '') || location.search) {
+    history.replaceState(null, '', next);
+  }
   if (!instant) setTimeout(() => fade.classList.remove('on'), 60);
 }
 
@@ -1202,21 +1237,63 @@ function animate() {
 }
 
 // ————————————————— אדמין —————————————————
+function adminLoginUrl() {
+  const redirect = location.origin + '/edit';
+  return '/wp-login.php?redirect_to=' + encodeURIComponent(redirect);
+}
+
+function showAdminLoginPrompt(msg) {
+  const bar = $('admin-bar');
+  const loginBtn = $('btn-admin-login');
+  const editBtn = $('btn-edit-toggle');
+  bar.classList.add('show');
+  loginBtn.style.display = '';
+  loginBtn.href = adminLoginUrl();
+  editBtn.style.display = 'none';
+  drawIcons();
+  if (msg) toast(msg, true);
+}
+
+function showAdminControls() {
+  const bar = $('admin-bar');
+  const loginBtn = $('btn-admin-login');
+  const editBtn = $('btn-edit-toggle');
+  bar.classList.add('show');
+  loginBtn.style.display = 'none';
+  editBtn.style.display = '';
+  drawIcons();
+}
+
 async function checkAdmin(force) {
   if (!force && localStorage.getItem('home360_admin') !== '1') return;
   try {
-    const res = await fetch(API + '?action=me', { credentials: 'same-origin' });
+    const redirect = encodeURIComponent(location.origin + '/edit');
+    const res = await fetch(API + '?action=me&redirect=' + redirect, {
+      credentials: 'same-origin',
+      cache: 'no-store'
+    });
     const j = await res.json();
     if (j.admin) {
       isAdmin = true; nonce = j.nonce;
       localStorage.setItem('home360_admin', '1');
-      $('admin-bar').classList.add('show');
+      showAdminControls();
+      if (force && /\/edit\/?$/.test(location.pathname)) {
+        history.replaceState(null, '', pathForSpace(currentSpace ? currentSpace.id : startSpaceId()));
+      }
     } else {
       localStorage.removeItem('home360_admin');
-      if (force) toast('לא מחוברת כאדמין — התחברי לוורדפרס ונסי שוב', true);
+      isAdmin = false;
+      if (force) {
+        if (j.loggedIn) {
+          showAdminLoginPrompt('מחוברת לוורדפרס אבל בלי הרשאת מנהלת (manage_options)');
+        } else {
+          showAdminLoginPrompt('צריך להתחבר לוורדפרס כמנהלת — לחצי «התחברות לעריכה»');
+        }
+        if (j.loginUrl) $('btn-admin-login').href = j.loginUrl;
+      }
     }
   } catch (e) {
-    if (force) toast('שגיאה בבדיקת הרשאות', true);
+    if (force) showAdminLoginPrompt('שגיאה בבדיקת הרשאות — נסי התחברות מחדש');
   }
 }
 
@@ -1683,7 +1760,7 @@ function slugifySpaceId(raw) {
 function updateSlugHint(id) {
   const hint = $('sp-slug-hint');
   if (!hint) return;
-  hint.textContent = id ? ('הקישור יהיה: ?space=' + id) : 'אותיות באנגלית, מספרים, מקף או קו תחתון';
+  hint.textContent = id ? ('הקישור יהיה: ' + publicSpaceUrl(id)) : 'אותיות באנגלית, מספרים, מקף או קו תחתון';
 }
 function renameSpaceId(sp, nextId) {
   const oldId = sp.id;
@@ -1703,9 +1780,7 @@ function renameSpaceId(sp, nextId) {
     delete textures[oldId];
   }
   if (currentSpace && currentSpace.id === id) {
-    const url = new URL(location);
-    url.searchParams.set('space', id);
-    history.replaceState(null, '', url);
+    history.replaceState(null, '', pathForSpace(id));
   }
   return { ok: true, id };
 }
@@ -1729,7 +1804,7 @@ $('btn-add-space').onclick = async () => {
   await switchSpace(sp.id);
   openSpacePanel(sp);
   toast(suggested && suggested === id
-    ? ('מרחב חדש נוצר — הקישור: ?space=' + id)
+    ? ('מרחב חדש נוצר — הקישור: ' + publicSpaceUrl(id))
     : 'מרחב חדש נוצר — הוסיפי תמונת רקע 360° (אפשר לערוך את הכתובת הקצרה)');
 };
 
@@ -1779,7 +1854,7 @@ $('sp-slug').addEventListener('change', () => {
   if (result.id === prev) return;
   markDirty();
   buildSpaceNav();
-  toast('הכתובת עודכנה: ?space=' + result.id);
+  toast('הכתובת עודכנה: ' + publicSpaceUrl(result.id));
 });
 $('sp-image').addEventListener('input', () => {
   if (!editingSpace) return;

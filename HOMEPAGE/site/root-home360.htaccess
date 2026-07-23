@@ -1,0 +1,8 @@
+# BEGIN HOME360
+# דף הבית 360 — שורש + כתובות קצרות למרחבים (chepti.com/learn)
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^$ /home/index.html [L]
+RewriteRule ^(edit|entrance|learn|works)/?$ /home/index.html [L]
+</IfModule>
+# END HOME360

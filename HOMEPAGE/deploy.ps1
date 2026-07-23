@@ -66,6 +66,43 @@ if (Test-Path -LiteralPath $htaccess) {
   if ($LASTEXITCODE -ne 0) { throw "scp failed for .htaccess, exit=$LASTEXITCODE" }
 }
 
+$rootSnippet = Join-Path $site 'root-home360.htaccess'
+if (Test-Path -LiteralPath $rootSnippet) {
+  & $scp @sshOpts $rootSnippet 'hostinger:/home/u630483490/public_html/home/root-home360.htaccess'
+  if ($LASTEXITCODE -ne 0) { throw "scp failed for root snippet, exit=$LASTEXITCODE" }
+  $ssh = $null
+  foreach ($candidate in @(
+    'C:\Windows\System32\OpenSSH\ssh.exe',
+    'T:\תוכנות\Git\usr\bin\ssh.exe',
+    'ssh'
+  )) {
+    if ($candidate -eq 'ssh' -or (Test-Path -LiteralPath $candidate)) { $ssh = $candidate; break }
+  }
+  if ($ssh) {
+    $patch = @'
+python3 - <<'PY'
+from pathlib import Path
+root = Path('/home/u630483490/public_html/.htaccess')
+snippet = Path('/home/u630483490/public_html/home/root-home360.htaccess').read_text(encoding='utf-8').strip() + '\n\n'
+text = root.read_text(encoding='utf-8')
+start, end = '# BEGIN HOME360', '# END HOME360'
+if start in text and end in text:
+    pre = text.split(start, 1)[0]
+    post = text.split(end, 1)[1]
+    if post.startswith('\n'): post = post[1:]
+    text = pre + snippet + post
+else:
+    text = snippet + text
+root.write_text(text, encoding='utf-8')
+print('root htaccess HOME360 updated')
+PY
+rm -f public_html/home/_diag_auth.php public_html/home/root-home360.htaccess
+'@
+    & $ssh @sshOpts hostinger $patch
+    if ($LASTEXITCODE -ne 0) { throw "ssh root htaccess patch failed, exit=$LASTEXITCODE" }
+  }
+}
+
 $imgDir = Join-Path $site 'img'
 $images = @(Get-ChildItem -LiteralPath $imgDir -Filter '*.jpg' -ErrorAction SilentlyContinue)
 if ($images.Count -gt 0) {
@@ -76,4 +113,6 @@ if ($images.Count -gt 0) {
 
 Write-Host '=== Deploy complete ===' -ForegroundColor Green
 Write-Host 'https://chepti.com/'
-Write-Host 'https://chepti.com/?space=works'
+Write-Host 'https://chepti.com/learn'
+Write-Host 'https://chepti.com/works'
+Write-Host 'https://chepti.com/edit'

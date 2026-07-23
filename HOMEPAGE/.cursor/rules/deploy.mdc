@@ -27,17 +27,19 @@ alwaysApply: true
 ## יעד
 
 - SSH: `Host hostinger` ב-`T:\.ssh\config` (פורט 65002)
-- `UserKnownHostsFile T:/.ssh/known_hosts` (חובה — שם משתמש Windows בעברית שובר נתיב `known_hosts` ברירת מחדל)
+- `UserKnownHostsFile T:/.ssh/known_hosts`
 - נתיב מרוחק: `/home/u630483490/public_html/home/`
-- האתר: https://chepti.com/ (rewrite ל-`/home/`)
+- האתר: https://chepti.com/
+- כתובות מרחב: https://chepti.com/learn , https://chepti.com/works
+- עריכה: https://chepti.com/edit
 
 ## מה נפרס בפריסה מלאה
 
 - `site/index.html`, `site/api.php`, `site/data.json`
 - `site/home.htaccess` → `home/.htaccess`
+- עדכון בלוק `# BEGIN HOME360` ב-`public_html/.htaccess`
 - `site/img/*.jpg`
 
 ## זהירות
 
-- `data.json` בשרת עלול להתעדכן גם דרך `?admin=1`. לפני דריסה — לוודא שהעותק המקומי הוא המקור האמיתי, או להשתמש ב-`-SkipData`.
-- אחרי פריסת HTML יש no-cache ב-`.htaccess` של `/home/` — אין צורך ב-hard refresh בדרך כלל.
+- `data.json` בשרת עלול להתעדכן גם דרך מצב עריכה — לפני דריסה לוודא שהמקור נכון, או `-SkipData`.

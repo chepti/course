@@ -10,3 +10,11 @@
   RewriteEngine On
   RewriteRule \.html$ - [E=Cache-Control:no-cache]
 </IfModule>
+
+# כתובות קצרות גם תחת /home/learn (בנוסף לשורש chepti.com/learn)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^([a-z0-9_-]+)/?$ /home/index.html [L]
+</IfModule>
