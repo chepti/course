@@ -106,6 +106,13 @@ if ($home360_action === 'me') {
     exit;
 }
 
+// גרסת הנתונים הנוכחית בשרת (זמן שינוי הקובץ) — לזיהוי דריסה
+if ($home360_action === 'version') {
+    clearstatcache(true, $dataFile);
+    echo json_encode(array('version' => file_exists($dataFile) ? (int) filemtime($dataFile) : 0));
+    exit;
+}
+
 if ($home360_action === 'save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$isAdmin) {
         http_response_code(403);
@@ -127,6 +134,21 @@ if ($home360_action === 'save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // ——— הגנה מפני דריסה: אם הקובץ בשרת עודכן מאז שהדפדפן טען אותו, לא לשמור ———
+    // הגרסה בשרת נקבעת לפי זמן השינוי של הקובץ, כדי שגם עדכון ידני (scp) ייספר.
+    $serverVersion = file_exists($dataFile) ? (int) filemtime($dataFile) : 0;
+    $clientVersion = isset($_SERVER['HTTP_X_HOME360_VERSION']) ? (int) $_SERVER['HTTP_X_HOME360_VERSION'] : 0;
+    $force = isset($_GET['force']) && $_GET['force'] === '1';
+    if (!$force && $serverVersion > 0 && $clientVersion !== $serverVersion) {
+        http_response_code(409);
+        echo json_encode(array(
+            'error' => 'stale',
+            'serverVersion' => $serverVersion,
+            'clientVersion' => $clientVersion
+        ));
+        exit;
+    }
+
     if (file_exists($dataFile)) {
         copy($dataFile, __DIR__ . '/data.backup.json');
     }
@@ -140,8 +162,13 @@ if ($home360_action === 'save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    clearstatcache(true, $dataFile);
     $rewrote = home360_update_root_rewrites($json['spaces']);
-    echo json_encode(array('ok' => true, 'rewrites' => $rewrote));
+    echo json_encode(array(
+        'ok' => true,
+        'rewrites' => $rewrote,
+        'version' => (int) filemtime($dataFile)
+    ));
     exit;
 }
 

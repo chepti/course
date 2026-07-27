@@ -567,6 +567,7 @@ let wantAdmin = false;
 let selectedHs = null;
 let editingSpace = null;
 let expandedParents = new Set();
+let dataVersion = 0;   // גרסת הנתונים שנטענה — למניעת דריסה של שינויים מאוחרים יותר
 
 // Three.js
 let scene, camera, renderer, sphereMesh, texLoader;
@@ -673,6 +674,9 @@ function normalizeHotspot(hs) {
 // ————————————————— אתחול —————————————————
 async function boot() {
   drawIcons();   // להציג את אייקון הבית במסך הטעינה מיד (לפני שהנתונים נטענים)
+  // קודם הגרסה ואז הנתונים — כך שאם מישהו שומר בין השניים, הגרסה שנרשמה
+  // תהיה ישנה מהקובץ והשמירה הבאה תיחסם (במקום לדרוס בשקט)
+  await fetchDataVersion();
   try {
     const res = await fetch('data.json?ts=' + Date.now(), { cache: 'no-store' });
     DATA = await res.json();
@@ -1344,18 +1348,47 @@ function markDirty() {
   $('btn-save').classList.add('dirty');
 }
 
-$('btn-save').onclick = async () => {
-  const clean = JSON.parse(JSON.stringify(DATA, (k, v) => k === '_el' ? undefined : v));
+async function fetchDataVersion() {
   try {
-    const res = await fetch(API + '?action=save', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json', 'X-Home360-Nonce': nonce },
-      body: JSON.stringify(clean)
-    });
-    const j = await res.json();
+    const r = await fetch(API + '?action=version', { credentials: 'same-origin', cache: 'no-store' });
+    const j = await r.json();
+    dataVersion = j.version || 0;
+  } catch (e) { dataVersion = 0; }
+}
+
+async function saveData(force) {
+  const clean = JSON.parse(JSON.stringify(DATA, (k, v) => k === '_el' ? undefined : v));
+  const res = await fetch(API + '?action=save' + (force ? '&force=1' : ''), {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Home360-Nonce': nonce,
+      'X-Home360-Version': String(dataVersion)
+    },
+    body: JSON.stringify(clean)
+  });
+  return { res, json: await res.json().catch(() => ({})) };
+}
+
+$('btn-save').onclick = async () => {
+  try {
+    let { res, json: j } = await saveData(false);
+
+    // הקובץ בשרת השתנה מאז הטעינה — לא לדרוס בלי לשאול
+    if (res.status === 409) {
+      const ok = confirm(
+        'הנתונים בשרת עודכנו מאז שהדף נטען (אולי מחלון אחר, או שינוי שנעשה בצד השרת).\n\n' +
+        'אישור = לשמור בכל זאת ולדרוס את מה שיש בשרת.\n' +
+        'ביטול = לרענן את הדף ולטעון את הגרסה העדכנית (השינויים שלא נשמרו יאבדו).'
+      );
+      if (!ok) { location.reload(); return; }
+      ({ res, json: j } = await saveData(true));
+    }
+
     if (j.ok) {
       dirty = false;
+      dataVersion = j.version || dataVersion;
       $('btn-save').classList.remove('dirty');
       toast('נשמר! 💾');
     } else {
