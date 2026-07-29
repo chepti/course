@@ -1711,16 +1711,38 @@ function fileToResizedDataURL(file, maxDim, quality) {
     fr.onerror = reject; fr.readAsDataURL(file);
   });
 }
+// מעלה תמונה מוקטנת לשרת כקובץ אמיתי — היא לעולם לא נשמרת כטקסט (data URL) בתוך data.json
+async function uploadImageToServer(dataUrl, slug) {
+  const res = await fetch(API + '?action=upload_image', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { 'Content-Type': 'application/json', 'X-Home360-Nonce': nonce },
+    body: JSON.stringify({ data: dataUrl, slug })
+  });
+  const j = await res.json().catch(() => ({}));
+  if (!res.ok || !j.ok) throw new Error(j.error || res.status);
+  return j.path;
+}
+
 async function applyImageFile(file) {
   if (!selectedHs || !file || !file.type.startsWith('image/')) return;
+  let data;
+  try { data = await fileToResizedDataURL(file); }
+  catch (e) { toast('לא הצלחתי לקרוא את התמונה', true); return; }
+
+  selectedHs.image = data;   // תצוגה מיידית בזמן שההעלאה רצה ברקע
+  renderImgPreview();
+  markDirty();
+
   try {
-    const data = await fileToResizedDataURL(file);
-    selectedHs.image = data;
+    const path = await uploadImageToServer(data, selectedHs.id + '-image');
+    selectedHs.image = path;
     $('f-image').value = '';
     renderImgPreview();
-    markDirty();
     toast('תמונה נוספה 🖼️');
-  } catch (e) { toast('לא הצלחתי לקרוא את התמונה', true); }
+  } catch (e) {
+    toast('ההעלאה לשרת נכשלה — התמונה נשארה זמנית בדף, כדאי לנסות שוב', true);
+  }
 }
 function renderImgPreview() {
   const box = $('img-preview');
@@ -1896,12 +1918,20 @@ $('sp-image').addEventListener('input', () => {
 
 async function applySpaceImageFile(file) {
   if (!editingSpace || !file || !file.type.startsWith('image/')) return;
+  let data;
+  try { data = await fileToResizedDataURL(file, 4096, 0.85); }   // פנורמה — רזולוציה גבוהה
+  catch (e) { toast('לא הצלחתי לקרוא את התמונה', true); return; }
+
+  $('sp-image').value = '';
+  setSpaceImage(data);   // תצוגה מיידית בזמן שההעלאה רצה ברקע
+
   try {
-    const data = await fileToResizedDataURL(file, 4096, 0.85);   // פנורמה — רזולוציה גבוהה
-    $('sp-image').value = '';
-    setSpaceImage(data);
+    const path = await uploadImageToServer(data, editingSpace.id + '-bg');
+    setSpaceImage(path);
     toast('תמונת רקע נוספה 🖼️');
-  } catch (e) { toast('לא הצלחתי לקרוא את התמונה', true); }
+  } catch (e) {
+    toast('ההעלאה לשרת נכשלה — התמונה נשארה זמנית, כדאי לנסות שוב', true);
+  }
 }
 function setSpaceImage(url) {
   if (!editingSpace) return;

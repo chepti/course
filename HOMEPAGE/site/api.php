@@ -106,6 +106,60 @@ if ($home360_action === 'me') {
     exit;
 }
 
+// העלאת תמונה מודבקת/נגררת — נשמרת ישר כקובץ, לעולם לא נכנסת ל-data.json כטקסט
+if ($home360_action === 'upload_image' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$isAdmin) {
+        http_response_code(403);
+        echo json_encode(array('error' => 'not admin'));
+        exit;
+    }
+    $nonce = isset($_SERVER['HTTP_X_HOME360_NONCE']) ? $_SERVER['HTTP_X_HOME360_NONCE'] : '';
+    if (!wp_verify_nonce($nonce, 'home360_save')) {
+        http_response_code(403);
+        echo json_encode(array('error' => 'bad nonce'));
+        exit;
+    }
+
+    $body = file_get_contents('php://input');
+    $json = json_decode($body, true);
+    $data = isset($json['data']) ? $json['data'] : '';
+    $slug = isset($json['slug']) ? $json['slug'] : 'img';
+    $slug = strtolower(preg_replace('/[^a-z0-9_-]+/i', '-', $slug));
+    $slug = trim($slug, '-');
+    if ($slug === '') $slug = 'img';
+
+    if (!preg_match('#^data:(image/(?:jpeg|jpg|png|webp|gif));base64,(.+)$#s', $data, $m)) {
+        http_response_code(400);
+        echo json_encode(array('error' => 'bad image data'));
+        exit;
+    }
+    $mime = $m[1];
+    $ext = array('image/jpeg' => 'jpg', 'image/jpg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif');
+    $ext = isset($ext[$mime]) ? $ext[$mime] : 'jpg';
+    $raw = base64_decode($m[2], true);
+    if ($raw === false) {
+        http_response_code(400);
+        echo json_encode(array('error' => 'bad base64'));
+        exit;
+    }
+
+    $dir = __DIR__ . '/img/uploads';
+    if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+    // שם ייחודי לכל העלאה — קובץ חדש לגמרי בכל פעם, כדי לא ליפול שוב במלכודת
+    // קאש התמונות של הדפדפן (ר' תיעוד: reuse של אותו שם קובץ = תמונה ישנה נתקעת לצמיתות)
+    $fname = $slug . '-' . substr(uniqid(), -8) . '.' . $ext;
+    $path = $dir . '/' . $fname;
+    if (file_put_contents($path, $raw) === false) {
+        http_response_code(500);
+        echo json_encode(array('error' => 'write failed'));
+        exit;
+    }
+
+    echo json_encode(array('ok' => true, 'path' => 'img/uploads/' . $fname));
+    exit;
+}
+
 // גרסת הנתונים הנוכחית בשרת (זמן שינוי הקובץ) — לזיהוי דריסה
 if ($home360_action === 'version') {
     clearstatcache(true, $dataFile);
