@@ -262,6 +262,32 @@ button.chip:hover{transform:translateY(-2px);background:#fffdf8}
 
 /* מדיה בכרטיס */
 .card-embed{width:100%;aspect-ratio:16/9;border:none;border-radius:14px;margin-top:14px;background:#000}
+
+/* נגן יוטיוב מינימלי: לפני הפעלה — תמונה + משולש קטן; אחרי הפעלה — סרגל קטן שמופיע בנגיעה/ריחוף */
+.yt{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;width:100%}
+.yt.card-embed-yt{border-radius:14px;margin-top:14px}
+.yt.modal-frame-yt{border-radius:24px 24px 0 0}
+.yt-thumb{width:100%;height:100%;object-fit:cover;display:block;opacity:.92}
+.yt-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;border:none;
+  background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  backdrop-filter:blur(4px);transition:transform .15s,background .15s}
+.yt:hover .yt-play{background:var(--terra);transform:translate(-50%,-50%) scale(1.08)}
+.yt svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.yt-play svg{fill:#fff;margin-left:3px}
+.yt-host{position:absolute;inset:0}
+.yt-host iframe{width:100%;height:100%;border:0;pointer-events:none}
+.yt-shield{position:absolute;inset:0;z-index:2}
+.yt-bar{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;align-items:center;gap:6px;direction:ltr;
+  padding:16px 8px 6px;background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:opacity .25s;pointer-events:none}
+.yt.show-bar .yt-bar{opacity:1;pointer-events:auto}
+.yt-bar button{width:24px;height:24px;border:none;background:none;padding:2px;cursor:pointer;display:flex;flex:0 0 auto}
+.yt-bar svg{width:100%;height:100%}
+.yt-bar .ic-fill{fill:#fff}
+.yt-time{color:#fff;font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.yt-seek{flex:1;position:relative;height:14px;cursor:pointer}
+.yt-seek::before{content:'';position:absolute;left:0;right:0;top:5px;height:3px;border-radius:2px;background:rgba(255,255,255,.35)}
+.yt-seek i{position:absolute;left:0;top:5px;height:3px;border-radius:2px;background:var(--terra);width:0}
+.yt:fullscreen{aspect-ratio:auto;border-radius:0}
 .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .cta-row .modal-cta{margin-top:0}
 .cta-row button.modal-cta{font-family:inherit;cursor:pointer}
@@ -1007,6 +1033,7 @@ function openModal(html, wide) {
   $('modal-body').innerHTML = html;
   $('modal-backdrop').classList.add('open');
   drawIcons();
+  initYtFacades($('modal-body'));
 }
 function closeModal() {
   $('modal-backdrop').classList.remove('open');
@@ -1032,12 +1059,101 @@ function toEmbedUrl(url, autoplay) {
   return null;
 }
 
+// ——— נגן יוטיוב מינימלי ———
+const YT_RE = /(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/|live\/|v\/)|youtu\.be\/)([\w-]{6,})/;
+function ytId(url) { const m = String(url || '').match(YT_RE); return m ? m[1] : null; }
+const YT_SVG = {
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  pause: '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>',
+  vol: '<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/>',
+  mute: '<path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/>',
+  full: '<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>'
+};
+const ytIcon = (k, fill) => `<svg viewBox="0 0 24 24"${fill ? ' class="ic-fill"' : ''}>${YT_SVG[k]}</svg>`;
+function ytFacadeHTML(id, cls) {
+  return `<div class="yt ${cls}" data-yt="${esc(id)}"><img class="yt-thumb" src="https://i.ytimg.com/vi/${esc(id)}/hqdefault.jpg" alt="">` +
+    `<button class="yt-play" type="button" aria-label="נגן">${ytIcon('play')}</button></div>`;
+}
+function loadYtApi() {
+  if (window.YT && YT.Player) return Promise.resolve();
+  if (!window._ytP) {
+    window._ytP = new Promise(res => {
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { if (prev) prev(); res(); };
+      const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(s);
+    });
+  }
+  return window._ytP;
+}
+function initYtFacades(root) {
+  root.querySelectorAll('.yt:not([data-init])').forEach(el => {
+    el.dataset.init = '1';
+    el.addEventListener('click', () => startYt(el), { once: true });
+  });
+}
+const fmtT = s => { s = Math.max(0, Math.floor(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+async function startYt(el) {
+  const id = el.dataset.yt;
+  el.innerHTML = '<div class="yt-host"><div></div></div><div class="yt-shield"></div>' +
+    `<div class="yt-bar"><button class="b-play" type="button" aria-label="נגן/השהה">${ytIcon('pause', true)}</button>` +
+    '<span class="yt-time">0:00</span><div class="yt-seek"><i></i></div>' +
+    `<button class="b-mute" type="button" aria-label="קול">${ytIcon('vol')}</button>` +
+    `<button class="b-full" type="button" aria-label="מסך מלא">${ytIcon('full')}</button></div>`;
+  el.style.cursor = 'default';
+  await loadYtApi();
+  const q = s => el.querySelector(s);
+  let hideT = null, player = null, playing = false;
+  const showBar = () => {
+    el.classList.add('show-bar'); clearTimeout(hideT);
+    if (playing) hideT = setTimeout(() => el.classList.remove('show-bar'), 2500);
+  };
+  const setPlayIcon = () => { q('.b-play').innerHTML = ytIcon(playing ? 'pause' : 'play', true); };
+  player = new YT.Player(q('.yt-host div'), {
+    videoId: id,
+    playerVars: { autoplay: 1, controls: 0, rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3, fs: 0, disablekb: 1 },
+    events: {
+      onReady: e => { e.target.playVideo(); },
+      onStateChange: e => { playing = e.data === 1; setPlayIcon(); showBar(); }
+    }
+  });
+  const toggle = () => { if (!player || !player.getPlayerState) return; playing ? player.pauseVideo() : player.playVideo(); showBar(); };
+  q('.yt-shield').addEventListener('click', toggle);
+  q('.b-play').addEventListener('click', e => { e.stopPropagation(); toggle(); });
+  q('.b-mute').addEventListener('click', e => {
+    e.stopPropagation();
+    if (player.isMuted()) { player.unMute(); e.currentTarget.innerHTML = ytIcon('vol'); }
+    else { player.mute(); e.currentTarget.innerHTML = ytIcon('mute'); }
+    showBar();
+  });
+  q('.b-full').addEventListener('click', e => {
+    e.stopPropagation();
+    if (document.fullscreenElement) document.exitFullscreen();
+    else (el.requestFullscreen || el.webkitRequestFullscreen || function () {}).call(el);
+  });
+  q('.yt-seek').addEventListener('click', e => {
+    e.stopPropagation();
+    const r = e.currentTarget.getBoundingClientRect();
+    player.seekTo(player.getDuration() * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), true);
+    showBar();
+  });
+  ['mousemove', 'touchstart'].forEach(ev => el.addEventListener(ev, showBar, { passive: true }));
+  el.addEventListener('mouseleave', () => { if (playing) el.classList.remove('show-bar'); });
+  const iv = setInterval(() => {
+    if (!el.isConnected) { clearInterval(iv); try { player.destroy(); } catch (e) {} return; }
+    if (!player || !player.getCurrentTime) return;
+    const d = player.getDuration() || 0, c = player.getCurrentTime() || 0;
+    q('.yt-time').textContent = fmtT(c) + ' / ' + fmtT(d);
+    q('.yt-seek i').style.width = (d ? (c / d) * 100 : 0) + '%';
+  }, 300);
+}
+
 // וידאו/לוטי כ-HTML של מדיה
 function mediaHTML(hs) {
   let m = '';
   if (hs.video) {
     const embed = toEmbedUrl(hs.video);
-    if (embed) m += `<iframe class="modal-frame" src="${esc(embed)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
+    if (ytId(hs.video)) m += ytFacadeHTML(ytId(hs.video), 'modal-frame-yt');
+    else if (embed) m += `<iframe class="modal-frame" src="${esc(embed)}" allow="autoplay; fullscreen; encrypted-media" allowfullscreen></iframe>`;
     else m += `<video class="modal-video" src="${esc(hs.video)}" controls autoplay playsinline></video>`;
   }
   if (hs.lottie) m += `<lottie-player class="modal-lottie" src="${esc(hs.lottie)}" background="transparent" speed="1" autoplay loop></lottie-player>`;
@@ -1062,8 +1178,12 @@ function cardBodyHTML(hs) {
     b += '</div>';
   }
   if (hs.embed) {
-    const eu = toEmbedUrl(hs.embed, false) || hs.embed;   // יוטיוב/וימאו מומרים אוטומטית; כל כתובת אחרת כמו שהיא
-    b += `<iframe class="card-embed" src="${esc(eu)}" allow="fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    if (ytId(hs.embed)) {
+      b += ytFacadeHTML(ytId(hs.embed), 'card-embed-yt');
+    } else {
+      const eu = toEmbedUrl(hs.embed, false) || hs.embed;   // וימאו מומר אוטומטית; כל כתובת אחרת כמו שהיא
+      b += `<iframe class="card-embed" src="${esc(eu)}" allow="fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+    }
   }
   const kidCount = childrenOf(hs).length;
   if (hs.link || kidCount) {
