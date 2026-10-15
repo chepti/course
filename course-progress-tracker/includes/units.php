@@ -166,6 +166,10 @@ function cpt_render_unit_shell($slug, $body) {
     $html .= $body;
     $html .= '</div>'; // .course-unit-body
 
+    if (function_exists('cpt_render_course_footer')) {
+        $html .= cpt_render_course_footer(); // credit + feedback button
+    }
+
     // Dismiss the loader even when a full-page cache serves guest HTML to
     // logged-in learners (course-tracker.js is only enqueued for logged-in
     // users at render time, so cached pages never include it).

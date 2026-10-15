@@ -379,6 +379,105 @@
 @keyframes course-spin { to { transform: rotate(360deg); } }
 .course-shell.is-ready .course-loader { opacity: 0; pointer-events: none; }
 
+/* ---------- Footer (credit + feedback) ---------- */
+
+.course-shell:has(.course-footer) .course-unit-body { border-radius: 0; }
+.course-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--shell-line);
+  background: #f7f9fb;
+  border-radius: 0 0 16px 16px;
+}
+.course-footer .course-footer-credit {
+  color: #6b7885;
+  font-size: .85rem;
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+.course-footer .course-footer-credit:hover { color: var(--shell-accent); border-bottom-color: var(--shell-accent); }
+/* !important on the button look: the site theme restyles every <button> */
+.course-footer .course-feedback-open {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  width: auto !important;
+  height: auto !important;
+  padding: 9px 18px !important;
+  background: #fff !important;
+  color: var(--shell-accent) !important;
+  border: 1.5px solid var(--shell-accent) !important;
+  border-radius: 999px !important;
+  font: inherit !important;
+  font-size: .9rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.course-footer .course-feedback-open:hover,
+.course-footer .course-feedback-open:focus-visible {
+  background: var(--shell-accent) !important;
+  color: #fff !important;
+  transform: translateY(-1px);
+}
+
+/* ---------- Feedback dialog (appended to <body>, so literal colours) ---------- */
+
+.cpt-fb {
+  position: fixed; inset: 0; z-index: 100000;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  background: rgba(20, 40, 60, .45);
+  direction: rtl;
+  font-family: 'Rubik', 'Varela Round', 'Segoe UI', Tahoma, sans-serif;
+}
+.cpt-fb .cpt-fb-dialog {
+  width: 100%; max-width: 520px; max-height: 92vh; overflow: auto;
+  box-sizing: border-box;
+  padding: 24px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(20, 40, 60, .3);
+  color: #2c3e50;
+}
+.cpt-fb .cpt-fb-title { margin: 0 0 6px; font-size: 1.3rem; font-weight: 700; color: #2c3e50; }
+.cpt-fb .cpt-fb-where { margin: 0 0 14px; font-size: .85rem; color: #6b7885; line-height: 1.5; }
+.cpt-fb .cpt-fb-where strong { color: #2c3e50; font-weight: 600; }
+.cpt-fb .cpt-fb-types { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.cpt-fb button.cpt-fb-chip,
+.cpt-fb button.cpt-fb-send,
+.cpt-fb button.cpt-fb-cancel {
+  width: auto !important; height: auto !important;
+  padding: 8px 18px !important;
+  border-radius: 999px !important;
+  font: inherit !important; font-size: .92rem !important; font-weight: 600 !important; line-height: 1.2 !important;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, opacity .2s ease;
+}
+.cpt-fb button.cpt-fb-chip { background: #fff !important; color: #2a8c8c !important; border: 1.5px solid #cfe3e3 !important; }
+.cpt-fb button.cpt-fb-chip.is-on { background: #2a8c8c !important; color: #fff !important; border-color: #2a8c8c !important; }
+.cpt-fb button.cpt-fb-send { background: #2a8c8c !important; color: #fff !important; border: 1.5px solid #2a8c8c !important; }
+.cpt-fb button.cpt-fb-send:hover { background: #e67e7e !important; border-color: #e67e7e !important; }
+.cpt-fb button.cpt-fb-send:disabled { opacity: .55; cursor: default; }
+.cpt-fb button.cpt-fb-cancel { background: transparent !important; color: #6b7885 !important; border: 1.5px solid #dfe5ea !important; }
+.cpt-fb .cpt-fb-text {
+  display: block; width: 100%; box-sizing: border-box; min-height: 110px;
+  padding: 12px 14px; margin: 0 0 8px;
+  border: 1.5px solid #dfe5ea; border-radius: 14px;
+  font: inherit; font-size: .95rem; color: #2c3e50; background: #fff; resize: vertical;
+}
+.cpt-fb .cpt-fb-text:focus { outline: none; border-color: #2a8c8c; box-shadow: 0 0 0 3px rgba(42, 140, 140, .15); }
+.cpt-fb .cpt-fb-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.cpt-fb .cpt-fb-status { min-height: 1.3em; margin: 0 0 8px; font-size: .88rem; color: #6b7885; }
+.cpt-fb .cpt-fb-status.is-error { color: #c0392b; }
+.cpt-fb .cpt-fb-actions { display: flex; gap: 10px; }
+.cpt-fb .cpt-fb-done p { margin: 0 0 16px; color: #6b7885; }
+
 /* ---------- Mobile ---------- */
 
 @media (max-width: 800px) {
