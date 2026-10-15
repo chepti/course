@@ -1,0 +1,10 @@
+# מתכונים למורה עם אינסטינקט — https://chepti.com/instinct/
+
+> ספריית בקשות מוכנות להעתקה לסוכן AI אישי (אינסטינקט), לפי סוג משימה. גולשים מגישים מתכונים, המנהלת מאשרת.
+
+## ל-API (לסוכנים)
+- חוזה מלא, ללא סיסמה: https://chepti.com/instinct/api.php?action=help
+- מתכונים מאושרים (ציבורי, JSON): https://chepti.com/instinct/api.php?action=list
+- הגשת מתכון (ציבורי, POST): api.php?action=submit — נכנס כ"ממתין לאישור"
+- פעולות מנהלת (כותרת X-Key): action=state (תמונת מצב קומפקטית), action=ops (אצווה: approve/reject/update/create/delete/hide/show/feature)
+- הנחיות ל-System prompt: https://chepti.com/instinct/AGENT.md

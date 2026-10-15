@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>מתכונים למורה עם אינסטינקט</title>
+<meta name="description" content="ספריית מתכונים למורים: בקשות מוכנות להעתקה לסוכן אינסטינקט, עם שדות להשלמה, טיפים ומה להכין.">
+<meta property="og:title" content="מתכונים למורה עם אינסטינקט">
+<meta property="og:description" content="בקשות מוכנות להעתקה לסוכן אינסטינקט, עם שדות להשלמה, טיפים ומה להכין.">
+<link rel="canonical" href="https://chepti.com/instinct/">
+<meta property="og:url" content="https://chepti.com/instinct/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#3E6482">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%3E%3Crect%20width='24'%20height='24'%20rx='6'%20fill='%233E6482'/%3E%3Cg%20transform='translate%283.6%203.6%29%20scale%28.7%29'%20fill='%23FFC62E'%20stroke='%23FFC62E'%20stroke-width='1.6'%20stroke-linejoin='round'%3E%3Cpath%20d='M4%2014a1%201%200%200%201-.78-1.63l9.9-10.2a.5.5%200%200%201%20.86.46l-1.92%206.02A1%201%200%200%200%2013%2010h7a1%201%200%200%201%20.78%201.63l-9.9%2010.2a.5.5%200%200%201-.86-.46l1.92-6.02A1%201%200%200%200%2011%2014z'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap">
+<style>
+:root {
+  --bg: #EDF2F6;
+  --surface: #FFFFFF;
+  --ink: #1E2B38;
+  --muted: #566676;
+  --line: #D2DEE8;
+  --btn-bg: #36607F;
+  --btn-ink: #FFFFFF;
+  --accent: #2F5878;
+  --hero-bg: #3E6482;
+  --hero-ink: #FFFFFF;
+  --hero-soft: #D3E2EE;
+  --sun: #FFC62E;
+  --sun-ink: #3B2F00;
+  --mark-bg: #FFE27A;
+  --mark-ink: #3B2F00;
+  --focus: #D97706;
+  --c-teach: #DCE8F3; --c-video: #FADCE9; --c-design: #CFEDEA; --c-dev: #FFE3CF;
+  --c-auto: #FFEFB8; --c-research: #E8E3D6; --c-team: #E5F3C2;
+  --n-tip: #D3F4E8; --n-warn: #FFEFB8;
+  --fill-bg: #C7F0D5; --fill-ink: #0E3B22;
+  --pat: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='360'%20height='360'%20viewBox='0%200%20360%20360'%3E%3Cg%20fill='%23DCE7F0'%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(40%2062)%20rotate(-25)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(250%2044)%20rotate(35)%20scale(.8)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(128%20214)%20rotate(160)%20scale(1.2)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(296%20196)%20rotate(112)%20scale(.5)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(322%20214)%20rotate(64)%20scale(.45)'/%3E%3C/g%3E%3Cg%20fill='none'%20stroke='%23C6D8E7'%20stroke-width='3.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M30%20150q12-18%2024%200t24%200%2024%200%2024%200'/%3E%3Cpath%20d='M190%20306q11-16%2022%200t22%200%2022%200%2022%200'%20transform='rotate(-6%20190%20306)'/%3E%3Ccircle%20cx='312'%20cy='262'%20r='14'/%3E%3Ccircle%20cx='70'%20cy='300'%20r='9'/%3E%3Cpath%20d='M156%20330v-24M144%20318h24'/%3E%3C/g%3E%3Cg%20stroke='%23C6D8E7'%20stroke-width='2.6'%20stroke-linecap='round'%3E%3Cpath%20d='M232%20214l18-10M238%20228l18-10M244%20242l18-10'/%3E%3C/g%3E%3Cpath%20d='M60%20112C80%20100%20102%20124%20128%20110'%20fill='none'%20stroke='%23DCE7F0'%20stroke-width='9'%20stroke-linecap='round'/%3E%3Cpath%20d='M0%200a26%2026%200%200%201%2052%200Z'%20fill='%23E3EBF2'%20stroke='%23C6D8E7'%20stroke-width='2.5'%20stroke-linejoin='round'%20transform='translate(262%20138)%20rotate(20)'/%3E%3Cg%20fill='%23F2DA94'%3E%3Ccircle%20cx='186'%20cy='100'%20r='5'/%3E%3Ccircle%20cx='202'%20cy='113'%20r='3.5'/%3E%3Ccircle%20cx='177'%20cy='119'%20r='3'/%3E%3Ccircle%20cx='300'%20cy='64'%20r='4'/%3E%3Ccircle%20cx='42'%20cy='206'%20r='4.5'/%3E%3Ccircle%20cx='322'%20cy='326'%20r='4'/%3E%3Ccircle%20cx='110'%20cy='20'%20r='3.5'/%3E%3C/g%3E%3C/svg%3E"); --pat-hero: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='360'%20height='360'%20viewBox='0%200%20360%20360'%3E%3Cg%20fill='rgba(255,255,255,.08)'%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(40%2062)%20rotate(-25)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(250%2044)%20rotate(35)%20scale(.8)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(128%20214)%20rotate(160)%20scale(1.2)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(296%20196)%20rotate(112)%20scale(.5)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(322%20214)%20rotate(64)%20scale(.45)'/%3E%3C/g%3E%3Cg%20fill='none'%20stroke='rgba(255,255,255,.16)'%20stroke-width='3.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M30%20150q12-18%2024%200t24%200%2024%200%2024%200'/%3E%3Cpath%20d='M190%20306q11-16%2022%200t22%200%2022%200%2022%200'%20transform='rotate(-6%20190%20306)'/%3E%3Ccircle%20cx='312'%20cy='262'%20r='14'/%3E%3Ccircle%20cx='70'%20cy='300'%20r='9'/%3E%3Cpath%20d='M156%20330v-24M144%20318h24'/%3E%3C/g%3E%3Cg%20stroke='rgba(255,255,255,.16)'%20stroke-width='2.6'%20stroke-linecap='round'%3E%3Cpath%20d='M232%20214l18-10M238%20228l18-10M244%20242l18-10'/%3E%3C/g%3E%3Cpath%20d='M60%20112C80%20100%20102%20124%20128%20110'%20fill='none'%20stroke='rgba(255,255,255,.08)'%20stroke-width='9'%20stroke-linecap='round'/%3E%3Cpath%20d='M0%200a26%2026%200%200%201%2052%200Z'%20fill='rgba(255,255,255,.06)'%20stroke='rgba(255,255,255,.16)'%20stroke-width='2.5'%20stroke-linejoin='round'%20transform='translate(262%20138)%20rotate(20)'/%3E%3Cg%20fill='rgba(255,198,46,.55)'%3E%3Ccircle%20cx='186'%20cy='100'%20r='5'/%3E%3Ccircle%20cx='202'%20cy='113'%20r='3.5'/%3E%3Ccircle%20cx='177'%20cy='119'%20r='3'/%3E%3Ccircle%20cx='300'%20cy='64'%20r='4'/%3E%3Ccircle%20cx='42'%20cy='206'%20r='4.5'/%3E%3Ccircle%20cx='322'%20cy='326'%20r='4'/%3E%3Ccircle%20cx='110'%20cy='20'%20r='3.5'/%3E%3C/g%3E%3C/svg%3E");
+  --font: "Fredoka", "Assistant", "Rubik", "Heebo", Arial, sans-serif;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1822; --surface: #16232F; --ink: #E8F0F6; --muted: #A3B6C6; --line: #2A3E50;
+    --btn-bg: #8FB9D9; --btn-ink: #0E1822; --accent: #8FB9D9;
+    --hero-bg: #1D3548; --hero-ink: #FFFFFF; --hero-soft: #BDD2E2;
+    --mark-bg: #7A6215; --mark-ink: #FFF3C4; --focus: #FFB547;
+    --c-teach: #25425A; --c-video: #5A2644; --c-design: #1D4B4A; --c-dev: #5E3A20;
+    --c-auto: #5B4A12; --c-research: #4A4636; --c-team: #3A4D17; --n-tip: #1B5446; --n-warn: #5B4A12;
+    --fill-bg: #1F5A3E; --fill-ink: #DFF8E8; --pat: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='360'%20height='360'%20viewBox='0%200%20360%20360'%3E%3Cg%20fill='%2315293A'%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(40%2062)%20rotate(-25)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(250%2044)%20rotate(35)%20scale(.8)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(128%20214)%20rotate(160)%20scale(1.2)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(296%20196)%20rotate(112)%20scale(.5)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(322%20214)%20rotate(64)%20scale(.45)'/%3E%3C/g%3E%3Cg%20fill='none'%20stroke='%231F364A'%20stroke-width='3.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M30%20150q12-18%2024%200t24%200%2024%200%2024%200'/%3E%3Cpath%20d='M190%20306q11-16%2022%200t22%200%2022%200%2022%200'%20transform='rotate(-6%20190%20306)'/%3E%3Ccircle%20cx='312'%20cy='262'%20r='14'/%3E%3Ccircle%20cx='70'%20cy='300'%20r='9'/%3E%3Cpath%20d='M156%20330v-24M144%20318h24'/%3E%3C/g%3E%3Cg%20stroke='%231F364A'%20stroke-width='2.6'%20stroke-linecap='round'%3E%3Cpath%20d='M232%20214l18-10M238%20228l18-10M244%20242l18-10'/%3E%3C/g%3E%3Cpath%20d='M60%20112C80%20100%20102%20124%20128%20110'%20fill='none'%20stroke='%2315293A'%20stroke-width='9'%20stroke-linecap='round'/%3E%3Cpath%20d='M0%200a26%2026%200%200%201%2052%200Z'%20fill='%23122332'%20stroke='%231F364A'%20stroke-width='2.5'%20stroke-linejoin='round'%20transform='translate(262%20138)%20rotate(20)'/%3E%3Cg%20fill='%234D4221'%3E%3Ccircle%20cx='186'%20cy='100'%20r='5'/%3E%3Ccircle%20cx='202'%20cy='113'%20r='3.5'/%3E%3Ccircle%20cx='177'%20cy='119'%20r='3'/%3E%3Ccircle%20cx='300'%20cy='64'%20r='4'/%3E%3Ccircle%20cx='42'%20cy='206'%20r='4.5'/%3E%3Ccircle%20cx='322'%20cy='326'%20r='4'/%3E%3Ccircle%20cx='110'%20cy='20'%20r='3.5'/%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1822; --surface: #16232F; --ink: #E8F0F6; --muted: #A3B6C6; --line: #2A3E50;
+  --btn-bg: #8FB9D9; --btn-ink: #0E1822; --accent: #8FB9D9;
+  --hero-bg: #1D3548; --hero-ink: #FFFFFF; --hero-soft: #BDD2E2;
+  --mark-bg: #7A6215; --mark-ink: #FFF3C4; --focus: #FFB547;
+  --c-teach: #25425A; --c-video: #5A2644; --c-design: #1D4B4A; --c-dev: #5E3A20;
+  --c-auto: #5B4A12; --c-research: #4A4636; --c-team: #3A4D17; --n-tip: #1B5446; --n-warn: #5B4A12;
+  --fill-bg: #1F5A3E; --fill-ink: #DFF8E8; --pat: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='360'%20height='360'%20viewBox='0%200%20360%20360'%3E%3Cg%20fill='%2315293A'%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(40%2062)%20rotate(-25)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(250%2044)%20rotate(35)%20scale(.8)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(128%20214)%20rotate(160)%20scale(1.2)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(296%20196)%20rotate(112)%20scale(.5)'/%3E%3Cpath%20d='M0%200C14-26%2046-30%2064-4%2044%2022%2014%2024%200%200Z'%20transform='translate(322%20214)%20rotate(64)%20scale(.45)'/%3E%3C/g%3E%3Cg%20fill='none'%20stroke='%231F364A'%20stroke-width='3.5'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M30%20150q12-18%2024%200t24%200%2024%200%2024%200'/%3E%3Cpath%20d='M190%20306q11-16%2022%200t22%200%2022%200%2022%200'%20transform='rotate(-6%20190%20306)'/%3E%3Ccircle%20cx='312'%20cy='262'%20r='14'/%3E%3Ccircle%20cx='70'%20cy='300'%20r='9'/%3E%3Cpath%20d='M156%20330v-24M144%20318h24'/%3E%3C/g%3E%3Cg%20stroke='%231F364A'%20stroke-width='2.6'%20stroke-linecap='round'%3E%3Cpath%20d='M232%20214l18-10M238%20228l18-10M244%20242l18-10'/%3E%3C/g%3E%3Cpath%20d='M60%20112C80%20100%20102%20124%20128%20110'%20fill='none'%20stroke='%2315293A'%20stroke-width='9'%20stroke-linecap='round'/%3E%3Cpath%20d='M0%200a26%2026%200%200%201%2052%200Z'%20fill='%23122332'%20stroke='%231F364A'%20stroke-width='2.5'%20stroke-linejoin='round'%20transform='translate(262%20138)%20rotate(20)'/%3E%3Cg%20fill='%234D4221'%3E%3Ccircle%20cx='186'%20cy='100'%20r='5'/%3E%3Ccircle%20cx='202'%20cy='113'%20r='3.5'/%3E%3Ccircle%20cx='177'%20cy='119'%20r='3'/%3E%3Ccircle%20cx='300'%20cy='64'%20r='4'/%3E%3Ccircle%20cx='42'%20cy='206'%20r='4.5'/%3E%3Ccircle%20cx='322'%20cy='326'%20r='4'/%3E%3Ccircle%20cx='110'%20cy='20'%20r='3.5'/%3E%3C/g%3E%3C/svg%3E");
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0; background-color: var(--bg); background-image: var(--pat); background-size: 360px 360px; color: var(--ink);
+  font-family: var(--font); font-size: 1.06rem; line-height: 1.7; font-weight: 400;
+  -webkit-text-size-adjust: 100%;
+}
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
+[hidden] { display: none !important; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 32px); }
+
+/* ---------- hero ---------- */
+.hero {
+  position: relative; overflow: hidden; background-color: var(--hero-bg); background-image: var(--pat-hero); background-size: 360px 360px; color: var(--hero-ink);
+  padding: clamp(28px, 6vw, 56px) 0 clamp(36px, 6vw, 60px);
+  border-radius: 0 0 40px 40px;
+}
+.hero::after {
+  content: ""; position: absolute; width: 190px; height: 190px; border-radius: 50%;
+  background: var(--sun); inset-inline-start: -70px; bottom: -80px; opacity: .95;
+}
+.hero-grid { position: relative; z-index: 1; display: grid; gap: 28px; align-items: center; }
+@media (min-width: 840px) { .hero-grid { grid-template-columns: 1fr 340px; gap: 48px; } }
+.hero h1 { font-size: clamp(2.5rem, 8vw, 4.2rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.01em; }
+.hero .lede { margin-top: 14px; font-size: clamp(1.1rem, 2.4vw, 1.3rem); max-width: 34ch; color: var(--hero-soft); line-height: 1.55; }
+.steps { display: flex; flex-wrap: wrap; gap: 10px 22px; margin: 26px 0 0; padding: 0; list-style: none; }
+.steps li { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.steps .n {
+  display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--sun); color: var(--sun-ink); font-weight: 700; font-size: .95rem; flex: none;
+}
+.mock { display: none; }
+@media (min-width: 840px) {
+  .mock {
+    display: block; background: var(--surface); color: var(--ink); border-radius: 20px; padding: 26px 22px 22px;
+    transform: rotate(-2.5deg); position: relative; font-size: 1rem; line-height: 1.75;
+  }
+  .mock::before {
+    content: ""; position: absolute; top: -12px; inset-inline-start: 38%; width: 92px; height: 26px;
+    background: var(--sun); transform: rotate(3deg); border-radius: 3px;
+  }
+  .mock .ruled { display: block; height: 10px; border-radius: 6px; background: var(--line); margin-top: 12px; }
+  .mock .ruled.s { width: 62%; }
+}
+
+/* ---------- controls ---------- */
+.controls { margin-top: 28px; display: grid; gap: 14px; }
+.search {
+  width: 100%; min-height: 52px; padding: 0 18px; border-radius: 16px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.search::placeholder { color: var(--muted); opacity: 1; }
+.search:focus-visible { border-color: var(--accent); }
+.rows { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.rows .lbl { color: var(--muted); font-size: .95rem; margin-inline-end: 4px; }
+.chip {
+  min-height: 44px; padding: 0 16px; border-radius: 999px; cursor: pointer;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+}
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--btn-bg); border-color: var(--btn-bg); color: var(--btn-ink); }
+.count { color: var(--muted); font-size: .95rem; }
+
+/* ---------- list ---------- */
+.group { margin-top: 38px; }
+.group h2 { font-size: 1.55rem; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+.group .sub { color: var(--muted); font-size: 1rem; margin-top: 2px; }
+.grid { display: grid; gap: 16px; margin-top: 16px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 980px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+.card {
+  display: flex; flex-direction: column; gap: 10px; padding: 18px; text-decoration: none;
+  background: var(--surface); border: 2px solid var(--line); border-radius: 22px;
+  transition: border-color .15s, transform .15s;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.tile {
+  display: grid; place-items: center; width: 54px; height: 54px; border-radius: 16px; font-size: 1.75rem; flex: none;
+}
+.t-teach { background: var(--c-teach); } .t-video { background: var(--c-video); } .t-design { background: var(--c-design); }
+.t-dev { background: var(--c-dev); } .t-auto { background: var(--c-auto); } .t-research { background: var(--c-research); }
+.t-team { background: var(--c-team); }
+.card h3 { font-size: 1.2rem; font-weight: 600; line-height: 1.3; }
+.card .gives { color: var(--muted); font-size: .98rem; line-height: 1.55; }
+.card .foot { margin-top: auto; padding-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: .9rem; color: var(--muted); }
+.dots { display: inline-flex; gap: 5px; align-items: center; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); display: block; }
+.dots i.on { background: var(--accent); }
+.lvl { display: inline-flex; gap: 8px; align-items: center; }
+.draft { background: var(--c-auto); color: var(--ink); font-size: .82rem; padding: 0 10px; border-radius: 999px; line-height: 1.7; }
+.share-btn {
+  margin-top: 24px; min-height: 48px; padding: 0 22px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--sun); color: var(--sun-ink); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
+}
+.share-btn:hover { filter: brightness(1.05); }
+.linkbtn { background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent); text-decoration: underline; min-height: 44px; }
+dialog.share {
+  width: min(640px, calc(100% - 28px)); max-height: calc(100dvh - 28px); overflow: auto; padding: 24px 22px 20px;
+  background: var(--surface); color: var(--ink); border: 2px solid var(--accent); border-radius: 22px;
+}
+dialog.share::backdrop { background: rgba(10, 20, 30, .55); }
+dialog.share h2 { font-size: 1.5rem; font-weight: 600; }
+dialog.share .lead { color: var(--muted); margin-top: 4px; }
+.field-row { display: grid; gap: 6px; margin-top: 16px; }
+.field-row label { font-weight: 500; }
+.field-row .opt { color: var(--muted); font-weight: 400; font-size: .9rem; }
+.field-row .help { color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.inp {
+  width: 100%; min-height: 48px; padding: 8px 14px; border: 2px solid var(--line); border-radius: 14px;
+  background: var(--bg); color: var(--ink); line-height: 1.5;
+}
+textarea.inp { min-height: 8.5em; resize: vertical; }
+.inp:focus-visible { border-color: var(--accent); }
+.check { display: flex; gap: 10px; align-items: flex-start; margin-top: 18px; }
+.check input { width: 22px; height: 22px; margin-top: 4px; flex: none; accent-color: var(--accent); }
+.err { margin-top: 12px; color: #B3261E; font-weight: 500; min-height: 1.2em; }
+.err.ok, :root[data-theme="dark"] .err.ok { color: var(--accent); }
+:root[data-theme="dark"] .err { color: #FFB4AB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err { color: #FFB4AB; } }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.btn2 {
+  min-height: 48px; padding: 0 20px; border-radius: 999px; cursor: pointer; font-weight: 600;
+  border: 2px solid var(--accent); background: transparent; color: var(--accent); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn2.primary { background: var(--btn-bg); border-color: var(--btn-bg); color: var(--btn-ink); }
+.empty { margin-top: 40px; padding: 28px; border: 2px dashed var(--line); border-radius: 22px; text-align: center; }
+.empty .chip { margin-top: 14px; }
+
+/* ---------- detail ---------- */
+.back {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; margin-top: 22px;
+  text-decoration: none; font-weight: 500; color: var(--accent);
+}
+.back svg { width: 18px; height: 18px; }
+.dhead { display: flex; gap: 16px; align-items: flex-start; margin-top: 10px; }
+.dhead .tile { width: 64px; height: 64px; font-size: 2.1rem; border-radius: 20px; }
+.dhead h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 700; line-height: 1.15; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 10px; color: var(--muted); font-size: .95rem; align-items: center; }
+.pill { padding: 2px 12px; border-radius: 999px; color: var(--ink); }
+.dlede { margin-top: 18px; font-size: 1.25rem; line-height: 1.55; max-width: 36ch; }
+.prep {
+  display: flex; gap: 12px; align-items: flex-start; margin-top: 22px; padding: 14px 18px;
+  border: 2px solid var(--line); border-radius: 18px; background: var(--surface);
+}
+.prep .ico { font-size: 1.4rem; line-height: 1.4; }
+.prep b { font-weight: 600; display: block; }
+.recipe {
+  position: relative; margin-top: 38px; padding: 28px 22px 22px; background: var(--surface);
+  border: 2px solid var(--accent); border-radius: 22px;
+}
+.recipe::before {
+  content: ""; position: absolute; top: -13px; inset-inline-start: 50%; width: 96px; height: 26px;
+  margin-inline-start: -48px; background: var(--sun); transform: rotate(-2deg); border-radius: 3px;
+}
+.recipe-top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.recipe h2 { font-size: 1.4rem; font-weight: 600; }
+.btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.sendmsg { margin-top: 12px; color: var(--muted); font-size: .95rem; min-height: 1.2em; }
+.sendmsg.warn { color: #B3261E; font-weight: 500; }
+:root[data-theme="dark"] .sendmsg.warn { color: #FFB4AB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .sendmsg.warn { color: #FFB4AB; } }
+.copy {
+  min-height: 48px; padding: 0 24px; border: 0; border-radius: 999px; cursor: pointer; font-weight: 600;
+  background: var(--btn-bg); color: var(--btn-ink); display: inline-flex; align-items: center; gap: 8px;
+}
+.copy:hover { filter: brightness(1.08); }
+.fields { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: .95rem; color: var(--muted); }
+mark.field { background: var(--mark-bg); color: var(--mark-ink); border-radius: 6px; padding: 1px 6px; }
+.fld {
+  background: var(--mark-bg); color: var(--mark-ink); border-radius: 8px; padding: 1px 8px; cursor: text;
+  border-bottom: 2px dashed var(--mark-ink); outline-offset: 2px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone; white-space: pre-wrap;
+}
+.fld:empty::before { content: "[" attr(data-ph) "]"; opacity: .8; }
+.fld.filled { background: var(--fill-bg); color: var(--fill-ink); border-bottom-color: transparent; }
+.fld:focus { outline: 3px solid var(--focus); }
+.hint { margin-top: 14px; color: var(--muted); font-size: .95rem; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+.hint b { font-weight: 600; color: var(--ink); }
+.ptext { margin-top: 16px; line-height: 1.8; position: relative; }
+.ptext.clamped { max-height: 9.6em; overflow: hidden; }
+.ptext.clamped::after {
+  content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 3.4em;
+  background: linear-gradient(to bottom, transparent, var(--surface));
+}
+.more { margin-top: 6px; min-height: 44px; background: none; border: 0; cursor: pointer; font-weight: 500; color: var(--accent); padding: 0; }
+.notes { display: grid; gap: 14px; margin-top: 26px; }
+@media (min-width: 720px) { .notes { grid-template-columns: 1fr 1fr; } }
+.note { padding: 18px 20px; border-radius: 20px; }
+.note h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+.note.tip { background: var(--n-tip); } .note.warn { background: var(--n-warn); }
+details.ex { margin-top: 26px; border: 2px solid var(--line); border-radius: 20px; background: var(--surface); }
+details.ex summary {
+  list-style: none; cursor: pointer; min-height: 56px; padding: 12px 20px; display: flex; align-items: center;
+  justify-content: space-between; font-weight: 600; font-size: 1.1rem;
+}
+details.ex summary::-webkit-details-marker { display: none; }
+details.ex summary::after { content: "+"; font-size: 1.5rem; line-height: 1; color: var(--accent); }
+details.ex[open] summary::after { content: "–"; }
+details.ex p { padding: 0 20px 20px; }
+.pn { display: grid; gap: 12px; margin-top: 44px; }
+@media (min-width: 640px) { .pn { grid-template-columns: 1fr 1fr; } }
+.pn a {
+  display: block; padding: 14px 18px; border: 2px solid var(--line); border-radius: 18px; text-decoration: none; background: var(--surface);
+}
+.pn a:hover { border-color: var(--accent); }
+.pn small { display: block; color: var(--muted); font-size: .88rem; }
+.pn .next { text-align: end; }
+footer { margin-top: 56px; padding: 24px 0 40px; color: var(--muted); font-size: .95rem; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* =====================================================================
+   תוספות: אייקוני SVG, מצב ניהול, הגשת מתכונים, פוטר
+   ===================================================================== */
+.ic { width: 1.15em; height: 1.15em; flex: none; vertical-align: -0.2em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tile { color: var(--ink); }
+.tile svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.dhead .tile svg { width: 34px; height: 34px; }
+.prep .ico { color: var(--accent); display: grid; place-items: center; padding-top: 3px; }
+.prep .ico svg { width: 1.4rem; height: 1.4rem; }
+.ptext { white-space: pre-wrap; }
+.note p, details.ex p { white-space: pre-line; }
+.share-btn .ic, .copy .ic, .btn2 .ic { width: 1.2em; height: 1.2em; }
+.state-msg { margin-top: 40px; padding: 28px; border: 2px dashed var(--line); border-radius: 22px; text-align: center; color: var(--muted); }
+.state-msg .chip { margin-top: 12px; }
+
+/* ---------- cards with admin edit ---------- */
+.cardwrap { position: relative; display: flex; }
+.cardwrap > .card { flex: 1; min-width: 0; }
+.iconbtn {
+  display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 999px; cursor: pointer; flex: none;
+  border: 2px solid var(--line); background: var(--surface); color: var(--accent); padding: 0;
+}
+.iconbtn:hover { border-color: var(--accent); }
+.iconbtn.danger { color: #B3261E; }
+:root[data-theme="dark"] .iconbtn.danger { color: #FFB4AB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .iconbtn.danger { color: #FFB4AB; } }
+.cedit { position: absolute; top: 12px; inset-inline-end: 12px; }
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: .82rem; padding: 0 10px; border-radius: 999px; line-height: 1.7; background: var(--line); color: var(--ink); }
+.badge .ic { width: 1em; height: 1em; }
+.badge.star { background: var(--sun); color: var(--sun-ink); }
+.badge.hid { background: var(--n-warn); }
+.card .foot .badges { display: inline-flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* ---------- admin bar ---------- */
+.adminbar { position: sticky; top: 0; z-index: 30; background: var(--surface); border-bottom: 2px solid var(--accent); }
+.adminbar .wrap { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding-block: 8px; }
+.adminbar .tag { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: var(--accent); margin-inline-end: auto; }
+.abtn {
+  min-height: 40px; padding: 0 16px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: .95rem;
+  border: 2px solid var(--accent); background: transparent; color: var(--accent); display: inline-flex; align-items: center; gap: 8px;
+}
+.abtn:hover { background: var(--bg); }
+.abtn.hot { background: var(--sun); border-color: var(--sun); color: var(--sun-ink); }
+.cnt { display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--btn-ink); font-size: .85rem; font-weight: 700; }
+.abtn.hot .cnt { background: var(--sun-ink); color: var(--sun); }
+.cnt:empty, .cnt[data-n="0"] { display: none; }
+
+/* ---------- dialogs ---------- */
+dialog.share.wide { width: min(780px, calc(100% - 28px)); }
+.dlg-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.row2 { display: grid; gap: 12px; }
+@media (min-width: 560px) { .row2 { grid-template-columns: 1fr 1fr; } }
+select.inp { appearance: none; padding-inline-end: 38px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23788' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: left 12px center; background-size: 18px; }
+.chk-row { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 16px; }
+.chk-row label { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; }
+.chk-row input { width: 20px; height: 20px; accent-color: var(--accent); }
+details.more-f { margin-top: 16px; border: 2px solid var(--line); border-radius: 16px; padding: 0 16px 16px; }
+details.more-f summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; font-weight: 600; color: var(--accent); }
+.info { margin-top: 12px; padding: 10px 14px; background: var(--n-warn); border-radius: 14px; font-size: .95rem; }
+.hp { position: absolute; inset-inline-start: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.btn2.danger { border-color: #B3261E; color: #B3261E; }
+:root[data-theme="dark"] .btn2.danger { border-color: #FFB4AB; color: #FFB4AB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn2.danger { border-color: #FFB4AB; color: #FFB4AB; } }
+.btn2:disabled { opacity: .55; cursor: wait; }
+.thanks { text-align: center; padding: 18px 6px 6px; }
+.thanks .big { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 50%; background: var(--n-tip); color: var(--ink); }
+.thanks .big svg { width: 32px; height: 32px; }
+
+.plist { display: grid; gap: 12px; margin-top: 16px; }
+.pcard { border: 2px solid var(--line); border-radius: 18px; padding: 14px 16px; background: var(--bg); }
+.pcard h3 { font-size: 1.1rem; font-weight: 600; }
+.pcard .pmeta { color: var(--muted); font-size: .9rem; margin-top: 2px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.pcard .psnip { margin-top: 8px; color: var(--ink); font-size: .95rem; line-height: 1.55; white-space: pre-wrap; }
+.pcard .actions { margin-top: 10px; }
+.pcard .btn2 { min-height: 42px; padding: 0 16px; }
+
+/* ---------- toast ---------- */
+.toast {
+  position: fixed; inset-inline: 16px; bottom: 20px; margin-inline: auto; width: fit-content; max-width: min(520px, calc(100% - 32px)); z-index: 60;
+  padding: 12px 20px; border-radius: 999px; background: var(--ink); color: var(--bg); font-weight: 500;
+  opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s;
+}
+.toast.show { opacity: 1; transform: none; }
+.toast.bad { background: #B3261E; color: #fff; }
+
+/* ---------- footer ---------- */
+footer.site-foot { margin-top: 56px; padding: 22px 0 36px; border-top: 2px dashed var(--line); }
+.foot-note { max-width: 70ch; }
+.foot-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin-top: 16px; }
+.credit a { font-weight: 600; color: var(--accent); text-decoration: none; border-bottom: 2px solid var(--sun); }
+.credit a:hover { background: var(--mark-bg); color: var(--mark-ink); }
+.foot-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.foot-actions .btn2 { min-height: 44px; padding: 0 18px; font-weight: 500; }
+.adminlink { font-size: .85rem; color: var(--muted); text-decoration: none; display: inline-flex; gap: 6px; align-items: center; min-height: 44px; padding: 0 8px; }
+.adminlink:hover { color: var(--accent); }
+@media print { .adminbar, footer, .hero .share-btn { display: none !important; } }
+</style>
+</head>
+<body>
+<noscript><p style="padding:24px">האתר דורש הפעלת JavaScript כדי להציג את המתכונים.</p></noscript>
+
+<div class="adminbar" id="adminbar" hidden>
+  <div class="wrap">
+    <span class="tag" id="adminTag"></span>
+    <button type="button" class="abtn hot" id="abPending" title="מתכונים שהוגשו ומחכים לאישור"></button>
+    <button type="button" class="abtn" id="abNew" title="הוספת מתכון חדש ישירות"></button>
+    <button type="button" class="abtn" id="abFb" title="הודעות משוב מהגולשים"></button>
+    <button type="button" class="abtn" id="abExport" title="הורדת גיבוי מלא של כל המתכונים"></button>
+  </div>
+</div>
+
+<div id="home">
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>מתכונים למורה</h1>
+        <p class="lede">מה אפשר להכין עם אינסטינקט, בבקשה שכבר כתובה ומוכנה להעתקה.</p>
+        <ol class="steps">
+          <li><span class="n">1</span>בחירת מתכון</li>
+          <li><span class="n">2</span>השלמת מה שמסומן</li>
+          <li><span class="n">3</span>שליחה לאינסטינקט ובדיקה</li>
+        </ol>
+        <button type="button" class="share-btn" id="openShare"></button>
+      </div>
+      <div class="mock" aria-hidden="true">
+        <span>המצורף צילום של דף עבודה <mark class="field">[נושא]</mark>. בנה אותו מחדש כדף A4 מוכן להדפסה.</span>
+        <span class="ruled"></span><span class="ruled s"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="controls">
+      <label class="sr" for="q">חיפוש מתכון</label>
+      <input id="q" class="search" type="search" placeholder="חיפוש: מצגת, דף עבודה, משחק…" autocomplete="off">
+      <div class="rows" id="cats" role="group" aria-label="סוג משימה"></div>
+      <div class="count" id="count" aria-live="polite"></div>
+    </div>
+    <div id="results"><div class="state-msg">טוען את המתכונים…</div></div>
+  </main>
+</div>
+
+<div id="detail" hidden>
+  <div class="wrap" id="detailBody"></div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <p class="foot-note">רוב המתכונים מתוך טבלת שימושים שאנשים בקהילה שיתפו. מתכון המסומן "טרם נוסה" נכתב בלי ניסיון בפועל. אין להעלות לסוכן שמות של תלמידים ותלמידות או פרטים מזהים.</p>
+    <div class="foot-row">
+      <div class="credit">נבנה ב<a href="https://chepti.com" target="_blank" rel="noopener">חולמים תקשוב</a></div>
+      <div class="foot-actions">
+        <button type="button" class="btn2" id="openShare2"></button>
+        <button type="button" class="btn2" id="openFb"></button>
+        <a class="adminlink" id="loginLink" href="/wp-login.php?redirect_to=https%3A%2F%2Fchepti.com%2Finstinct%2F" title="כניסה לניהול המתכונים" rel="nofollow"></a>
+      </div>
+    </div>
+  </div>
+</footer>
+<div class="sr" id="live" aria-live="polite"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- ===== הגשת מתכון (ציבורי) ===== -->
+<dialog class="share" id="shareDlg" aria-labelledby="shareTitle">
+  <form id="shareForm" novalidate>
+    <div id="shareBody">
+      <div class="dlg-head"><h2 id="shareTitle">שיתוף מתכון משלך</h2><button type="button" class="iconbtn" data-close title="סגירה" aria-label="סגירה" id="shareX"></button></div>
+      <p class="lead">מתכון שעבד לך? אפשר לשלוח אותו, והוא ייבדק לפני שיעלה לאתר.</p>
+      <div class="field-row"><label for="sf-title">שם המתכון</label><input class="inp" id="sf-title" maxlength="140" autocomplete="off"></div>
+      <div class="row2">
+        <div class="field-row"><label for="sf-cat">סוג משימה <span class="opt">(אופציונלי)</span></label><select class="inp" id="sf-cat"></select></div>
+        <div class="field-row"><label for="sf-level">רמת קושי <span class="opt">(אופציונלי)</span></label><select class="inp" id="sf-level"><option value="1">בסיסי</option><option value="2">בינוני</option><option value="3">מתקדם</option></select></div>
+      </div>
+      <div class="field-row"><label for="sf-gives">מה מקבלים בסוף <span class="opt">(אופציונלי)</span></label><input class="inp" id="sf-gives" maxlength="400" autocomplete="off"></div>
+      <div class="field-row"><label for="sf-prep">מה צריך להכין <span class="opt">(אופציונלי)</span></label><input class="inp" id="sf-prep" maxlength="500" autocomplete="off"></div>
+      <div class="field-row"><label for="sf-prompt">הבקשה לסוכן</label>
+        <textarea class="inp" id="sf-prompt" maxlength="8000"></textarea>
+        <span class="help">אפשר לסמן מה להחליף בסוגריים מרובעים, למשל [נושא] או [שכבת גיל], והם יהפכו לשדות להשלמה.</span></div>
+      <div class="field-row"><label for="sf-tip">טיפ או הערה <span class="opt">(אופציונלי)</span></label><textarea class="inp" id="sf-tip" maxlength="1000" style="min-height:5em"></textarea></div>
+      <div class="row2">
+        <div class="field-row"><label for="sf-author">שם לקרדיט <span class="opt">(אפשר כינוי, אופציונלי)</span></label><input class="inp" id="sf-author" maxlength="80" autocomplete="off"></div>
+        <div class="field-row"><label for="sf-email">מייל <span class="opt">(לא יוצג באתר, אופציונלי)</span></label><input class="inp" id="sf-email" type="email" dir="ltr" maxlength="120" autocomplete="email"><span class="help">רק למקרה שנרצה לשאול שאלה על המתכון.</span></div>
+      </div>
+      <input class="hp" id="sf-website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="check"><input type="checkbox" id="sf-ok"><span>המתכון לא כולל שמות או פרטים מזהים של תלמידים</span></label>
+      <div class="err" id="sf-err" role="alert"></div>
+      <div class="actions"><button type="submit" class="btn2 primary" id="sf-send"></button><button type="button" class="btn2" data-close id="sf-cancel">ביטול</button></div>
+    </div>
+  </form>
+</dialog>
+
+<!-- ===== משוב (ציבורי) ===== -->
+<dialog class="share" id="fbDlg" aria-labelledby="fbTitle">
+  <form id="fbForm" novalidate>
+    <div id="fbBody">
+      <div class="dlg-head"><h2 id="fbTitle">משוב על האתר</h2><button type="button" class="iconbtn" data-close title="סגירה" aria-label="סגירה" id="fbX"></button></div>
+      <p class="lead">משהו לא עובד, חסר או אפשר לשפר? נשמח לשמוע.</p>
+      <div class="field-row"><label for="fb-msg">ההודעה</label><textarea class="inp" id="fb-msg" maxlength="2000"></textarea></div>
+      <div class="field-row"><label for="fb-contact">איך לחזור אליך <span class="opt">(אופציונלי)</span></label><input class="inp" id="fb-contact" maxlength="120" autocomplete="off"></div>
+      <input class="hp" id="fb-website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="err" id="fb-err" role="alert"></div>
+      <div class="actions"><button type="submit" class="btn2 primary" id="fb-send"></button><button type="button" class="btn2" data-close>ביטול</button></div>
+    </div>
+  </form>
+</dialog>
+
+<!-- ===== עריכת מתכון (מנהלת) ===== -->
+<dialog class="share wide" id="editDlg" aria-labelledby="edTitle">
+  <form id="editForm" novalidate>
+    <div class="dlg-head"><h2 id="edTitle">עריכת מתכון</h2><button type="button" class="iconbtn" data-close title="סגירה" aria-label="סגירה" id="edX"></button></div>
+    <div class="info" id="edInfo" hidden></div>
+    <div class="field-row"><label for="ed-title">שם המתכון</label><input class="inp" data-f="title" id="ed-title" maxlength="140" autocomplete="off"></div>
+    <div class="row2">
+      <div class="field-row"><label for="ed-cat">סוג משימה</label><select class="inp" data-f="cat" id="ed-cat"></select></div>
+      <div class="field-row"><label for="ed-level">רמת קושי</label><select class="inp" data-f="level" id="ed-level"><option value="1">בסיסי</option><option value="2">בינוני</option><option value="3">מתקדם</option></select></div>
+    </div>
+    <div class="field-row"><label for="ed-gives">מה מקבלים בסוף</label><input class="inp" data-f="gives" id="ed-gives" maxlength="400" autocomplete="off"></div>
+    <div class="field-row"><label for="ed-prep">מה צריך להכין</label><input class="inp" data-f="prep" id="ed-prep" maxlength="500" autocomplete="off"></div>
+    <div class="field-row"><label for="ed-prompt">הבקשה לסוכן</label><textarea class="inp" data-f="prompt" id="ed-prompt" maxlength="8000" style="min-height:11em"></textarea><span class="help">[סוגריים מרובעים] הופכים לשדות להשלמה.</span></div>
+    <div class="field-row"><label for="ed-tip">טיפ מהניסיון</label><textarea class="inp" data-f="tip" id="ed-tip" maxlength="1000" style="min-height:5em"></textarea></div>
+    <div class="field-row"><label for="ed-limits">שימו לב</label><textarea class="inp" data-f="limits" id="ed-limits" maxlength="1000" style="min-height:5em"></textarea></div>
+    <details class="more-f">
+      <summary>עוד שדות</summary>
+      <div class="field-row"><label for="ed-example">איך זה נראה בפועל</label><textarea class="inp" data-f="example" id="ed-example" maxlength="1500" style="min-height:6em"></textarea></div>
+      <div class="row2">
+        <div class="field-row"><label for="ed-tipLabel">כותרת לטיפ <span class="opt">(ברירת מחדל: טיפ מהניסיון)</span></label><input class="inp" data-f="tipLabel" id="ed-tipLabel" maxlength="40" autocomplete="off"></div>
+        <div class="field-row"><label for="ed-author">קרדיט</label><input class="inp" data-f="author" id="ed-author" maxlength="80" autocomplete="off"></div>
+      </div>
+      <div class="field-row"><label for="ed-sheetTitle">שם משני לחיפוש</label><input class="inp" data-f="sheetTitle" id="ed-sheetTitle" maxlength="200" autocomplete="off"></div>
+    </details>
+    <div class="chk-row">
+      <label id="edStatusWrap">סטטוס <select class="inp" data-f="status" id="ed-status" style="min-height:40px;width:auto"><option value="published">מפורסם</option><option value="hidden">מוסתר</option><option value="pending">ממתין לאישור</option></select></label>
+      <label><input type="checkbox" data-f="featured" id="ed-featured">מומלץ (קודם ברשימה)</label>
+      <label><input type="checkbox" data-f="draft" id="ed-draft">טרם נוסה בפועל</label>
+    </div>
+    <div class="err" id="ed-err" role="alert"></div>
+    <div class="actions" id="ed-actions"></div>
+  </form>
+</dialog>
+
+<!-- ===== ממתינים לאישור (מנהלת) ===== -->
+<dialog class="share wide" id="pendDlg" aria-labelledby="pdTitle">
+  <div class="dlg-head"><h2 id="pdTitle">ממתינים לאישור</h2><button type="button" class="iconbtn" data-close title="סגירה" aria-label="סגירה" id="pdX"></button></div>
+  <p class="lead">מתכונים שאנשים שלחו. עד האישור הם לא מופיעים באתר.</p>
+  <div class="plist" id="pdList"></div>
+</dialog>
+
+<!-- ===== משוב שהתקבל (מנהלת) ===== -->
+<dialog class="share wide" id="fbListDlg" aria-labelledby="flTitle">
+  <div class="dlg-head"><h2 id="flTitle">משוב שהתקבל</h2><button type="button" class="iconbtn" data-close title="סגירה" aria-label="סגירה" id="flX"></button></div>
+  <div class="plist" id="flList"></div>
+</dialog>
+
+<script>
+/* ---------- קבועים ---------- */
+const API = '/instinct/api.php';
+const AGENT = '16508702892'; /* המספר של אינסטינקט בוואטסאפ */
+const CATS = {
+  teach:    { label: 'הוראה ותוכן לימודי' },
+  video:    { label: 'וידאו, מולטימדיה ויצירה' },
+  design:   { label: 'תמונות, עיצוב ומסמכים' },
+  dev:      { label: 'פיתוח, אפליקציות ומשחקים' },
+  auto:     { label: 'אוטומציה ומעקב' },
+  research: { label: 'מחקר, תרגום ותכנון' },
+  team:     { label: 'ניהול צוות וקהילה מקצועית' }
+};
+const CAT_ORDER = Object.keys(CATS);
+const LEVELS = [null, { label: 'בסיסי' }, { label: 'בינוני' }, { label: 'מתקדם' }];
+
+/* אייקונים בסגנון Lucide: קו 2, קצוות מעוגלים */
+const P = {
+  teach: '<path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>',
+  video: '<path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/>',
+  design: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>',
+  dev: '<path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>',
+  auto: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  research: '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
+  team: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  clip: '<path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"/>',
+  copy: '<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>',
+  wa: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  edit: '<path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+  inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  download: '<path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/>',
+  msg: '<path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>',
+  eyeoff: '<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  send: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
+  chev: '<path d="m9 18 6-6-6-6"/>'
+};
+const svg = (k, cls) => '<svg class="' + (cls || 'ic') + '" viewBox="0 0 24 24" aria-hidden="true">' + P[k] + '</svg>';
+const tile = (cat) => '<span class="tile t-' + cat + '" aria-hidden="true">' + svg(P[cat] ? cat : 'teach', '') + '</span>';
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dots = (n) => '<span class="dots" aria-hidden="true">' + [1,2,3].map(i => '<i class="' + (i <= n ? 'on' : '') + '"></i>').join('') + '</span>';
+const fmtDate = (t) => { try { return new Date(t * 1000).toLocaleDateString('he-IL'); } catch (_) { return ''; } };
+
+/* ---------- מצב ---------- */
+const state = { q: '', cat: 'all' };
+let ALL = [];            /* כל מה שהשרת החזיר: לציבור מאושרים, למנהלת הכל */
+let LISTED = [];         /* מאושרים (+ מוסתרים למנהלת), ממוינים */
+let PENDING = [];        /* ממתינים — מנהלת בלבד */
+let me = { admin: false, nonce: '', loggedIn: false };
+let adminCounts = { feedback: 0 };
+let loaded = false;
+
+/* ---------- קריאות לשרת ---------- */
+async function api(action, opt) {
+  opt = opt || {};
+  const headers = {};
+  if (opt.body) headers['Content-Type'] = 'application/json';
+  if (me.nonce && opt.method === 'POST') headers['X-Instinct-Nonce'] = me.nonce;
+  let res, j;
+  try {
+    res = await fetch(API + '?action=' + action + (opt.qs || ''), {
+      method: opt.method || 'GET', headers, credentials: 'same-origin', cache: 'no-store',
+      body: opt.body ? JSON.stringify(opt.body) : undefined
+    });
+    j = await res.json();
+  } catch (_) { return { ok: false, error: 'אין חיבור לשרת. אפשר לנסות שוב.' }; }
+  if (j && j.ok === undefined) j.ok = res.ok;
+  return j || { ok: false, error: 'תשובה לא תקינה מהשרת' };
+}
+let tt;
+function toast(msg, bad) {
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (bad ? ' bad' : '');
+  clearTimeout(tt); tt = setTimeout(() => { t.className = 'toast'; }, 3800);
+}
+
+/* ---------- ניתוח בקשה לשדות ---------- */
+function segments(s) {
+  const out = []; let last = 0; const re = /\[([^\]]+)\]/g; let m;
+  while ((m = re.exec(s))) { if (m.index > last) out.push({ t: s.slice(last, m.index) }); out.push({ f: m[1] }); last = re.lastIndex; }
+  if (last < s.length) out.push({ t: s.slice(last) });
+  return out;
+}
+const fieldsOf = (s) => [...new Set(segments(s).filter(x => x.f).map(x => x.f))];
+const editable = (s) => segments(s).map(x => x.f !== undefined
+  ? '<span class="fld" contenteditable="true" role="textbox" spellcheck="false" aria-label="' + esc(x.f) + '" data-key="' + esc(x.f) + '" data-ph="' + esc(x.f) + '"></span>'
+  : esc(x.t)).join('');
+
+/* ---------- טעינת נתונים ---------- */
+function indexData() {
+  ALL.forEach((r, i) => { r._i = i; });
+  const ord = (r) => (r.order != null ? r.order : r._i);
+  LISTED = ALL.filter(r => r.status !== 'pending').sort((a, b) =>
+    CAT_ORDER.indexOf(a.cat) - CAT_ORDER.indexOf(b.cat) || (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || a.level - b.level || ord(a) - ord(b));
+  PENDING = ALL.filter(r => r.status === 'pending').sort((a, b) => (b.created || 0) - (a.created || 0));
+}
+async function loadData() {
+  let j = await api('list', { qs: me.admin ? '&all=1' : '' });
+  if (!j.ok) throw new Error(j.error || 'load failed');
+  ALL = j.recipes || [];
+  indexData();
+  return j;
+}
+async function refreshAll() {
+  await loadData();
+  if (me.admin) await refreshAdminState();
+  buildControls(); renderList(); renderAdminBar(); route();
+}
+async function refreshAdminState() {
+  const s = await api('state');
+  if (s.ok) adminCounts.feedback = s.feedback || 0;
+}
+
+/* ---------- בקרות וסינון ---------- */
+function buildControls() {
+  const present = CAT_ORDER.filter(k => LISTED.some(r => r.cat === k));
+  if (state.cat !== 'all' && !present.includes(state.cat)) state.cat = 'all';
+  $('#cats').innerHTML =
+    '<button type="button" class="chip" data-cat="all" aria-pressed="' + (state.cat === 'all') + '">הכל</button>' +
+    present.map(k => '<button type="button" class="chip" data-cat="' + k + '" aria-pressed="' + (state.cat === k) + '">' + CATS[k].label + '</button>').join('');
+}
+$('#cats').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  state.cat = b.dataset.cat; buildControls(); renderList();
+});
+$('#q').addEventListener('input', (e) => { state.q = e.target.value.trim(); renderList(); });
+
+function matches(r) {
+  if (state.cat !== 'all' && r.cat !== state.cat) return false;
+  if (state.q) {
+    const hay = [r.title, r.gives, CATS[r.cat] ? CATS[r.cat].label : '', r.sheetTitle, r.prep, r.prompt, r.tip].join(' ').toLowerCase();
+    if (!hay.includes(state.q.toLowerCase())) return false;
+  }
+  return true;
+}
+function badges(r) {
+  return (r.featured ? '<span class="badge star">' + svg('star') + 'מומלץ</span>' : '') +
+    (r.status === 'hidden' ? '<span class="badge hid">' + svg('eyeoff') + 'מוסתר</span>' : '') +
+    (r.draft ? '<span class="draft">טרם נוסה</span>' : '');
+}
+function cardHtml(r) {
+  return '<div class="cardwrap"><a class="card" href="#/r/' + esc(r.id) + '">' +
+    tile(r.cat) +
+    '<h3>' + esc(r.title) + '</h3>' +
+    '<p class="gives">' + esc(r.gives) + '</p>' +
+    '<span class="foot"><span class="lvl">' + dots(r.level) + 'רמה: ' + LEVELS[r.level].label + '</span><span class="badges">' + badges(r) +
+    (me.admin ? '<span class="badge" title="כמה פעמים הועתק או נשלח">' + svg('copy') + (r.copies || 0) + '</span>' : '') + '</span></span></a>' +
+    (me.admin ? '<button type="button" class="iconbtn cedit" data-edit="' + esc(r.id) + '" title="עריכה" aria-label="עריכת ' + esc(r.title) + '">' + svg('edit') + '</button>' : '') +
+    '</div>';
+}
+function renderList() {
+  const list = LISTED.filter(matches);
+  $('#count').textContent = list.length === LISTED.length ? LISTED.length + ' מתכונים' : 'נמצאו ' + list.length + ' מתוך ' + LISTED.length;
+  if (!LISTED.length) {
+    $('#results').innerHTML = '<div class="state-msg"><p>עוד אין מתכונים באתר.</p></div>';
+    return;
+  }
+  if (!list.length) {
+    $('#results').innerHTML = '<div class="empty"><p>לא נמצא מתכון שמתאים לחיפוש.</p><button type="button" class="chip" id="reset">ניקוי הסינון</button></div>';
+    $('#reset').addEventListener('click', () => { state.q = ''; state.cat = 'all'; $('#q').value = ''; buildControls(); renderList(); });
+    return;
+  }
+  let html = '';
+  CAT_ORDER.forEach((k) => {
+    const part = list.filter(r => r.cat === k);
+    if (!part.length) return;
+    html += '<section class="group"><h2>' + CATS[k].label + '</h2>' +
+      '<p class="sub">' + part.length + (part.length === 1 ? ' מתכון' : ' מתכונים') + '</p>' +
+      '<div class="grid">' + part.map(cardHtml).join('') + '</div></section>';
+  });
+  $('#results').innerHTML = html;
+}
+$('#results').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-edit]'); if (!b) return;
+  openEdit(ALL.find(r => r.id === b.dataset.edit));
+});
+
+/* ---------- עמוד מתכון ---------- */
+function detailHtml(r) {
+  const i = LISTED.indexOf(r);
+  const prev = LISTED[i - 1], next = LISTED[i + 1];
+  const fields = fieldsOf(r.prompt);
+  const long = r.prompt.length > 330 && !fields.length;
+  return '' +
+  '<a class="back" href="#/">' + svg('chev', 'ic') + 'חזרה לכל המתכונים</a>' +
+  '<div class="dhead">' + tile(r.cat) +
+    '<div><h1>' + esc(r.title) + '</h1>' +
+    '<div class="meta"><span class="pill t-' + esc(r.cat) + '">' + (CATS[r.cat] ? CATS[r.cat].label : '') + '</span>' +
+    '<span class="lvl">' + dots(r.level) + 'רמה: ' + LEVELS[r.level].label + '</span>' + badges(r) +
+    (r.author ? '<span>תודה ל' + esc(r.author) + '</span>' : '') +
+    (me.admin ? '<button type="button" class="btn2" id="edBtn" style="min-height:38px;padding:0 14px">' + svg('edit') + 'עריכה</button>' : '') +
+    '</div></div></div>' +
+  (r.gives ? '<p class="dlede">' + esc(r.gives) + '</p>' : '') +
+  (r.prep ? '<div class="prep"><span class="ico" aria-hidden="true">' + svg('clip') + '</span><div><b>מה צריך להכין</b>' + esc(r.prep) + '</div></div>' : '') +
+  '<section class="recipe" aria-labelledby="rh">' +
+    '<div class="recipe-top"><h2 id="rh">הבקשה לסוכן</h2><div class="btns">' +
+    '<button type="button" class="copy" id="waBtn">' + svg('wa') + 'שליחה לאינסטינקט בוואטסאפ</button>' +
+    '<button type="button" class="btn2" id="copyBtn">' + svg('copy') + '<span id="copyLbl">העתקת הבקשה</span></button></div></div>' +
+    '<p class="sendmsg" id="sendMsg" aria-live="polite"></p>' +
+    (fields.length ? '<p class="hint"><span>להשלים את המסומן בצהוב ישירות בטקסט ואז להעתיק. השינויים לא נשמרים.</span><b id="left" aria-live="polite"></b></p>' : '') +
+    '<p class="ptext' + (long ? ' clamped' : '') + '" id="ptext">' + (fields.length ? editable(r.prompt) : esc(r.prompt)) + '</p>' +
+    (long ? '<button type="button" class="more" id="moreBtn" aria-expanded="false">קריאת כל הבקשה</button>' : '') +
+  '</section>' +
+  '<div class="notes">' +
+    (r.tip ? '<div class="note tip"><h3>' + esc(r.tipLabel || 'טיפ מהניסיון') + '</h3><p>' + esc(r.tip) + '</p></div>' : '') +
+    (r.limits ? '<div class="note warn"><h3>שימו לב</h3><p>' + esc(r.limits) + '</p></div>' : '') +
+  '</div>' +
+  (r.example ? '<details class="ex"><summary>איך זה נראה בפועל</summary><p>' + esc(r.example) + '</p></details>' : '') +
+  '<nav class="pn" aria-label="מתכונים נוספים">' +
+    (prev ? '<a href="#/r/' + esc(prev.id) + '"><small>המתכון הקודם</small>' + esc(prev.title) + '</a>' : '<span></span>') +
+    (next ? '<a class="next" href="#/r/' + esc(next.id) + '"><small>המתכון הבא</small>' + esc(next.title) + '</a>' : '') +
+  '</nav>';
+}
+
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (_) {}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok;
+  } catch (_) { return false; }
+}
+const hitSeen = new Set();
+function countHit(id) {
+  if (me.admin || hitSeen.has(id)) return;
+  hitSeen.add(id);
+  try { fetch(API + '?action=hit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id }), keepalive: true }); } catch (_) {}
+}
+
+function showDetail(r) {
+  $('#detailBody').innerHTML = detailHtml(r);
+  $('#home').hidden = true; $('#detail').hidden = false;
+  document.title = r.title + ' | מתכונים למורה';
+  window.scrollTo(0, 0);
+  const eb = $('#edBtn'); if (eb) eb.addEventListener('click', () => openEdit(r));
+  const btn = $('#copyBtn'), lbl = $('#copyLbl');
+  const flds = [...document.querySelectorAll('.fld')];
+  const valueOf = (key) => { const f = flds.find(x => x.dataset.key === key && x.textContent.trim()); return f ? f.textContent.trim() : ''; };
+  const finalText = () => segments(r.prompt).map(x => x.f !== undefined ? (valueOf(x.f) || '[' + x.f + ']') : x.t).join('');
+  const refresh = () => {
+    flds.forEach(f => f.classList.toggle('filled', !!f.textContent.trim()));
+    const left = $('#left'); if (!left) return;
+    const empty = fieldsOf(r.prompt).filter(k => !valueOf(k)).length;
+    left.textContent = empty ? (empty === 1 ? 'נשאר שדה אחד להשלמה' : 'נשארו ' + empty + ' שדות להשלמה') : 'כל השדות מולאו';
+  };
+  flds.forEach((f) => {
+    f.addEventListener('input', () => {
+      if (!f.textContent.trim()) f.innerHTML = '';
+      flds.forEach(o => { if (o !== f && o.dataset.key === f.dataset.key) o.textContent = f.textContent; });
+      refresh();
+    });
+    f.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); const n = flds[flds.indexOf(f) + 1]; if (n) n.focus(); else f.blur(); }
+    });
+    f.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const txt = (e.clipboardData || window.clipboardData).getData('text').replace(/\s+/g, ' ');
+      document.execCommand('insertText', false, txt);
+    });
+  });
+  refresh();
+  const openUrl = (url) => { const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; document.body.appendChild(a); a.click(); a.remove(); };
+  const msg = $('#sendMsg');
+  $('#waBtn').addEventListener('click', () => {
+    const emptyKeys = fieldsOf(r.prompt).filter(k => !valueOf(k));
+    if (emptyKeys.length) {
+      msg.className = 'sendmsg warn';
+      msg.textContent = (emptyKeys.length === 1 ? 'נשאר שדה אחד להשלמה' : 'נשארו ' + emptyKeys.length + ' שדות להשלמה') + '. יש להשלים לפני השליחה, או להעתיק ולערוך בצ׳אט.';
+      const first = flds.find(f => !f.textContent.trim()); if (first) first.focus();
+      return;
+    }
+    const text = finalText();
+    const withText = 'https://wa.me/' + AGENT + '?text=' + encodeURIComponent(text);
+    const fits = withText.length <= 7500;
+    const done = copyText(text);              /* גיבוי: הבקשה מועתקת גם כשנפתח הצ׳אט */
+    openUrl(fits ? withText : 'https://wa.me/' + AGENT);
+    countHit(r.id);
+    msg.className = 'sendmsg';
+    done.then((ok) => {
+      msg.textContent = fits
+        ? 'נפתח הצ׳אט עם אינסטינקט.' + (ok ? ' אם ההודעה לא הופיעה, אפשר להדביק אותה: הבקשה הועתקה.' : '') + ' אם צריך קובץ או תמונה, מצרפים אותם שם.'
+        : (ok ? 'הבקשה ארוכה, ולכן היא הועתקה. יש להדביק אותה בצ׳אט עם אינסטינקט.' : 'הבקשה ארוכה. יש להעתיק אותה בכפתור ״העתקת הבקשה״ ולהדביק בצ׳אט.');
+    });
+  });
+  let t;
+  btn.addEventListener('click', async () => {
+    const ok = await copyText(finalText());
+    if (ok) countHit(r.id);
+    lbl.textContent = ok ? 'הועתק' : 'ההעתקה לא הצליחה, יש לסמן את הטקסט';
+    $('#live').textContent = ok ? 'הבקשה הועתקה' : 'ההעתקה לא הצליחה';
+    clearTimeout(t); t = setTimeout(() => { lbl.textContent = 'העתקת הבקשה'; }, 2200);
+  });
+  const more = $('#moreBtn');
+  if (more) more.addEventListener('click', () => {
+    const p = $('#ptext'); const open = p.classList.toggle('clamped') === false;
+    more.textContent = open ? 'הצגת פחות' : 'קריאת כל הבקשה';
+    more.setAttribute('aria-expanded', String(open));
+  });
+}
+function showHome() {
+  $('#detail').hidden = true; $('#home').hidden = false;
+  document.title = 'מתכונים למורה עם אינסטינקט';
+}
+function route() {
+  if (!loaded) return;
+  const h = location.hash;
+  if (h === '#/pending') {
+    showHome();
+    if (me.admin) { if (!$('#pendDlg').open) openPending(); }
+    else if (me.loggedIn) toast('אין הרשאת ניהול למשתמש הזה', true);
+    else location.href = '/wp-login.php?redirect_to=' + encodeURIComponent(location.origin + '/instinct/#/pending');
+    return;
+  }
+  const m = h.match(/^#\/r\/([\w-]+)/);
+  const r = m && LISTED.find(x => x.id === m[1]);
+  if (r) showDetail(r); else showHome();
+}
+window.addEventListener('hashchange', route);
+
+/* ---------- דיאלוגים: עזרים ---------- */
+function setIcons() {
+  $('#openShare').innerHTML = svg('plus') + 'שיתוף מתכון משלך';
+  $('#openShare2').innerHTML = svg('plus') + 'יש לך מתכון שעבד? אפשר לשתף';
+  $('#openFb').innerHTML = svg('msg') + 'משוב';
+  $('#loginLink').innerHTML = svg('lock') + 'כניסת מנהלת';
+  $('#sf-send').innerHTML = svg('send') + 'שליחה לאישור';
+  $('#fb-send').innerHTML = svg('send') + 'שליחה';
+  ['shareX', 'fbX', 'edX', 'pdX', 'flX'].forEach(id => { $('#' + id).innerHTML = svg('x'); });
+  const opts = '<option value="">לא בטוח/ה, שהמנהלת תחליט</option>' + CAT_ORDER.map(k => '<option value="' + k + '">' + CATS[k].label + '</option>').join('');
+  $('#sf-cat').innerHTML = opts;
+  $('#ed-cat').innerHTML = '<option value="">בחירת קטגוריה…</option>' + CAT_ORDER.map(k => '<option value="' + k + '">' + CATS[k].label + '</option>').join('');
+}
+document.addEventListener('click', (e) => {
+  const c = e.target.closest('[data-close]'); if (c) { const d = c.closest('dialog'); if (d) d.close(); return; }
+  if (e.target.tagName === 'DIALOG') {   /* סגירה רק בלחיצה על הרקע המכהה, לא על ריפוד הדיאלוג */
+    const b = e.target.getBoundingClientRect();
+    if (e.clientX < b.left || e.clientX > b.right || e.clientY < b.top || e.clientY > b.bottom) e.target.close();
+  }
+});
+['pendDlg'].forEach(id => $('#' + id).addEventListener('close', () => { if (location.hash === '#/pending') history.replaceState(null, '', location.pathname + location.search); }));
+
+/* ---------- הגשת מתכון (ציבורי) ---------- */
+const shareDlg = $('#shareDlg');
+const shareFormHtml = $('#shareBody').innerHTML;
+function openShare() {
+  if (!$('#sf-title')) { $('#shareBody').innerHTML = shareFormHtml; setIcons(); }
+  ['sf-title','sf-gives','sf-prep','sf-prompt','sf-tip','sf-author','sf-email','sf-website'].forEach(id => { $('#' + id).value = ''; });
+  $('#sf-cat').value = ''; $('#sf-level').value = '1'; $('#sf-ok').checked = false;
+  $('#sf-err').className = 'err'; $('#sf-err').textContent = '';
+  shareDlg.showModal();
+}
+$('#openShare').addEventListener('click', openShare);
+$('#openShare2').addEventListener('click', openShare);
+$('#shareForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const v = (id) => $('#' + id).value.trim();
+  const err = $('#sf-err'); err.className = 'err';
+  if (!v('sf-title')) { err.textContent = 'חסר שם למתכון.'; $('#sf-title').focus(); return; }
+  if (!v('sf-prompt')) { err.textContent = 'חסרה הבקשה לסוכן.'; $('#sf-prompt').focus(); return; }
+  if (!$('#sf-ok').checked) { err.textContent = 'יש לאשר שהמתכון לא כולל פרטים מזהים של תלמידים.'; $('#sf-ok').focus(); return; }
+  const btn = $('#sf-send'); btn.disabled = true; err.textContent = 'שולח…';
+  const j = await api('submit', { method: 'POST', body: {
+    title: v('sf-title'), cat: v('sf-cat'), level: v('sf-level'), gives: v('sf-gives'), prep: v('sf-prep'), prompt: v('sf-prompt'),
+    tip: v('sf-tip'), author: v('sf-author'), email: v('sf-email'), website: v('sf-website'), ok: true
+  } });
+  btn.disabled = false;
+  if (!j.ok) { err.textContent = j.error || 'השליחה נכשלה. אפשר לנסות שוב.'; return; }
+  $('#shareBody').innerHTML = '<div class="thanks"><div class="big">' + svg('check', '') + '</div><h2>תודה!</h2><p class="lead">המתכון התקבל וממתין לאישור. אחרי בדיקה הוא יעלה לאתר.</p><div class="actions" style="justify-content:center"><button type="button" class="btn2 primary" data-close>סגירה</button></div></div>';
+  $('#live').textContent = 'המתכון נשלח לאישור';
+});
+
+/* ---------- משוב (ציבורי) ---------- */
+const fbDlg = $('#fbDlg');
+const fbFormHtml = $('#fbBody').innerHTML;
+$('#openFb').addEventListener('click', () => {
+  if (!$('#fb-msg')) { $('#fbBody').innerHTML = fbFormHtml; setIcons(); }
+  $('#fb-msg').value = ''; $('#fb-contact').value = ''; $('#fb-err').textContent = '';
+  fbDlg.showModal();
+});
+$('#fbForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const msg = $('#fb-msg').value.trim(), err = $('#fb-err');
+  if (!msg) { err.textContent = 'כדאי לכתוב משהו קודם.'; $('#fb-msg').focus(); return; }
+  const btn = $('#fb-send'); btn.disabled = true; err.textContent = 'שולח…';
+  const j = await api('feedback', { method: 'POST', body: { message: msg, contact: $('#fb-contact').value.trim(), website: $('#fb-website').value } });
+  btn.disabled = false;
+  if (!j.ok) { err.textContent = j.error || 'השליחה נכשלה.'; return; }
+  fbDlg.close(); toast('תודה על המשוב!');
+});
+
+/* ======================= ניהול ======================= */
+function renderAdminBar() {
+  const bar = $('#adminbar');
+  bar.hidden = !me.admin;
+  if (!me.admin) return;
+  $('#adminTag').innerHTML = svg('shield') + 'מצב ניהול';
+  $('#abPending').innerHTML = svg('inbox') + 'ממתינים לאישור <span class="cnt" data-n="' + PENDING.length + '">' + PENDING.length + '</span>';
+  $('#abNew').innerHTML = svg('plus') + 'מתכון חדש';
+  $('#abFb').innerHTML = svg('msg') + 'משוב <span class="cnt" data-n="' + adminCounts.feedback + '">' + adminCounts.feedback + '</span>';
+  $('#abExport').innerHTML = svg('download') + 'גיבוי';
+  $('#loginLink').hidden = true;
+}
+$('#abPending').addEventListener('click', openPending);
+$('#abNew').addEventListener('click', () => openEdit(null));
+$('#abFb').addEventListener('click', openFeedbackList);
+$('#abExport').addEventListener('click', async () => {
+  const j = await api('export');
+  if (!j.ok) { toast(j.error || 'הגיבוי נכשל', true); return; }
+  const blob = new Blob([JSON.stringify(j, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'instinct-recipes-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+});
+
+async function adminOps(ops) {
+  const j = await api('ops', { method: 'POST', body: { ops } });
+  if (!j.results) return { ok: false, error: j.error || 'הפעולה נכשלה', results: [] };
+  return j;
+}
+function opError(j) {
+  const f = (j.results || []).find(r => !r.ok);
+  if (!f) return j.error || 'הפעולה נכשלה';
+  if (f.error === 'needs_cat' || f.error === 'cat is required') return 'חסרה קטגוריה';
+  return f.message || f.error || 'הפעולה נכשלה';
+}
+
+/* ---- עריכה / יצירה ---- */
+const edDlg = $('#editDlg');
+let edCur = null;
+const FIELD_KEYS = ['title', 'cat', 'level', 'gives', 'prep', 'prompt', 'tip', 'limits', 'example', 'tipLabel', 'author', 'sheetTitle', 'status', 'featured', 'draft'];
+const edEl = (k) => edDlg.querySelector('[data-f="' + k + '"]');
+function openEdit(r) {
+  edCur = r || null;
+  const isNew = !r, isPending = r && r.status === 'pending';
+  $('#edTitle').textContent = isNew ? 'מתכון חדש' : (isPending ? 'מתכון שהוגש לאישור' : 'עריכת מתכון');
+  FIELD_KEYS.forEach((k) => {
+    const el = edEl(k), val = r ? r[k] : null;
+    if (el.type === 'checkbox') el.checked = !!val;
+    else el.value = val == null || val === '' ? (k === 'level' ? '1' : (k === 'status' ? 'published' : '')) : String(val);
+  });
+  const info = $('#edInfo');
+  if (isPending) {
+    info.hidden = false;
+    info.textContent = 'הוגש' + (r.author ? ' על ידי ' + r.author : '') + (r.email ? ' · מייל: ' + r.email : '') + (r.created ? ' · ' + fmtDate(r.created) : '') + (r.cat ? '' : ' · לא נבחרה קטגוריה, כדאי לבחור');
+  } else if (r && r.copies != null) { info.hidden = false; info.textContent = 'הועתק או נשלח לאינסטינקט ' + r.copies + ' פעמים'; }
+  else info.hidden = true;
+  $('#edStatusWrap').hidden = isNew || isPending;
+  $('#ed-err').className = 'err'; $('#ed-err').textContent = '';
+  const btn = (id, label, ic, cls) => '<button type="button" class="btn2 ' + (cls || '') + '" id="' + id + '">' + svg(ic) + label + '</button>';
+  $('#ed-actions').innerHTML =
+    (isNew ? btn('ed-publish', 'פרסום', 'check', 'primary') : '') +
+    (isPending ? btn('ed-approve', 'אישור ופרסום', 'check', 'primary') + btn('ed-save', 'שמירה בלי לפרסם', 'edit') + btn('ed-del', 'דחייה ומחיקה', 'trash', 'danger') : '') +
+    (!isNew && !isPending ? btn('ed-save', 'שמירה', 'check', 'primary') + btn('ed-del', 'מחיקה', 'trash', 'danger') : '') +
+    '<button type="button" class="btn2" data-close>ביטול</button>';
+  edDlg.showModal();
+}
+function readEdit() {
+  const o = {};
+  FIELD_KEYS.forEach((k) => {
+    const el = edEl(k);
+    o[k] = el.type === 'checkbox' ? el.checked : el.value.trim();
+  });
+  o.level = parseInt(o.level, 10) || 1;
+  return o;
+}
+function edValidate(o, needCat) {
+  const err = $('#ed-err'); err.className = 'err';
+  if (!o.title) { err.textContent = 'חסר שם למתכון.'; edEl('title').focus(); return false; }
+  if (!o.prompt) { err.textContent = 'חסרה הבקשה לסוכן.'; edEl('prompt').focus(); return false; }
+  if (needCat && !o.cat) { err.textContent = 'יש לבחור סוג משימה.'; edEl('cat').focus(); return false; }
+  return true;
+}
+async function edRun(btnEl, op, doneMsg, needCat) {
+  const o = readEdit();
+  if (!edValidate(o, needCat)) return;
+  const fields = Object.assign({}, o);
+  if (op !== 'update' || (edCur && edCur.status === 'pending')) delete fields.status;   /* סטטוס נקבע על ידי הפעולה */
+  btnEl.disabled = true;
+  const body = op === 'create' ? { op: 'create', fields: Object.assign(fields, { status: 'published' }) } : { op, id: edCur.id, fields };
+  const j = await adminOps([body]);
+  btnEl.disabled = false;
+  if (!j.ok) { $('#ed-err').textContent = opError(j); return; }
+  edDlg.close(); toast(doneMsg);
+  await refreshAll();
+}
+$('#ed-actions').addEventListener('click', async (e) => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'ed-publish') edRun(b, 'create', 'המתכון פורסם', true);
+  else if (b.id === 'ed-approve') edRun(b, 'approve', 'המתכון אושר ופורסם', true);
+  else if (b.id === 'ed-save') edRun(b, 'update', 'נשמר', false);
+  else if (b.id === 'ed-del') {
+    const pend = edCur.status === 'pending';
+    if (!confirm((pend ? 'לדחות ולמחוק את ההגשה' : 'למחוק לצמיתות את המתכון') + ' "' + edCur.title + '"?')) return;
+    b.disabled = true;
+    const j = await adminOps([{ op: pend ? 'reject' : 'delete', id: edCur.id }]);
+    b.disabled = false;
+    if (!j.ok) { $('#ed-err').textContent = opError(j); return; }
+    edDlg.close(); toast(pend ? 'ההגשה נדחתה' : 'המתכון נמחק');
+    if (location.hash.startsWith('#/r/')) location.hash = '#/';
+    await refreshAll();
+  }
+});
+$('#editForm').addEventListener('submit', (e) => e.preventDefault());
+
+/* ---- ממתינים ---- */
+function pendingHtml() {
+  if (!PENDING.length) return '<div class="state-msg" style="margin-top:0">אין מתכונים שממתינים לאישור.</div>';
+  return PENDING.map((r) =>
+    '<article class="pcard" data-id="' + esc(r.id) + '"><h3>' + esc(r.title) + '</h3>' +
+    '<div class="pmeta"><span>' + (CATS[r.cat] ? esc(CATS[r.cat].label) : 'ללא קטגוריה') + '</span><span>רמה: ' + LEVELS[r.level].label + '</span>' +
+    (r.author ? '<span>קרדיט: ' + esc(r.author) + '</span>' : '') + (r.email ? '<span dir="ltr">' + esc(r.email) + '</span>' : '') + '<span>' + fmtDate(r.created) + '</span></div>' +
+    '<p class="psnip">' + esc(r.prompt.length > 260 ? r.prompt.slice(0, 260) + '…' : r.prompt) + '</p>' +
+    '<div class="actions">' +
+      '<button type="button" class="btn2 primary" data-act="edit">' + svg('edit') + 'עריכה ופרסום</button>' +
+      (r.cat ? '<button type="button" class="btn2" data-act="quick">' + svg('check') + 'אישור מהיר</button>' : '') +
+      '<button type="button" class="btn2 danger" data-act="reject">' + svg('x') + 'דחייה</button>' +
+    '</div></article>').join('');
+}
+function openPending() { $('#pdList').innerHTML = pendingHtml(); if (!$('#pendDlg').open) $('#pendDlg').showModal(); }
+$('#pdList').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const id = b.closest('.pcard').dataset.id, r = ALL.find(x => x.id === id);
+  if (b.dataset.act === 'edit') { $('#pendDlg').close(); openEdit(r); return; }
+  if (b.dataset.act === 'reject' && !confirm('לדחות ולמחוק את ההגשה "' + r.title + '"?')) return;
+  b.disabled = true;
+  const j = await adminOps([{ op: b.dataset.act === 'quick' ? 'approve' : 'reject', id }]);
+  if (!j.ok) { b.disabled = false; toast(opError(j), true); return; }
+  toast(b.dataset.act === 'quick' ? 'המתכון אושר ופורסם' : 'ההגשה נדחתה');
+  await refreshAll();
+  $('#pdList').innerHTML = pendingHtml();
+});
+
+/* ---- משוב שהתקבל ---- */
+async function openFeedbackList() {
+  const j = await api('feedback_list');
+  if (!j.ok) { toast(j.error || 'הטעינה נכשלה', true); return; }
+  const list = (j.feedback || []).slice().reverse();
+  $('#flList').innerHTML = list.length ? list.map((f) =>
+    '<article class="pcard" data-id="' + esc(f.id) + '"><div class="pmeta"><span>' + fmtDate(f.created) + '</span>' + (f.contact ? '<span>' + esc(f.contact) + '</span>' : '') + '</div>' +
+    '<p class="psnip">' + esc(f.message) + '</p><div class="actions"><button type="button" class="btn2 danger" data-del="' + esc(f.id) + '">' + svg('trash') + 'מחיקה</button></div></article>').join('')
+    : '<div class="state-msg" style="margin-top:0">עוד אין משוב.</div>';
+  $('#fbListDlg').showModal();
+}
+$('#flList').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-del]'); if (!b) return;
+  b.disabled = true;
+  const j = await adminOps([{ op: 'feedback_delete', id: b.dataset.del }]);
+  if (!j.ok) { b.disabled = false; toast(opError(j), true); return; }
+  b.closest('.pcard').remove(); adminCounts.feedback = Math.max(0, adminCounts.feedback - 1); renderAdminBar();
+});
+
+/* ======================= אתחול ======================= */
+async function boot() {
+  setIcons();
+  try {
+    const j = await loadData();
+    if (j.maybeAdmin) {
+      const m = await api('me');
+      me = { admin: !!m.admin, nonce: m.nonce || '', loggedIn: !!m.loggedIn };
+      if (me.admin) { await loadData(); await refreshAdminState(); }
+    }
+  } catch (_) {
+    $('#results').innerHTML = '<div class="state-msg"><p>לא הצלחנו לטעון את המתכונים.</p><button type="button" class="chip" id="retry">ניסיון נוסף</button></div>';
+    $('#retry').addEventListener('click', () => { $('#results').innerHTML = '<div class="state-msg">טוען את המתכונים…</div>'; boot(); });
+    return;
+  }
+  loaded = true;
+  buildControls(); renderList(); renderAdminBar(); route();
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,3 +1,9 @@
 ﻿
 # ZIPs not needed - deploy is via SCP
 *.zip
+
+# INSTINCT: מפתח סוכן, נתונים חיים (מקור האמת בשרת), גיבויים
+INSTINCT/site/config.php
+INSTINCT/site/data/*.backup.json
+INSTINCT/site/data/feedback.json
+INSTINCT/site/data/rate.json

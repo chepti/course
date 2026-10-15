@@ -1,0 +1,17 @@
+# מתכוני אינסטינקט — HTML בלי cache כדי שעדכונים יופיעו מיד
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|md|txt)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# קובץ הקונפיג (מפתח הסוכן) — חסום לגישה ישירה
+<FilesMatch "^config(\.sample)?\.php$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
