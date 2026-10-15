@@ -1482,7 +1482,17 @@ async function fetchDataVersion() {
   } catch (e) { dataVersion = 0; }
 }
 
+async function refreshNonce() {
+  try {
+    const r = await fetch(API + '?action=me', { credentials: 'same-origin', cache: 'no-store' });
+    const j = await r.json();
+    if (j.nonce) nonce = j.nonce;
+  } catch (e) {}
+}
+setInterval(refreshNonce, 30 * 60 * 1000);   // מפתח האבטחה פג אחרי שעות — מרעננים ברקע
+
 async function saveData(force) {
+  await refreshNonce();
   const clean = JSON.parse(JSON.stringify(DATA, (k, v) => k === '_el' ? undefined : v));
   const res = await fetch(API + '?action=save' + (force ? '&force=1' : ''), {
     method: 'POST',

@@ -92,6 +92,19 @@ function home360_update_root_rewrites($spaces) {
     return file_put_contents($htaccess, $updated) !== false;
 }
 
+// אימות בקשת כתיבה: nonce תקף, או (כשה-nonce פג כי הדף נשאר פתוח שעות) בקשה מאותו אתר
+// מאדמין מחובר — הדפדפן שולח Origin/Referer של האתר, ואתר זר לא יכול לשלוח JSON עם כותרות מותאמות.
+function home360_nonce_ok($nonce) {
+    if ($nonce && wp_verify_nonce($nonce, 'home360_save')) return true;
+    $host = parse_url(home_url(), PHP_URL_HOST);
+    foreach (array('HTTP_ORIGIN', 'HTTP_REFERER') as $k) {
+        if (!empty($_SERVER[$k])) {
+            return parse_url($_SERVER[$k], PHP_URL_HOST) === $host;
+        }
+    }
+    return false;
+}
+
 if ($home360_action === 'me') {
     $user = $loggedIn && function_exists('wp_get_current_user') ? wp_get_current_user() : null;
     echo json_encode(array(
@@ -114,7 +127,7 @@ if ($home360_action === 'upload_image' && $_SERVER['REQUEST_METHOD'] === 'POST')
         exit;
     }
     $nonce = isset($_SERVER['HTTP_X_HOME360_NONCE']) ? $_SERVER['HTTP_X_HOME360_NONCE'] : '';
-    if (!wp_verify_nonce($nonce, 'home360_save')) {
+    if (!home360_nonce_ok($nonce)) {
         http_response_code(403);
         echo json_encode(array('error' => 'bad nonce'));
         exit;
@@ -174,7 +187,7 @@ if ($home360_action === 'save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     $nonce = isset($_SERVER['HTTP_X_HOME360_NONCE']) ? $_SERVER['HTTP_X_HOME360_NONCE'] : '';
-    if (!wp_verify_nonce($nonce, 'home360_save')) {
+    if (!home360_nonce_ok($nonce)) {
         http_response_code(403);
         echo json_encode(array('error' => 'bad nonce'));
         exit;
