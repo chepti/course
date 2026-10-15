@@ -300,6 +300,7 @@ if ($inst_actionName === 'help' || $inst_actionName === '') {
             'state' => 'GET (מנהלת) — תמונת מצב קומפקטית: ספירות, ממתינים, רשימת כותרות',
             'submit' => 'POST (ציבורי) — {title,prompt,cat?,level?,gives?,prep?,tip?,author?,email?,ok:true} → נכנס כ"ממתין". עד 4 בשעה לכתובת',
             'hit' => 'POST (ציבורי) — {id} מגדיל מונה העתקות',
+            'tried' => 'POST (ציבורי) — {id, on:true|false} "ניסיתי!": מגדיל/מקטין מונה של מי שסימנו שהמתכון עבד. מחזיר {tried}. השדה tried מופיע גם ב-list',
             'feedback' => 'POST (ציבורי) — {message,contact?}',
             'feedback_list' => 'GET (מנהלת)',
             'export' => 'GET (מנהלת) — גיבוי מלא',
@@ -405,6 +406,25 @@ if ($inst_actionName === 'hit' && $inst_method === 'POST') {
         foreach ($all as &$r) if ($r['id'] === $id && $r['status'] === 'published') { $r['copies'] = (isset($r['copies']) ? $r['copies'] : 0) + 1; break; }
     });
     inst_out(array('ok' => true));
+}
+
+// "ניסיתי!" — סימון שמתכון עבד. הסימון האישי נשמר בדפדפן; כאן רק המונה המצטבר (on:false = ביטול סימון)
+if ($inst_actionName === 'tried' && $inst_method === 'POST') {
+    $b = inst_body();
+    $id = isset($b['id']) ? (string) $b['id'] : '';
+    $delta = (isset($b['on']) && !$b['on']) ? -1 : 1;
+    if (!inst_rate_ok('tried', 40, 150)) inst_err('יותר מדי סימונים בזמן קצר', 429);
+    $n = inst_update('recipes', function (&$all) use ($id, $delta) {
+        foreach ($all as &$r) {
+            if ($r['id'] === $id && $r['status'] === 'published') {
+                $r['tried'] = max(0, (isset($r['tried']) ? (int) $r['tried'] : 0) + $delta);
+                return $r['tried'];
+            }
+        }
+        return null;
+    });
+    if ($n === null) inst_err('not_found', 404);
+    inst_out(array('ok' => true, 'tried' => $n));
 }
 
 if ($inst_actionName === 'feedback' && $inst_method === 'POST') {
