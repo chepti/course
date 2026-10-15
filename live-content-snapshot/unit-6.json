@@ -1,0 +1,71 @@
+{
+  "sidebar_title": "מדיה ואודיו",
+  "primary_color": "#e67e22",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "מבט על",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>מבט על</h1>\r\n                    <p>אתם רוצים להכין סרטון הסבר לתלמידים? או פודקאסט על נושא שהם לומדים? אולי להנפיש תמונה של דמות היסטורית שתדבר על עצמה?</p>\r\n                    <p>עד לא מזמן זה דרש ציוד, זמן וידע טכני. היום אפשר ליצור את כל אלה תוך דקות, בלי מצלמה ובלי עריכה מורכבת.</p>\r\n                    <p>ביחידה הזו נלמד איך ליצור חמישה סוגי תוכן מדיה - אודיו, סרטוני הסבר, הנפשות, סרטונים עלילתיים ומונטאז'ים. נכיר את הכלים ונבין מתי להשתמש בכל אחד.</p>\r\n                    \r\n                    <p>[video: https://www.youtube.com/embed/VMOrQTrCAT4 | מבט על - יצירת מדיה ואודיו (סרטון)]</p>\r\n\r\n                    <img src=\"https://i.imgur.com/5sxpD5S.jpg\" alt=\"איור מדיה ואודיו\" class=\"illustration\">",
+      "blocked_url": "https://drive.google.com/drive/folders/1mi_n-dRCTs-h5ZoTTlBimQa0Pf7inDuS?usp=sharing"
+    },
+    {
+      "id": "tools",
+      "title": "כלים",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>כלים</h1>\r\n<p>ביחידה זו נכיר כלים ליצירת תוכן מדיה ואודיו - מפודקאסטים אוטומטיים ועד סרטונים עלילתיים. כל כלי מתאים לסוג תוכן אחר ולצרכים שונים.</p>\r\n<h4>אודיו</h4>\r\n<p>כלים ליצירת תוכן אודיו - פודקאסטים, טקסט לדיבור ושירים.</p>\r\n<h4>דיבוב</h4>\n<p>כלים ליצירת קריינות וקולות בבינה, ולדיבוב - ElevenLabs.</p>\r\n<h4>הנפשה וסרטוני AI</h4>\r\n<p>כלים להנפשה ויצירת וידאו - גוגל וידס, קנבה, מינמקס ועוד.</p>\r\n<h4>סרטוני הסבר</h4>\r\n<p>כלים ליצירת סרטוני הסבר - ג'מיני נוטבוק, סימוול, קנבה, סקריןפאל ו-LOOM.</p>\r\n<h4>שירים</h4>\r\n<p>כיצד ליצור שירים לליווי הלמידה</p>\r\n<p><a href=\"https://tikshuv.chepti.com/wp-content/uploads/2026/06/WhatsApp-Image-2026-05-03-at-23.55.35.jpeg\"><img class=\"alignnone size-full wp-image-33235\" src=\"https://tikshuv.chepti.com/wp-content/uploads/2026/06/WhatsApp-Image-2026-05-03-at-23.55.35.jpeg\" alt=\"\" width=\"1024\" height=\"572\" /></a></p>"
+    },
+    {
+      "id": "tools_audio",
+      "title": "אודיו",
+      "parent": "tools",
+      "videos": [],
+      "html": "<h2>אודיו</h2>\r\n<hr />\r\n<h4>פודקאסט אוטומטי בג'מיני נוטבוק</h4>\r\n<p>ניתן ליצור פודקאסט אוטומטי שבו שני מנחים צוללים ומעמיקים במקורות שהעלינו או קישרנו למחברת. איכות מפתיעה, ומאפשר למידה דרך האוזניים.</p>\r\n<p>[video: https://www.youtube.com/embed/sGkleItTNrs]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://notebooklm.google.com/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">נוטבוק</a></div>\r\n<hr />\r\n<h4>טקסט לדיבור ב-AI STUDIO</h4>\r\n<p>כאשר נרצה שליטה יותר מדוייקת בתוכן, נעדיף ליצור את האודיו. סטודיו (איזור המפתחים של גוגל) מאפשר להדביק טקסט ולקבל קריינות של דובר אחד (למשל הקראת מבחן) או שניים (דו שיח מכל סוג שנרצה). אפשר לשלוט ברמה די טובה על תוכן הדברים. כדאי לנקד, אבל עדיין יהיו שגיאות. אפשר ליצור שוב עד להגעה לתוצאה מוצלחת.</p>\r\n<p>[video: https://www.youtube.com/embed/XGn1WHisAJ4]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://aistudio.google.com/generate-speech?model=gemini-2.5-flash-preview-tts\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">AI STUDIO TTS</a></div>\r\n<hr />\r\n<h4>טקסט לדיבור ב-OPENAI FM</h4>\r\n<p>פשוט ובסיסי</p>\r\n<p>[video: https://www.youtube.com/embed/YzjIe1qaEJ0]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://www.openai.fm/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">OPENAI FM</a></div>\r\n<hr />\r\n<div class=\"button-wrapper\"> </div>"
+    },
+    {
+      "id": "tools_dubbing",
+      "title": "דיבוב",
+      "parent": "tools",
+      "videos": [],
+      "html": "<h2>דיבוב</h2>\n<hr />\n<h4>ElevenLabs</h4>\n<p>פלטפורמה ליצירת קריינות וקולות בבינה, ולדיבוב סרטונים ודמויות. המסלול החינמי מוגבל במכסה חודשית, ומומלץ לבדוק מראש את איכות ההגייה בעברית.</p>\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://elevenlabs.io/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">ElevenLabs</a></div>"
+    },
+    {
+      "id": "tools_animation",
+      "title": "הנפשה וסרטוני AI",
+      "parent": "tools",
+      "videos": [],
+      "html": "<h2>הנפשה</h2>\r\n<hr />\r\n<h4>גוגל וידס</h4>\r\n<p>כלי הווידאו של גוגל - יצירת סרטון שלם מפרומפט או מתמונות, עם תבניות, קריינות ועריכה נוחה. נגיש בחשבון גוגל רגיל.</p>\r\n<p>[video: https://www.youtube.com/embed/pTln0rmd29k]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://vids.google.com/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">גוגל וידס</a></div>\r\n<hr />\r\n<h4>סרטוני AI בקנבה</h4>\r\n<p>קנבה מאפשרת ליצור קטעי וידאו עם בינה ולשלב אותם ישירות בעיצובים ובמצגות - הכל בתוך הכלי המוכר.</p>\r\n<p>[video: https://www.youtube.com/embed/zxGTcw4Iu8c]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://www.canva.com/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">קנבה</a></div>\r\n<hr />\r\n<h4>מינמקס</h4>\r\n<p>מתחילים מתמונה ומקבלים סרטון קצר. המתנה ארוכה של כמה שעות לקבלת התוצר. מגבלה חודשית, הקרדיטים מתחדשים. כלי סיני.</p>\r\n<p>[video: https://www.youtube.com/embed/NTc7w1e77Hs]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://hailuoai.video/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">מינמקס</a></div>\r\n<p>חלופות אחרות: קלינג, וידו, לומה, ראנווי (בתשלום)</p>\r\n<p><em>סורה 2 - כלי וידאו קולנועי שהיה כאן, ונסגר.</em></p>\r\n<hr />\r\n<h4>גרוק - יצירת וידאו</h4>\r\n<p>גרוק (של X) מסוגל ליצור סרטוני AI איכותיים מתיאור טקסט. <strong>שימו לב: יצירת וידאו בגרוק דורשת מנוי בתשלום. </strong><a href=\"https://youtu.be/GOt1uyZN294\">https://youtu.be/GOt1uyZN294</a></p>"
+    },
+    {
+      "id": "tools_explanation",
+      "title": "סרטוני הסבר",
+      "parent": "tools",
+      "videos": [],
+      "html": "<h2>סרטוני הסבר</h2>\r\n                    \r\n                    <hr>\r\n                    \r\n                    <h4>ג'מיני נוטבוק</h4>\r\n                    <p>בתוך נוטבוק ניתן ליצור סרטון סקירה, זו בעצם מצגת מעוצבת שמלווה בקריינות, שמציגה את התוכן בצורה בהירה ומעניינת יחסית.</p>\r\n                    <p>[video: https://www.youtube.com/embed/DByAr6q2Uhs]</p>\r\n\r\n                    <hr>\r\n                    \r\n                    <h4>סימוול</h4>\r\n                    <p>תוסף לדפדפן שמאפשר להעלות קובץ או נושא וליצור עליו סרטון הסבר. בסיסי מבחינת עיצוב, תוצר ארוך יחסית (כ-5 דקות).</p>\r\n                    <p>20K תווים חינם בחודש. אין אופציה להורדת הסרטון לאחרונה, צריך לצלם בעזרת כלי הקלטת מסך.</p>\r\n                    <div class=\"button-wrapper\">\r\n                        <a href=\"https://www.symvol.io/\" target=\"_blank\" class=\"styled-button\" data-track-click>סימוול</a>\r\n                    </div>\r\n\r\n                    <hr>\r\n                    \r\n                    <h4>סרטון הסבר בקנבה</h4>\r\n                    <p>לפעמים נרצה ליצור סרטון הסבר בעצמנו, בלי בינה.</p>\r\n                    <p>קנבה למשל מאפשרת להקליט את עצמנו, עם או בלי שיראו אותנו, על גבי מצגות ויצירות נוספות.</p>\r\n                    <p>איך? בהעלאות, נלחץ על \"הקלט את עצמך\" ונגיע לסטודיו. נבחר מסכים לשיתוף, נמקם את הוידאו ונתחיל להקליט.</p>\r\n                    <p>בסיום - שמירה ויציאה. קנבה מזהה מעברים בין שקפים, ומחלקת את הוידאו כך שיציג בכל שקף רק את הקטע המתאים.</p>\r\n                    <p>אפשר להוסיף כתוביות לסרטון שאנו מעלים אל קנבה, באופן אוטומטי יווצרו תיבות טקסט מתאימות לכל קטע בסרטון, שניתן לערוך.</p>\r\n\r\n                    <hr>\r\n                    \r\n                    <h4>סרטון סמן - סקריןפאל</h4>\r\n                    <p>כלי חמוד ללכידת מסך, אני משתמשת בו המון. מדגיש את סמן העכבר, מקליט אותי ואת המסך בצורה בהירה (פחות מוצלח כשצריך להקליט שמע מהמחשב). יתרון משמעותי - אפשר להשהות הקלטה, לחזור אחורנית ולדרוס קטעים.</p>\r\n                    <p>חינם עד 15 דקות בכל פעם, מאפשר חיבור לערוץ יוטיוב והעלאה ישירה לשם, עריכה בסיסית</p>\r\n                    <p>[video: https://www.youtube.com/embed/j8eljodcbLE]</p>\r\n                    <div class=\"button-wrapper\">\r\n                        <a href=\"https://screenpal.com/\" target=\"_blank\" class=\"styled-button\" data-track-click>סקריןפאל</a>\r\n                    </div>\r\n\r\n                    <hr>\r\n                    \r\n                    <h4>LOOM</h4>\r\n                    <p>עוד חלופה עם בונוס למורים - LOOM. היתרון - מעלה מיד לענן את הסרטון, אפשר לתת סרטון צפיה תוך דקות ספורות. אפשר לבקש חשבון חינוך.</p>\r\n                    <div class=\"button-wrapper\">\r\n                        <a href=\"https://tikshuv.chepti.com/%D7%90%D7%99%D7%9A-%D7%A4%D7%AA%D7%97%D7%AA%D7%99-%D7%97%D7%A9%D7%91%D7%95%D7%9F-%D7%9C%D7%95%D7%9D-loom-%D7%9C%D7%97%D7%99%D7%A0%D7%95%D7%9A/\" target=\"_blank\" class=\"styled-button\" data-track-click>LOOM - חשבון חינוך</a>\r\n                    </div>"
+    },
+    {
+      "id": "tools_songs",
+      "title": "שירים",
+      "parent": "tools",
+      "videos": [],
+      "html": "<h4>שירים  בג'מיני</h4>\r\n<p>ג'מיני 2.5 מאפשר ליצור שירים ומוזיקה, כולל בעברית. אפשר לבקש ג'ינגל לשיעור, שיר לפרשת שבוע, מנגינה לזיכרון מידע ועוד - ולהוריד את הקובץ לשימוש ישיר בכיתה.</p>\r\n<p><a href=\"https://gemini.google.com/app\"> ג'מיני</a></p>\r\n<hr />\r\n<h4>שירים בסונו</h4>\r\n<p>סונו - יוצר שירים בעברית. שימו לב: הורדת שיר מסונו מצריכה מנוי בתשלום - גם בגרסה הבסיסית. בגרסה החינמית אפשר רק להאזין. בגרסה בתשלום אפשר גם להעלות הקלטה ולקבל תזמורת מלווה, החלפת הקול ועוד.</p>\r\n<p>[video: https://www.youtube.com/embed/wfCTHXML_SI]</p>\r\n<p><a href=\"https://suno.com/discover\">סונו</a></p>"
+    },
+    {
+      "id": "discussion",
+      "title": "דיון",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>דיון</h1>\r\n                    <p><strong>חלופה 1: דילמה פדגוגית</strong></p>\r\n                    <p>חשבו על יחידת לימוד שאתם מלמדים. תארו נושא ספציפי שקשה להסביר בעל פה או בטקסט. איזה סוג תוכן מדיה (אודיו/הסבר/הנפשה/עלילתי/מונטאז') יכול לשדרג את ההוראה שלו? למה דווקא הסוג הזה? מה הערך המוסף שלו על פני הסבר מסורתי?</p>\r\n                    <p><strong>חלופה 2: תלמידים כיוצרים</strong></p>\r\n                    <p>אם הייתם נותנים לתלמידים שלכם משימה ליצור תוכן מדיה על נושא שלמדו - איזה סוג תוכן הייתם בוחרים? באיזו שכבת גיל? מה הלמידה העמוקה שתתרחש בתהליך היצירה עצמו (מעבר לידע על הנושא)?</p>\r\n                    \r\n                    <img src=\"https://i.imgur.com/wI5ovIv.jpg\" alt=\"איור דיון\" class=\"illustration\">"
+    },
+    {
+      "id": "task",
+      "title": "משימה",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>משימה</h1>\r\n<p>צרו תוכן מדיה אחד שישרת מורים אחרים:</p>\r\n<h4>אפשרות 1: סרטון הסבר (2-4 דקות)</h4>\r\n<p>הסבר קצר על נושא לימודי ספציפי - מושג מתמטי, תהליך מדעי, אירוע היסטורי. בחרו נושא שמורים רבים מלמדים והכינו סרטון ברור ומסודר.</p>\r\n<h4>אפשרות 2: דמות מדברת</h4>\r\n<p>תמונה מונפשת של דמות רלוונטית (היסטורית/ספרותית/מדעית) שמספרת על עצמה או מסבירה מושג. הקפידו על דיוק תוכני ואותנטיות.</p>\r\n<h4>אפשרות 3: פודקאסט חינוכי</h4>\r\n<p>שיחה או הסבר מוקלט (3-5 דקות) על נושא מעניין. יכול להיות סקירה, ראיון מדומה, או הצגת נושא במבט חדש. (אם בחרתם פודקאסט אוטומטי - ציינו בפוסט כיצד התאמתם ובדקתם את איכות התוצר)</p>\r\n<h4>אפשרות 4: סרטון עלילתי קצר</h4>\r\n<p>סיפור או סצנה שממחישה רעיון לימודי - משל, אגדה, רגע היסטורי. הקפידו על איכות ויזואלית ועל קשר ברור לתוכן הלימודי.</p>\r\n<hr />\r\n<h4>מה להגיש:</h4>\r\n<ul>\r\n<li>קישור לתוצר הסופי (סרטון/אודיו) - לוודא שנגיש לצפיה.</li>\r\n<li>בפוסט פרטו:\r\n<ul>\r\n<li>איזה סוג תוכן בחרתם ולמה</li>\r\n<li>לאיזה נושא לימודי ושכבת גיל זה מתאים (בחרו קטגוריות ותגיות)</li>\r\n<li>באיזה כלי השתמשתם (\"פלטפורמה\")</li>\r\n<li>מה היה מאתגר ומה הפתיע אתכם</li>\r\n<li>הצעות שימוש פדגוגי - איך מורים יכולים לשלב את זה בשיעור</li>\r\n</ul>\r\n</li>\r\n<li>העלאה למאגר חומר פתוח - שתפו את התוצר שלכם כדי שמורים אחרים יוכלו להשתמש בו.</li>\r\n</ul>\r\n<p><strong>טיפ:</strong> בחרו נושא שאתם מלמדים או שאתם מכירים היטב - איכות התוכן חשובה לא פחות מהטכנולוגיה.</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://openstuff.co.il/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">חומר פתוח</a></div>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://openstuff.co.il/upload/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">איך מעלים לחומר פתוח? מדריך, סרטון ושאלות נפוצות</a><label style=\"display: flex;align-items: center;gap: 10px;cursor: pointer;font-weight: bold\"></label></div>\r\n<p>[done-button: העליתי לחומר פתוח]</p>"
+    }
+  ],
+  "blocked_url": "https://drive.google.com/drive/folders/1mi_n-dRCTs-h5ZoTTlBimQa0Pf7inDuS?usp=sharing"
+}

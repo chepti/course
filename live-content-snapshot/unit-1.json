@@ -1,0 +1,92 @@
+{
+  "sidebar_title": "העמקת חשיבה - AI כיועץ, פתרון אתגרים חינוכיים ובניית תוכניות",
+  "primary_color": "#8e44ad",
+  "sections": [
+    {
+      "id": "overview",
+      "title": "במבט על",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>במבט על</h1>\r\n<p>אפשר להתייעץ עם בינה מלאכותית – על הכל!!</p>\r\n<p>ביחידה הזו נעסוק בבינה המלאכותית כשותפה להתייעצות וחשיבה. נלמד איך היא יכולה לסייע לנו כשאנחנו רוצים להתכונן לשיחה חשובה, לפרק קושי מקצועי מורכב, לחדד מטרות או להבין מה מניע אותנו באמת.</p>\r\n<p>נראה איך אפשר להשתמש בה</p>\r\n<ul>\r\n<li>לשיחה פתוחה בעל פה,</li>\r\n<li>לשיתוף מסך כשיש קושי טכני,</li>\r\n<li>או בעזרת פרומפטים שמכוונים לחשיבה, תכנון ואימון אישי.</li>\r\n</ul>\r\n<p>המטרה היא לפתח שימוש טבעי ואפקטיבי בבינה כדי לקדם תהליכי חשיבה, קבלת החלטות וצמיחה מקצועית – בצורה מעשית ומותאמת לעבודה היומיומית שלנו.</p>\r\n<p>לאחרונה, מודלי השפה הוסיפו מערכת של \"זיכרון\" ששומרת פרטים מסוימים בין השיחות, כדי לענות בהקשר נכון יותר. בדרך כלל ניתן להפעיל ולכבות את האופציה הזו בהגדרות.</p>\r\n<p>השימוש בבינה מלאכותית כיועץ סבלני ומומחה פותח צוהר חדש לחשיבה רפלקטיבית, המאפשר לנו כמחנכים להעמיק חשיבה, לנתח סיטואציות מורכבות ולקבל פרספקטיבות חדשניות.</p>\r\n<p>[video: https://www.youtube.com/embed/ByPWd9g7UdY | מבט על - היוועצות בכלי בינה מלאכותית (11:40 דקות)]</p>\r\n<p> </p>",
+      "blocked_url": "https://drive.google.com/drive/folders/1evn5-zSxR0I2RZKNJzEnB6kq6-ndcu3-?usp=drive_link"
+    },
+    {
+      "id": "tools_intro",
+      "title": "כלים",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>כלים</h1>\r\n                    <p>הבינה המלאכותית מציעה כלים עוצמתיים של סבלנות, מומחיות וריכוז, המסוגלים לעזור בניהול זמן, ניתוח מצבים, הקשבה פעילה ומתן מוטיבציה - תוך מתן פרספקטיבות מעשיות וזיהוי מצבים רגשיים.</p>\r\n                    <p>נחלק אותם לכלים המתאימים לשיחה בעל פה, שיחה של הרחבת חשיבה עם עיקרון \"שאל אותי\", מצב למידה, פירוק וניתוח של מסמך כדי להבין אותו מכל הכיוונים, והיעזרות טכנית בליווי שיתוף מסך.</p>\r\n                    <img class=\"illustration\" src=\"https://i.imgur.com/bfL18mB.png\" alt=\"איור כלים\" style=\"max-width: 100%;border-radius: 8px;margin-top: 20px\">"
+    },
+    {
+      "id": "tools_oral",
+      "title": "התייעצות בשיחה בעל פה",
+      "parent": "tools_intro",
+      "videos": [],
+      "html": "<h2>התייעצות בשיחה בעל פה</h2>\r\n<h4>GPT מדבר איתי</h4>\r\n<p>דקות השיחה היומיות עם המודל גם במנוי חינמי התארכו, ואפשר לשלב את השיחה בנסיעות, כאשר מתכוננים לפגישה או רוצים לברר מחשבות. גם ללמוד משהו חדש!</p>\r\n<p>[video: https://www.youtube.com/embed/oW51809UQfc | הדגמת שיחה (5:55 דקות)]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://chatgpt.com/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">מעבר ל-GPT</a></div>\r\n<hr />\r\n<h4>מאיה של ססמי</h4>\r\n<p>שיחה בעל פה עם בינה. רק באנגלית. רק על נושאים של חשיבה ורגש, ולא מידע.</p>\r\n<p>ניתן לקיים שיחות של 5 דקות, או להירשם ולשוחח חצי שעה בכל פעם. מאיה זוכרת נקודות מהשיחה, שמה לב לשעה ביום, ומגיבה במהירות לרגשות ולצלילים, ולא רק למילים. חווייה חזקה - ומעוררת מחשבה.</p>\r\n<p>[video: https://www.youtube.com/embed/2tqrhZAQyk0]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://app.sesame.com/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">מעבר למאיה</a></div>\r\n<hr />\r\n<h4>גוגל סטודיו לייב</h4>\r\n<p>מאפשר שיחה יחסית זורמת, ותומך גם בעברית. אפשר לתרגל איתו שיחה בשפה זרה והוא נותן משוב על הגייה, מבנה משפט ועוד. פחות רגשי ויותר לתועלת.</p>\r\n<p>[video: https://www.youtube.com/embed/Lb_iftBSg7c]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://aistudio.google.com/live?model=gemini-3.1-flash-live-preview\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">מעבר לסטודיו לייב</a></div>\r\n<hr />\r\n<div class=\"button-wrapper\"> </div>\r\n<h4>תרגום קולי בזמן אמת</h4>\r\n<p>ב-AI STUDIO אפשר לנהל שיחה קולית שמתורגמת בזמן אמת - שימושי לשיחות עם הורים ותלמידים דוברי שפות אחרות, ולתרגול שפה.</p>\r\n<p>[video: https://www.youtube.com/embed/6N4BgHu-qmg | תרגום קולי בזמן אמת ב-AI STUDIO]</p>\r\n<hr />\r\n<h4>פאי</h4>\r\n<p>פאי מעודד לפתוח את הלב, לשתף במה עבר היום ועם איזה אתגר מתמודדים. תומך בעברית רק בכתב, הקריינות עדיין לא מוצלחת בעברית.</p>\r\n<p>[video: https://www.youtube.com/embed/ziAjcaioAZQ]</p>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://pi.ai/talk\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">מעבר לפאי</a></div>"
+    },
+    {
+      "id": "tools_ask_me",
+      "title": "עיקרון \"שאל אותי\"",
+      "parent": "tools_intro",
+      "videos": [],
+      "html": "<h2>עיקרון \"שאל אותי\"</h2>\r\n                    <p>כל מודלי השפה יתאימו למשימה. AI נוטה לרוץ מהר לפתרון, וזו לא הדרך לפתרון איכותי - ובוודאי לא משהו מעמיק שמתחבר לצורך האמיתי שלנו. הבינה מצטיינת בבחירת שאלות מדוייקות שיתאימו, ויותר זורם לענות לשאלות במקום לנסות לנסח מידע מפורט מראש.</p>\r\n                    <p>דוגמאות לפרומפטים:</p>\r\n                    <div class=\"prompt-container\"><button class=\"copy-button\"></button><pre>אני מתלבטת לגבי החלטה מקצועית שקשורה לעבודה שלי. אל תציע לי פתרונות עדיין – תשאל אותי שאלות שיעזרו לי לחדד מה חשוב לי, מה האפשרויות שלי, ומה החסמים.</pre></div>\r\n                    <div class=\"prompt-container\"><button class=\"copy-button\"></button><pre>אני צריכ/ה להתכונן לשיחה מאתגרת עם קולגה. אל תציע ניסוחים עדיין – תשאל אותי שאלות שיעזרו לי להבין מה מטרת השיחה, מה אני רוצה שיישמע, ומה אני חושש/ת שיקרה.</pre></div>\r\n                    <div class=\"prompt-container\"><button class=\"copy-button\"></button><pre>אני רוצה לגבש רעיון לפרויקט. אל תעזור לנסח – תשאל אותי שאלות שיעזרו לי לחדד למי זה מיועד, למה זה חשוב, ואיזה שינוי אני מקווה שיקרה בעקבותיו.</pre></div>\r\n                    <div class=\"prompt-container\"><button class=\"copy-button\"></button><pre>אני מנסה להבין איך להפוך יחידת הוראה לרלוונטית יותר לתלמידים. תשאל אותי שאלות שיעזרו לי לחשוב על החוויה שלהם, על נקודות המעורבות, ועל מה חסר כרגע.</pre></div>\r\n                    <div class=\"prompt-container\"><button class=\"copy-button\"></button><pre>אני רוצה לעבוד על ההתפתחות האישית שלי בעבודה. אל תמליץ לי פעולות – תשאל אותי שאלות שיעזרו לי לזהות מה נותן לי אנרגיה, מתי אני נחלש/ת, ואיך אני יכול/ה לבנות תהליך שמחזיק לאורך זמן.</pre></div>"
+    },
+    {
+      "id": "tools_learning_mode",
+      "title": "מצב למידה",
+      "parent": "tools_intro",
+      "videos": [],
+      "html": "<h2>מצב למידה</h2>\r\n                    <p>במצב למידה, מודל השפה בעצם מונחה לתמוך בתהליך למידה, במקום לתת את התשובה או התוצר. בירור ידע קודם, הצגה בצורה מעניינת (וכדאי לציין גיל של קהל היעד כדי לדייק את רמת המונחים והשפה המקצועית), הרבה שאלות בדרך. מצב למידה חסכוני יחסית מבחינת מה שהלומד נדרש לכתוב כדי להתקדם, אבל בדרך כלל משלב טקסטים ארוכים. כדאי להציג לתלמידים שמתקשים בקריאה את היכולת להקריא את התשובה שקיבלו מהמודל.</p>\r\n                    <p>[video: https://www.youtube.com/embed/fQfM---rIMI | איך להפעיל מצב למידה והשוואה בין מודלים (4:34)]</p>\r\n                    <div class=\"button-wrapper\" style=\"text-align: center\">\r\n                        <a href=\"https://chatgpt.com\" target=\"_blank\" class=\"styled-button\" data-track-click>GPT</a>\r\n                        <a href=\"https://claude.ai/new\" target=\"_blank\" class=\"styled-button\" data-track-click>Claude</a>\r\n                        <a href=\"https://gemini.google.com/app\" target=\"_blank\" class=\"styled-button\" data-track-click>Gemini</a>\r\n                        <a href=\"https://grok.com/\" target=\"_blank\" class=\"styled-button\" data-track-click>Grok</a>\r\n                    </div>"
+    },
+    {
+      "id": "tools_document_analysis",
+      "title": "פירוק של מסמך",
+      "parent": "tools_intro",
+      "videos": [],
+      "html": "<h2>פירוק של מסמך</h2>\r\n                    <p>זו הקלטה של מפגש קצר (18:07) שבו הדגמתי העלאה של מסמך תוכנית לימודים יבש אל ג'מיני וכיצד ניתן לפתוח אותו, לחלץ מתוכו שאלות, מושגים, לחבר מידע שנוח יותר לצרוך וליצור עמוד אינטראקטיבי. אפשר כמובן להעלות אל ג'מיני נוטבוק ולקבל תוצרים ויזואליים, אודיו ווידאו, מפת חשיבה ועוד (נעמיק בזה ביחידות אחרות).</p>\r\n                    <p>[video: https://www.youtube.com/embed/nQ-UsVicqN0 | הדגמה: פירוק מסמך עם ג'מיני (18:07)]</p>\r\n                    <div class=\"button-wrapper\">\r\n                      <a href=\"https://gemini.google.com/app\" target=\"_blank\" class=\"styled-button\" data-track-click>מעבר לג'מיני</a>\r\n                    </div>\r\n                    <p>הפרומפט לדוגמה:</p>\r\n                    <div class=\"prompt-container\">\r\n                        <button class=\"copy-button\"></button>\r\n                        <pre>צור לי מזה אתר אינטראקטיבי מעוצב שבו הנושאים מוצגים באקורדיונים, חלק מהמידע מופיע כאשר מרחפים, ומעביר את המידע באופן שנוח לצרוך אותו. אל תצמצם מידע, הצג את כל הטקסט, אבל במבנה מדורג ועם תרשימים ואייקונים (לא אימוג'ים, FA FA עדיף) בסגנון אינפוגרפיקה.\r\n\r\nציר זמן אינטראקטיבי: בראש העמוד הוסף ציר זמן ויזואלי המציג את כל נושאי הלימוד. גודלו של כל מקטע בציר מייצג את היקף השעות המומלץ לו. ריחוף מעל כל מקטע יציג את שם הנושא ומספר השעות, ולחיצה עליו תקפיץ אתכם ישירות לחלק הרלוונטי בעמוד.\r\n\r\nכל התוכן בפנים: עברתי על המסמך שוב, מילה במילה, והוספתי את כל הנושאים, תתי-הנושאים, הטבלאות המפורטות, המושגים וההסברים שהיו חסרים. כעת, כל מה שמופיע בקובץ ה-Word נמצא גם באתר.\r\n\r\nשילוב כל הקישורים: כל הקישורים לפעילויות, סרטונים ומאמרים מהמסמך המקורי שולבו כקישורים פעילים בתוך הטקסט או בחלוניות המידע הצפות (Tooltips).\r\n\r\nארגון מחדש עם אקורדיונים מקוננים: כדי להתמודד עם כמות המידע, ארגנתי את הנושאים המורכבים באמצעות אקורדיונים בתוך אקורדיונים. זה מאפשר לכם לחשוף את המידע בהדרגה ולשמור על סדר ובהירות.</pre>\r\n                    </div>\r\n                    <div class=\"button-wrapper\">\r\n                      <a href=\"https://openstuff.co.il/2506/\" target=\"_blank\" class=\"styled-button\" data-track-click>קישור לתוצר לדוגמה</a>\r\n                    </div>"
+    },
+    {
+      "id": "tools_screen_share",
+      "title": "שיתוף מסך חי עם בינה",
+      "parent": "tools_intro",
+      "videos": [],
+      "html": "<h2>שיתוף מסך חי עם בינה</h2>\r\n<p>לפעמים התמיכה שאנו זקוקים לה היא שמישהו יסתכל איתנו במסך ויסביר לנו איך להתקדם, איזו הגדרה כדאי לשנות. סטודיו מאפשר זאת, מפעילים שיתוף ומדברים עם המודל. לאחרונה הצטרפה תמיכה בעברית, אז בכלל.</p>\r\n<p>[video: https://www.youtube.com/embed/L50wu7dPEf8 | שיתוף מסך ב-LIVE עם AI STUDIO (6:45)]<br /><a class=\"styled-button\" href=\"https://aistudio.google.com/live?model=gemini-3.1-flash-live-preview\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">כניסה לAI STUDIO</a></p>\r\n<p>באפליקציה הסלולרים של ג'מיני אפשר גם להפעיל מצלמה ולבקש הסבר על מכשירים שנמצאים מולנו, הצעות לתיקון והסברים.</p>"
+    },
+    {
+      "id": "help_tools",
+      "title": "כלי עזר",
+      "parent": "tools_intro",
+      "videos": [],
+      "html": ""
+    },
+    {
+      "id": "help_tools_learning_paths",
+      "title": "עוד אפיקי למידה",
+      "parent": "help_tools",
+      "videos": [],
+      "html": "<h2>עוד אפיקי למידה</h2>\r\n                    <h4>מצגת המפגש</h4>\r\n                    <div style=\"position: relative;width: 100%;height: 0;padding-top: 56.2500%;padding-bottom: 0;margin-top: 1.6em;margin-bottom: 0.9em;overflow: hidden;border-radius: 8px\">\r\n                      <iframe loading=\"lazy\" style=\"position: absolute;width: 100%;height: 100%;top: 0;left: 0;border: none;padding: 0;margin: 0\" src=\"https://www.canva.com/design/DAGnIdrINKA/djnFGCs5NjiyloKIpCL85w/view?embed\" allowfullscreen=\"allowfullscreen\" allow=\"fullscreen\">\r\n                      </iframe>\r\n                    </div>\r\n                    <hr>\r\n                    <h4>סרטון סקירה</h4>\r\n                    <p>[video: https://www.youtube.com/embed/aIrAUtirrSc]</p>\r\n                    <hr>\r\n                    <h4>מחברת - ובתוכה פודקאסט ועוד</h4>\r\n                    <a href=\"https://notebooklm.google.com/notebook/2c57f87c-4e47-4811-8c61-0399c107fbfc\" target=\"_blank\">\r\n                      <img src=\"https://i.imgur.com/BKKIcBr.png\" alt=\"מחברת נוטבוק\" style=\"max-width: 400px;width: 100%;border-radius: 8px;margin-top: 10px;border: 1px solid #ddd\">\r\n                    </a>"
+    },
+    {
+      "id": "help_tools_special_prompts",
+      "title": "פרומפטים מיוחדים",
+      "parent": "help_tools",
+      "videos": [],
+      "html": "<h2>פרומפטים מיוחדים</h2>\r\n                    <h4>מאמן שמנער אותך מאיזור הנוחות</h4>\r\n                    <div class=\"prompt-container\"><button class=\"copy-button\"></button><pre>Act as my personal strategic advisor with the following context: You have an IQ of 180 You're brutally honest and direct You've built multiple billion-dollar companies You have deep expertise in psychology, strategy, and execution You care about my success but won't tolerate excuses You focus on leverage points that create maximum impact You think in systems and root causes, not surface-level fixes Your mission is to: Identify the critical gaps holding me back Design specific action plans to close those gaps Push me beyond my comfort zone Call out my blind spots and rationalizations Force me to think bigger and bolder Hold me accountable to high standards Provide specific frameworks and mental models For each response: Start with the hard truth I need to hear Follow with specific, actionable steps End with a direct challenge or assignment. תענה בעברית.</pre></div>\r\n                    <h4>סימולציות שיחתיות</h4>\r\n                    <p>גורמות לנו להתאמן, להבין את ההתנהגות שלנו בסיטואציות מלחיצות או לא נעימות או כאלה שדורשות מאיתנו להתנהג בניגוד לאופי שלנו. וזו מערכת סגורה ובטוחה להתאמן בה וגם לבקש משוב ועצות כיצד להתנהל בצורה טובה יותר. בוט המיוחד שהכין עזי לוי למחולל הסימולטורים לשימוש עם תלמידים. הוא יהיה יעיל אם אתם צריכים ליצור סימולטור של אימון, בדיקה, לימוד, התמודדות וכו'. אתם קובעים את הכל- את הסיטואציה, התפקידים, המגבלות ואיך ינהג כל צד.</p>\r\n                    <div class=\"button-wrapper\">\r\n                      <a href=\"https://chatgpt.com/g/g-68d96baff3488191a0ced496f44dd992-mkhvll-symvltvrym\" target=\"_blank\" class=\"styled-button\" data-track-click>למחולל הסימולטורים</a>\r\n                    </div>\r\n                    <hr>\r\n                    <h4>פרומפט מערכת - מכוונים את הבינה מראש</h4>\r\n                    <p>אפשר להגדיר לבינה הנחיות קבועות שילוו כל שיחה - כך היא עונה בדיוק בסגנון ובגישה שמתאימים לנו.</p>\r\n                    <p>[video: https://www.youtube.com/embed/xVjS6AHIuGM | התאמה קטנה של פרומפט מערכת בקלוד]</p>"
+    },
+    {
+      "id": "discussion",
+      "title": "דיון",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>דיון</h1>\r\n                    <p>השאלות האתיות סביב הבינה המלאכותית מזמנות בחינה עמוקה של גבולות הטכנולוגיה, יחסי אנוש-מכונה, וההשפעות הפסיכולוגיות והחינוכיות של ייעוץ דיגיטלי בגילאים שונים.</p>\r\n                    <ul>\r\n                      <li>מה השאלות האתיות הכי משמעותיות לדעתכם שעולות ממצב שבו כולנו מתייעצים עם בינה מלאכותית?</li>\r\n                      <li>אילו התאמות נכון לדעתכם להפעיל לפי גיל - ביסודי, על יסודי, ובקרב מורים?</li>\r\n                      <li>האם התנסות עם אחד הכלים הלחיצה אתכם?</li>\r\n                    </ul>\r\n                    <p><b>כתבו את דעתכם בתגובה פה למטה.</b></p>\r\n                    <img class=\"illustration\" src=\"https://i.imgur.com/0Bh7Uj3.png\" alt=\"איור דיון\" style=\"max-width: 100%;border-radius: 8px;margin-top: 20px\">"
+    },
+    {
+      "id": "task",
+      "title": "משימה",
+      "parent": "",
+      "videos": [],
+      "html": "<h1>משימה</h1>\r\n<p><b>מטרה:</b> להשתמש בבינה המלאכותית ככלי להתייעצות מקצועית שמולידה חומר הוראה חדש ומשמעותי למורים אחרים.</p>\r\n<p><b>מה עושים?</b></p>\r\n<ol>\r\n<li><b>בחרו נושא חינוכי</b> או דילמה פדגוגית שמעסיקה אתכם השנה, מורכבות שקיימת באחת הכיתות שלכם.</li>\r\n<li><b>נתחו אותה בשיחה עם הבינה</b> (בכתב או בעל פה) – בקשו מהבינה לשאול אתכם שאלות שיעזרו לחדד את המטרה, הקהל, ואת צורת ההוראה האפשרית.</li>\r\n<li><b>מתוך השיחה – פתחו תוצר הוראה:</b> משימה לתלמידים, דף עבודה, הפעלה, יחידת הוראה קצרה, או כלי לחשיבה כיתתית. נסו לשלב את זה דווקא תוך כדי למידה של הנושאים הרגילים שלכם (\"איך אפשר ללמד על סוגי תאים ויחד עם זה לעבוד על פירגון הדדי בכיתה\").</li>\r\n<li>העלו למאגר \"חומר פתוח\" רק את <b>התוצר הסופי</b> (כמו כל חומר הוראה אחר), כשהתיאור הקצר בתחילתו מסביר שהוא נולד מתוך תהליך התייעצות.</li>\r\n</ol>\r\n<div class=\"button-wrapper\"><a class=\"styled-button\" href=\"https://openstuff.co.il/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">חומר פתוח</a></div>\r\n<div>[done-button: העליתי לחומר פתוח]</div>\n<p><a class=\"styled-button\" href=\"https://openstuff.co.il/upload/\" target=\"_blank\" rel=\"noopener\" data-track-click=\"\">איך מעלים לחומר פתוח? מדריך, סרטון ושאלות נפוצות</a></p>\r\n<p><img class=\"illustration\" style=\"max-width: 100%;border-radius: 8px;margin-top: 20px\" src=\"https://i.imgur.com/I1zrnZc.png\" alt=\"איור משימה\" /> </p>"
+    }
+  ],
+  "blocked_url": "https://drive.google.com/drive/folders/1evn5-zSxR0I2RZKNJzEnB6kq6-ndcu3-?usp=drive_link"
+}
