@@ -24,8 +24,12 @@ function cpt_course_unit_shortcode($atts) {
         return '<p>course_unit: יש לציין id תקין, למשל [course_unit id="1"]</p>';
     }
 
+    // Structured content (Phase 2 editor) takes precedence over the HTML file
+    // when it exists; otherwise fall back to the hand-authored unit file.
+    // A unit created in the editor (e.g. unit 10) has no file at all.
     $file = CPT_PLUGIN_DIR . 'units/unit-' . $slug . '.html';
-    if (!file_exists($file)) {
+    $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
+    if (!$data && !file_exists($file)) {
         return '<p>course_unit: לא נמצא קובץ יחידה "' . esc_html($slug) . '"</p>';
     }
 
@@ -44,9 +48,6 @@ function cpt_course_unit_shortcode($atts) {
     cpt_unit_engine_enqueue_assets();
     wp_enqueue_style('cpt-course-shell', CPT_PLUGIN_URL . 'assets/course-shell.css', [], CPT_VERSION);
 
-    // Structured content (Phase 2 editor) takes precedence over the HTML file
-    // when it exists; otherwise fall back to the hand-authored unit file.
-    $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
     $body = $data ? cpt_render_unit_from_data($data) : file_get_contents($file);
     if (!$data && function_exists('cpt_replace_done_button_tokens')) {
         $body = cpt_replace_done_button_tokens($body);
@@ -124,8 +125,14 @@ function cpt_render_unit_shell($slug, $body) {
         }
         $html .= '</div>';
         $unit_data   = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
-        $blocked_url = ($unit_data && !empty($unit_data['blocked_url'])) ? $unit_data['blocked_url']
-                     : (function_exists('cpt_blocked_videos_url') ? cpt_blocked_videos_url() : '');
+        // Units with structured content show their own blocked-videos folder, or
+        // no button at all when none is set. The shared default link is only
+        // used for legacy file-based units that have no saved content.
+        if ($unit_data) {
+            $blocked_url = !empty($unit_data['blocked_url']) ? $unit_data['blocked_url'] : '';
+        } else {
+            $blocked_url = function_exists('cpt_blocked_videos_url') ? cpt_blocked_videos_url() : '';
+        }
         if ($blocked_url) {
             $html .= '<a class="course-hero-blocked" href="' . esc_url($blocked_url) . '" target="_blank" rel="noopener">'
                    . '<span aria-hidden="true">🎬</span> סרטונים לחסומים</a>';

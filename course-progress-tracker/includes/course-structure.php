@@ -27,6 +27,7 @@ function cpt_course_units() {
         ['n' => 7, 'slug' => 'apps',        'title' => 'אפליקציות',    'img' => $up . '240f220f-f4e6-4b8d-a6f5-a3f1d0c23c64-300x225.jpg'],
         ['n' => 8, 'slug' => 'assessment',  'title' => 'הערכה',        'img' => $up . '3ea11d54-2be9-4d9d-ba39-2cb983d11da3-300x225.jpg'],
         ['n' => 9, 'slug' => 'portfolio',   'title' => 'ארגון וניהול', 'img' => $up . 'c2426c07-18ca-45f5-9a65-9033f7538667-300x225.jpg'],
+        ['n' => 10, 'slug' => 'agent',      'title' => 'סוכן אישי',    'img' => 'https://tikshuv.chepti.com/wp-content/uploads/2026/10/unit-10-agent-300x225-1.jpg'],
     ];
     foreach ($units as &$u) {
         $u['url'] = $base . $u['slug'] . '/';
