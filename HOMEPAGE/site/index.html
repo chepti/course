@@ -1021,11 +1021,14 @@ function esc(s) {
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 }
 
-function toEmbedUrl(url) {
-  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/);
-  if (yt) return 'https://www.youtube.com/embed/' + yt[1] + '?autoplay=1&rel=0';
-  const vm = url.match(/vimeo\.com\/(\d+)/);
-  if (vm) return 'https://player.vimeo.com/video/' + vm[1] + '?autoplay=1';
+// ממיר קישור צפייה של יוטיוב/וימאו (כולל "לא רשום", shorts, live, פרמטרים נוספים) לכתובת הטמעה
+function toEmbedUrl(url, autoplay) {
+  url = String(url || '').trim();
+  const ap = autoplay === false ? '0' : '1';
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?(?:[^#]*&)?v=|shorts\/|embed\/|live\/|v\/)|youtu\.be\/)([\w-]{6,})/);
+  if (yt) return 'https://www.youtube.com/embed/' + yt[1] + '?rel=0&autoplay=' + ap;
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)(?:\/([0-9a-f]+))?/);
+  if (vm) return 'https://player.vimeo.com/video/' + vm[1] + (vm[2] ? '?h=' + vm[2] + '&' : '?') + 'autoplay=' + ap;
   return null;
 }
 
@@ -1058,7 +1061,10 @@ function cardBodyHTML(hs) {
     });
     b += '</div>';
   }
-  if (hs.embed) b += `<iframe class="card-embed" src="${esc(hs.embed)}" allowfullscreen></iframe>`;
+  if (hs.embed) {
+    const eu = toEmbedUrl(hs.embed, false) || hs.embed;   // יוטיוב/וימאו מומרים אוטומטית; כל כתובת אחרת כמו שהיא
+    b += `<iframe class="card-embed" src="${esc(eu)}" allow="fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  }
   const kidCount = childrenOf(hs).length;
   if (hs.link || kidCount) {
     b += '<div class="cta-row">';
