@@ -31,7 +31,7 @@ foreach ($_COOKIE as $inst_ck => $inst_cv) {
     if (strpos($inst_ck, 'wordpress_logged_in_') === 0) { $inst_hasWpCookie = true; break; }
 }
 $inst_wpLoaded = false;
-if ($inst_hasWpCookie || in_array($inst_actionName, array('submit', 'feedback'), true)) {
+if ($inst_hasWpCookie || in_array($inst_actionName, array('submit', 'submit_batch', 'feedback'), true)) {
     $inst_wpLoad = dirname(__DIR__) . '/wp-load.php';
     if (file_exists($inst_wpLoad)) {
         define('WP_USE_THEMES', false);
@@ -299,6 +299,7 @@ if ($inst_actionName === 'help' || $inst_actionName === '') {
             'list' => 'GET — המתכונים המאושרים. מנהלת: &all=1 מחזיר גם ממתינים ומוסתרים עם שדות פרטיים',
             'state' => 'GET (מנהלת) — תמונת מצב קומפקטית: ספירות, ממתינים, רשימת כותרות',
             'submit' => 'POST (ציבורי) — {title,prompt,cat?,level?,gives?,prep?,tip?,author?,email?,ok:true} → נכנס כ"ממתין". עד 4 בשעה לכתובת',
+            'submit_batch' => 'POST (ציבורי) — לסוכן אישי: {ok:true, author?, email?, recipes:[{title,prompt,cat?,level?,gives?,prep?,tip?}, ...]} עד 15 מתכונים. כולם נכנסים "ממתינים" ומדווחים בנפרד ב-results. ok:true רק אחרי שהמשתמשת עברה על כל מתכון ואישרה שאין פרטים מזהים של תלמידים. עד 5 בקשות בשעה לכתובת. הפרומפט המלא לסוכן: ' . $inst_siteUrl . '/agent-prompt.txt',
             'hit' => 'POST (ציבורי) — {id} מגדיל מונה העתקות',
             'tried' => 'POST (ציבורי) — {id, on:true|false} "ניסיתי!": מגדיל/מקטין מונה של מי שסימנו שהמתכון עבד. מחזיר {tried}. השדה tried מופיע גם ב-list',
             'feedback' => 'POST (ציבורי) — {message,contact?}',
@@ -397,6 +398,66 @@ if ($inst_actionName === 'submit' && $inst_method === 'POST') {
             "הוגש מתכון חדש לספריית המתכונים.\n\nשם: " . $clean['title'] . "\nקרדיט: " . $clean['author'] . "\n\nלאישור: " . $inst_siteUrl . '/#/pending');
     }
     inst_out(array('ok' => true));
+}
+
+/**
+ * הגשה מקבצת — לסוכן אישי שחילץ מתכונים מההיסטוריה של משתמשת, אחרי שהיא עברה עליהם ואישרה.
+ * {ok:true, author?, email?, recipes:[{title,prompt,cat?,level?,gives?,prep?,tip?,author?,email?}, ...]}
+ * כל מתכון נכנס כ"ממתין" (via=agent) ומדווח בנפרד. הגבלת קצב לבקשה, לא למתכון. מייל אחד למנהלת.
+ */
+if ($inst_actionName === 'submit_batch' && $inst_method === 'POST') {
+    $b = inst_body();
+    if (!empty($b['website'])) inst_out(array('ok' => true));
+    if (empty($b['ok'])) inst_err('יש לאשר (ok:true) שהמשתמשת עברה על המתכונים ושאין בהם שמות או פרטים מזהים של תלמידים');
+    $list = isset($b['recipes']) && is_array($b['recipes']) ? array_values($b['recipes']) : array();
+    if (!$list) inst_err('no recipes — send {"ok":true,"recipes":[...]}');
+    if (count($list) > 15) inst_err('too many recipes (max 15 per request)');
+    $defAuthor = isset($b['author']) ? (string) $b['author'] : '';
+    $defEmail = isset($b['email']) ? (string) $b['email'] : '';
+    if (!inst_rate_ok('batch', 5, 15)) inst_err('נשלחו הרבה הגשות בזמן קצר. אפשר לנסות שוב מאוחר יותר.', 429);
+
+    $results = array(); $toAdd = array();
+    foreach ($list as $n => $src) {
+        if (!is_array($src)) { $results[] = array('ok' => false, 'index' => $n, 'error' => 'recipe must be an object'); continue; }
+        $clean = array();
+        foreach (INST_PUBLIC_FIELDS as $k) $clean[$k] = isset($src[$k]) ? inst_clean_field($k, $src[$k]) : inst_clean_field($k, '');
+        if ($clean['author'] === '') $clean['author'] = inst_clean_field('author', $defAuthor);
+        if ($clean['email'] === '') $clean['email'] = inst_clean_field('email', $defEmail);
+        if ($clean['title'] === '') { $results[] = array('ok' => false, 'index' => $n, 'error' => 'חסר title'); continue; }
+        if ($clean['prompt'] === '') { $results[] = array('ok' => false, 'index' => $n, 'title' => $clean['title'], 'error' => 'חסר prompt'); continue; }
+        $urls = 0; foreach ($clean as $v) if (is_string($v)) $urls += inst_count_urls($v);
+        if ($urls > 2) { $results[] = array('ok' => false, 'index' => $n, 'title' => $clean['title'], 'error' => 'יותר מדי קישורים — להסיר קישורים מהמתכון'); continue; }
+        $results[] = array('ok' => true, 'index' => $n, 'title' => $clean['title']);
+        $toAdd[$n] = $clean;
+    }
+    $added = inst_update('recipes', function (&$all) use ($toAdd) {
+        $out = array();
+        foreach ($toAdd as $n => $clean) {
+            $dup = false;
+            foreach ($all as $r) if ($r['status'] === 'pending' && $r['title'] === $clean['title'] && $r['prompt'] === $clean['prompt']) { $dup = true; break; }
+            if ($dup) { $out[$n] = 'duplicate'; continue; }
+            $now = time();
+            $all[] = array_merge(array('id' => inst_new_id(), 'sheetTitle' => '', 'example' => '', 'limits' => '', 'featured' => false,
+                'status' => 'pending', 'via' => 'agent', 'created' => $now, 'updated' => $now, 'copies' => 0, 'order' => inst_next_order($all)), $clean);
+            $out[$n] = 'added';
+        }
+        return $out;
+    });
+    $titles = array();
+    foreach ($results as $i => $r) {
+        if (!empty($r['ok']) && isset($added[$r['index']])) {
+            $results[$i]['status'] = $added[$r['index']];
+            if ($added[$r['index']] === 'added') $titles[] = $r['title'];
+        }
+    }
+    if ($titles) {
+        inst_notify('הוגשו ' . count($titles) . ' מתכונים דרך סוכן אישי — ממתינים לאישור',
+            "סוכן אישי של מורה שלח מתכונים שחולצו מההיסטוריה שלה (לאחר שעברה עליהם ואישרה):\n\n- " . implode("\n- ", $titles) .
+            "\n\nקרדיט: " . inst_clean_field('author', $defAuthor) . "\n\nלאישור: " . $inst_siteUrl . '/#/pending');
+    }
+    $okN = count(array_filter($results, function ($r) { return !empty($r['ok']); }));
+    inst_out(array('ok' => $okN === count($results), 'received' => $okN, 'failed' => count($results) - $okN,
+        'message' => 'המתכונים ממתינים לאישור מנהלת האתר ולא יופיעו מיד.', 'results' => $results));
 }
 
 if ($inst_actionName === 'hit' && $inst_method === 'POST') {

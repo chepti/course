@@ -163,6 +163,19 @@ button, input, textarea { font: inherit; color: inherit; }
   background: var(--sun); color: var(--sun-ink); font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
 }
 .share-btn:hover { filter: brightness(1.05); }
+.hero-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.share-btn.alt { background: transparent; color: var(--hero-ink); border: 2px solid var(--hero-soft); }
+.share-btn.alt:hover { background: rgba(255, 255, 255, .12); filter: none; }
+.asteps { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+.asteps li { display: flex; gap: 12px; align-items: flex-start; line-height: 1.55; }
+.asteps .n { flex: none; width: 28px; height: 28px; border-radius: 50%; background: var(--btn-bg); color: var(--btn-ink); display: grid; place-items: center; font-weight: 600; font-size: .95rem; margin-top: 1px; }
+textarea.inp.mono { font-family: ui-monospace, Consolas, monospace; font-size: .92rem; direction: rtl; min-height: 11em; }
+textarea.inp.ltr { direction: ltr; text-align: left; }
+.more-f.agent-paste { margin-top: 22px; padding-top: 6px; border-top: 2px solid var(--line); }
+.rlist { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: .95rem; }
+.rlist .bad { color: #B3261E; }
+:root[data-theme="dark"] .rlist .bad { color: #FFB4AB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .rlist .bad { color: #FFB4AB; } }
 .linkbtn { background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent); text-decoration: underline; min-height: 44px; }
 dialog.share {
   width: min(640px, calc(100% - 28px)); max-height: calc(100dvh - 28px); overflow: auto; padding: 24px 22px 20px;
@@ -413,7 +426,10 @@ footer.site-foot { margin-top: 56px; padding: 22px 0 36px; border-top: 2px dashe
           <li><span class="n">2</span>השלמת מה שמסומן</li>
           <li><span class="n">3</span>שליחה לאינסטינקט ובדיקה</li>
         </ol>
-        <button type="button" class="share-btn" id="openShare"></button>
+        <div class="hero-btns">
+          <button type="button" class="share-btn" id="openShare"></button>
+          <button type="button" class="share-btn alt" id="openAgent" title="הסוכן שלך עובר על ההיסטוריה, מציע מתכונים, ואתה מאשר כל אחד לפני שהוא נשלח"></button>
+        </div>
       </div>
       <div class="mock" aria-hidden="true">
         <span>מצורף צילום של דף עבודה <mark class="field">[נושא]</mark>. בנה אותו מחדש כדף A4 מוכן להדפסה.</span>
@@ -444,6 +460,7 @@ footer.site-foot { margin-top: 56px; padding: 22px 0 36px; border-top: 2px dashe
       <div class="credit">נבנה ב<a href="https://chepti.com" target="_blank" rel="noopener">חולמים תקשוב</a></div>
       <div class="foot-actions">
         <button type="button" class="btn2" id="openShare2"></button>
+        <button type="button" class="btn2" id="openAgent2"></button>
         <button type="button" class="btn2" id="openFb"></button>
         <a class="adminlink" id="loginLink" href="/wp-login.php?redirect_to=https%3A%2F%2Fchepti.com%2Finstinct%2F" title="כניסה לניהול המתכונים" rel="nofollow"></a>
       </div>
@@ -480,6 +497,36 @@ footer.site-foot { margin-top: 56px; padding: 22px 0 36px; border-top: 2px dashe
       <div class="actions"><button type="submit" class="btn2 primary" id="sf-send"></button><button type="button" class="btn2" data-close id="sf-cancel">ביטול</button></div>
     </div>
   </form>
+</dialog>
+
+<!-- ===== סוכן אישי מחלץ מתכונים (ציבורי) ===== -->
+<dialog class="share wide" id="agentDlg" aria-labelledby="agentTitle">
+  <div id="agentBody">
+    <div class="dlg-head"><h2 id="agentTitle">שיתוף מתכונים דרך הסוכן האישי</h2><button type="button" class="iconbtn" data-close title="סגירה" aria-label="סגירה" id="agentX"></button></div>
+    <p class="lead">במקום למלא טופס, נותנים לסוכן לעבור על ההיסטוריה שלכם ולמצוא בקשות שעבדו טוב.</p>
+    <ol class="asteps">
+      <li><span class="n">1</span><span>מעתיקים את ההוראה שלמטה ושולחים אותה לסוכן האישי.</span></li>
+      <li><span class="n">2</span><span>הסוכן מציע מתכונים, בלי שמות ופרטים מזהים. עוברים על כל אחד ומאשרים, עורכים או מדלגים.</span></li>
+      <li><span class="n">3</span><span>רק מה שאישרתם נשלח, וגם אז הוא ממתין לאישור של מנהלת האתר לפני שיעלה.</span></li>
+    </ol>
+    <div class="field-row">
+      <label for="ag-prompt">ההוראה לסוכן</label>
+      <textarea class="inp mono" id="ag-prompt" readonly>טוען…</textarea>
+    </div>
+    <div class="actions"><button type="button" class="copy" id="ag-copy"></button></div>
+    <div class="sendmsg" id="ag-copymsg" aria-live="polite"></div>
+
+    <details class="more-f agent-paste" id="agPaste">
+      <summary>הסוכן לא הצליח לשלוח בעצמו? מדביקים כאן את מה שהוא הכין</summary>
+      <div class="field-row"><label for="ag-json">הבלוק שהסוכן הדפיס</label>
+        <textarea class="inp mono ltr" id="ag-json" dir="ltr" placeholder='{"ok": true, "recipes": [ ... ]}'></textarea>
+        <span class="help">מדביקים את כל הבלוק כמו שהוא. אפשר לראות ולערוך אותו כאן לפני השליחה.</span></div>
+      <label class="check"><input type="checkbox" id="ag-ok"><span>עברתי על כל המתכונים, ואין בהם שמות או פרטים מזהים של תלמידים</span></label>
+      <div class="err" id="ag-err" role="alert"></div>
+      <ul class="rlist" id="ag-res"></ul>
+      <div class="actions"><button type="button" class="btn2 primary" id="ag-send"></button></div>
+    </details>
+  </div>
 </dialog>
 
 <!-- ===== משוב (ציבורי) ===== -->
@@ -586,7 +633,8 @@ const P = {
   shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
   send: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
   chev: '<path d="m9 18 6-6-6-6"/>',
-  checkc: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>'
+  checkc: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  bot: '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>'
 };
 const svg = (k, cls) => '<svg class="' + (cls || 'ic') + '" viewBox="0 0 24 24" aria-hidden="true">' + P[k] + '</svg>';
 const tile = (cat) => '<span class="tile t-' + cat + '" aria-hidden="true">' + svg(P[cat] ? cat : 'teach', '') + '</span>';
@@ -898,6 +946,11 @@ function route() {
     else location.href = '/wp-login.php?redirect_to=' + encodeURIComponent(location.origin + '/instinct/#/pending');
     return;
   }
+  if (h === '#/import') {
+    showHome();
+    if (!agentDlg.open) { openAgent(); $('#agPaste').open = true; }
+    return;
+  }
   const m = h.match(/^#\/r\/([\w-]+)/);
   const r = m && LISTED.find(x => x.id === m[1]);
   if (r) showDetail(r); else showHome();
@@ -908,11 +961,15 @@ window.addEventListener('hashchange', route);
 function setIcons() {
   $('#openShare').innerHTML = svg('plus') + 'שיתוף מתכון משלך';
   $('#openShare2').innerHTML = svg('plus') + 'יש לך מתכון שעבד? אפשר לשתף';
+  $('#openAgent').innerHTML = svg('bot') + 'הסוכן שלי יכתוב מתכונים';
+  $('#openAgent2').innerHTML = svg('bot') + 'מתכונים דרך הסוכן';
+  $('#ag-copy').innerHTML = svg('copy') + 'העתקת ההוראה';
+  $('#ag-send').innerHTML = svg('send') + 'שליחה לאישור';
   $('#openFb').innerHTML = svg('msg') + 'משוב';
   $('#loginLink').innerHTML = svg('lock') + 'כניסת מנהלת';
   $('#sf-send').innerHTML = svg('send') + 'שליחה לאישור';
   $('#fb-send').innerHTML = svg('send') + 'שליחה';
-  ['shareX', 'fbX', 'edX', 'pdX', 'flX'].forEach(id => { $('#' + id).innerHTML = svg('x'); });
+  ['shareX', 'agentX', 'fbX', 'edX', 'pdX', 'flX'].forEach(id => { $('#' + id).innerHTML = svg('x'); });
   const opts = '<option value="">לא בטוח/ה, שהמנהלת תחליט</option>' + CAT_ORDER.map(k => '<option value="' + k + '">' + CATS[k].label + '</option>').join('');
   $('#sf-cat').innerHTML = opts;
   $('#ed-cat').innerHTML = '<option value="">בחירת קטגוריה…</option>' + CAT_ORDER.map(k => '<option value="' + k + '">' + CATS[k].label + '</option>').join('');
@@ -954,6 +1011,52 @@ $('#shareForm').addEventListener('submit', async (e) => {
   if (!j.ok) { err.textContent = j.error || 'השליחה נכשלה. אפשר לנסות שוב.'; return; }
   $('#shareBody').innerHTML = '<div class="thanks"><div class="big">' + svg('check', '') + '</div><h2>תודה!</h2><p class="lead">המתכון התקבל וממתין לאישור. אחרי בדיקה הוא יעלה לאתר.</p><div class="actions" style="justify-content:center"><button type="button" class="btn2 primary" data-close>סגירה</button></div></div>';
   $('#live').textContent = 'המתכון נשלח לאישור';
+});
+
+/* ---------- סוכן אישי מחלץ מתכונים (ציבורי) ---------- */
+const agentDlg = $('#agentDlg');
+let agentPromptText = '';
+async function openAgent() {
+  $('#ag-copymsg').textContent = ''; $('#ag-err').textContent = ''; $('#ag-res').innerHTML = '';
+  agentDlg.showModal();
+  if (!agentPromptText) {
+    try {
+      const r = await fetch('/instinct/agent-prompt.txt', { cache: 'no-store' });
+      if (!r.ok) throw 0;
+      agentPromptText = (await r.text()).trim();
+    } catch (_) { agentPromptText = ''; }
+    $('#ag-prompt').value = agentPromptText || 'לא הצלחנו לטעון את ההוראה. אפשר לפתוח אותה ישירות בכתובת chepti.com/instinct/agent-prompt.txt';
+  }
+}
+$('#openAgent').addEventListener('click', openAgent);
+$('#openAgent2').addEventListener('click', openAgent);
+agentDlg.addEventListener('close', () => { if (location.hash === '#/import') history.replaceState(null, '', location.pathname + location.search); });
+$('#ag-copy').addEventListener('click', async () => {
+  const msg = $('#ag-copymsg');
+  if (!agentPromptText) { msg.textContent = 'ההוראה עדיין לא נטענה.'; return; }
+  try { await navigator.clipboard.writeText(agentPromptText); msg.textContent = 'ההוראה הועתקה. אפשר להדביק אותה בשיחה עם הסוכן.'; }
+  catch (_) { const t = $('#ag-prompt'); t.focus(); t.select(); msg.textContent = 'ההוראה סומנה. אפשר ללחוץ העתקה (Ctrl+C).'; }
+});
+$('#ag-send').addEventListener('click', async () => {
+  const err = $('#ag-err'), res = $('#ag-res'); err.className = 'err'; res.innerHTML = '';
+  let raw = $('#ag-json').value.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+  if (!raw) { err.textContent = 'אפשר להדביק כאן את מה שהסוכן הדפיס.'; return; }
+  let data;
+  try { data = JSON.parse(raw); } catch (_) { err.textContent = 'לא הצלחתי לקרוא את הבלוק. כדאי להדביק אותו בשלמותו, מהסוגר הפותח עד הסוגר הסוגר.'; return; }
+  const recipes = Array.isArray(data) ? data : (data && Array.isArray(data.recipes) ? data.recipes : null);
+  if (!recipes || !recipes.length) { err.textContent = 'לא נמצאו מתכונים בבלוק.'; return; }
+  if (!$('#ag-ok').checked) { err.textContent = 'יש לאשר שעברת על המתכונים ושאין בהם פרטים מזהים של תלמידים.'; $('#ag-ok').focus(); return; }
+  const btn = $('#ag-send'); btn.disabled = true; err.textContent = 'שולח…';
+  const j = await api('submit_batch', { method: 'POST', body: {
+    ok: true, author: (data && data.author) || '', email: (data && data.email) || '', recipes
+  } });
+  btn.disabled = false;
+  if (!j.results) { err.textContent = j.error || 'השליחה נכשלה. אפשר לנסות שוב.'; return; }
+  err.className = 'err ok';
+  err.textContent = j.received + ' מתכונים התקבלו וממתינים לאישור' + (j.failed ? ', ' + j.failed + ' לא התקבלו' : '') + '.';
+  res.innerHTML = j.results.map(r => '<li class="' + (r.ok ? '' : 'bad') + '">' + esc(r.title || ('מתכון ' + (r.index + 1))) + ': ' +
+    (r.ok ? (r.status === 'duplicate' ? 'כבר נשלח קודם' : 'התקבל') : esc(r.error || 'נדחה')) + '</li>').join('');
+  $('#live').textContent = 'המתכונים נשלחו לאישור';
 });
 
 /* ---------- משוב (ציבורי) ---------- */
@@ -1095,6 +1198,7 @@ function pendingHtml() {
   return PENDING.map((r) =>
     '<article class="pcard" data-id="' + esc(r.id) + '"><h3>' + esc(r.title) + '</h3>' +
     '<div class="pmeta"><span>' + (CATS[r.cat] ? esc(CATS[r.cat].label) : 'ללא קטגוריה') + '</span><span>רמה: ' + LEVELS[r.level].label + '</span>' +
+    (r.via === 'agent' ? '<span>הוגש דרך סוכן אישי</span>' : '') +
     (r.author ? '<span>קרדיט: ' + esc(r.author) + '</span>' : '') + (r.email ? '<span dir="ltr">' + esc(r.email) + '</span>' : '') + '<span>' + fmtDate(r.created) + '</span></div>' +
     '<p class="psnip">' + esc(r.prompt.length > 260 ? r.prompt.slice(0, 260) + '…' : r.prompt) + '</p>' +
     '<div class="actions">' +

@@ -8,5 +8,5 @@
 - `site/data/recipes.json` — **זה רק זרע התחלתי.** המקור האמיתי הוא הקובץ בשרת (מתכונים שהוגשו/נערכו חיים שם).
 
 ## פריסה
-להעלות רק: `index.html api.php .htaccess llms.txt AGENT.md config.sample.php` (+ `data/.htaccess`).
+להעלות רק: `index.html api.php .htaccess llms.txt AGENT.md agent-prompt.txt config.sample.php` (+ `data/.htaccess`).
 **לעולם לא לדרוס `data/recipes.json` בשרת** — מושכים אותו קודם (`scp hostinger:.../instinct/data/recipes.json .`) אם צריך עותק מקומי.
