@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Course Progress Tracker
  * Description: מעקב התקדמות בקורס מבוסס יחידות HTML - מניפסט קורס מרכזי, REST API, דשבורד לומד, המשך מאיפה שעצרת, ודוחות. (הרישום האוטומטי הופרד לתוסף Course Registration)
- * Version: 3.11.2
+ * Version: 4.0.2
  * Author: Chepti
  */
 
@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly.
 }
 
-define('CPT_VERSION', '3.11.2');
+define('CPT_VERSION', '4.0.2');
 define('CPT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CPT_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -74,6 +74,9 @@ require_once CPT_PLUGIN_DIR . 'includes/course-structure.php'; // between-units 
 require_once CPT_PLUGIN_DIR . 'includes/content-model.php';    // structured unit content (Phase 2)
 require_once CPT_PLUGIN_DIR . 'includes/content-editor.php';   // no-code unit content editor (Phase 2)
 require_once CPT_PLUGIN_DIR . 'includes/front-editor.php';     // front-end inline editing for admins (Phase 2b)
+require_once CPT_PLUGIN_DIR . 'includes/v4-model.php';       // v4 item structure: chapters > groups > items, rules, notes
+require_once CPT_PLUGIN_DIR . 'includes/v4-render.php';      // v4 unit shell + payload
+require_once CPT_PLUGIN_DIR . 'includes/v4-ajax.php';        // v4 endpoints (state / event / note / edit)
 require_once CPT_PLUGIN_DIR . 'includes/progress.php';   // progress calculation
 require_once CPT_PLUGIN_DIR . 'includes/ajax.php';       // legacy admin-ajax endpoints (kept for cached pages running the old JS)
 require_once CPT_PLUGIN_DIR . 'includes/api.php';        // REST API (course/v1) + session bootstrap

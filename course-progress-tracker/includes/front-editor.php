@@ -18,6 +18,7 @@ add_action('wp_enqueue_scripts', function () {
         return;
     }
     $slug = $m[1];
+    if (function_exists('cpt_v4_page_active') && cpt_v4_page_active($post->ID)) { return; } // v4 has its own editor
     $data = function_exists('cpt_get_unit_content') ? cpt_get_unit_content($slug) : null;
 
     wp_enqueue_editor(); // TinyMCE + quicktags for the inline rich editor

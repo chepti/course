@@ -57,6 +57,11 @@
         var title = document.querySelector('.course-hero-title');
         var unit = [kicker ? kicker.textContent.trim() : '', title ? title.textContent.trim() : ''].filter(Boolean).join(' - ');
         if (!unit) { unit = document.title; }
+        // v4 item structure: the engine publishes where the learner is
+        if (window.cptV4Current) {
+            var v4 = window.cptV4Current;
+            return { unit: unit, main_label: v4.main_label, main_id: v4.main_id, sub_label: v4.sub_label, sub_id: v4.sub_id, heading: v4.heading };
+        }
         var area = document.getElementById('content-area');
         var h = area ? area.querySelector('h1, h2, h3') : null;
         return {

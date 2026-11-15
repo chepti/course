@@ -153,6 +153,15 @@ function cpt_check_and_mark_section_complete($user_id, $post_id, $section_id) {
  * When the unit is in the manifest, every defined section appears (untouched = 0).
  */
 function cpt_get_unit_section_progress($user_id, $post_id) {
+    // v4 item structure: one entry per chapter (optional-only chapters are left out)
+    if (empty($GLOBALS['cpt_v4_force_legacy']) && function_exists('cpt_v4_unit_for_post') && ($v4 = cpt_v4_unit_for_post($post_id))) {
+        $state = cpt_v4_state($user_id, $post_id, $v4);
+        $out = [];
+        foreach ($state['chapters'] as $cid => $c) {
+            if ($c['pct'] !== null) { $out[$cid] = $c['complete'] ? 100 : $c['pct']; }
+        }
+        return $out;
+    }
     global $wpdb;
     $activity_table = CPT_ACTIVITY_TABLE_NAME;
 
@@ -201,6 +210,10 @@ function cpt_get_unit_section_progress($user_id, $post_id) {
  * Legacy units: the old 4x25% (overview/tools/discussion/task) calculation.
  */
 function cpt_get_unit_overall_progress($user_id, $post_id, $section_progress = null) {
+    if (empty($GLOBALS['cpt_v4_force_legacy']) && function_exists('cpt_v4_unit_for_post') && ($v4 = cpt_v4_unit_for_post($post_id))) {
+        $state = cpt_v4_state($user_id, $post_id, $v4);
+        return (int) $state['percent'];
+    }
     if ($section_progress === null) {
         $section_progress = cpt_get_unit_section_progress($user_id, $post_id);
     }
@@ -240,6 +253,14 @@ function cpt_get_unit_overall_progress($user_id, $post_id, $section_progress = n
     return (int) round($total);
 }
 
+/** Learner-facing chapter titles of a unit: v4 chapters, else a curated manifest. */
+function cpt_unit_section_titles($post_id, $unit_def = null) {
+    if (function_exists('cpt_v4_unit_for_post') && ($v4 = cpt_v4_unit_for_post($post_id))) {
+        return wp_list_pluck($v4['chapters'], 'title', 'id');
+    }
+    return ($unit_def && cpt_manifest_unit_is_curated($unit_def)) ? wp_list_pluck($unit_def['sections'], 'title', 'id') : [];
+}
+
 /**
  * Course-wide summary for a user: list of units with progress.
  * Manifest course: all defined units in order (including not-started).
@@ -264,7 +285,7 @@ function cpt_get_course_summary($user_id) {
                 'url' => get_permalink($post_id),
                 'percent' => cpt_get_unit_overall_progress($user_id, $post_id, $section_progress),
                 'sections' => $section_progress,
-                'section_titles' => cpt_manifest_unit_is_curated($unit_def) ? wp_list_pluck($unit_def['sections'], 'title', 'id') : [],
+                'section_titles' => cpt_unit_section_titles($post_id, $unit_def),
             ];
         }
         return $units;

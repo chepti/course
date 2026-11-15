@@ -24,6 +24,19 @@ function cpt_course_unit_shortcode($atts) {
         return '<p>course_unit: יש לציין id תקין, למשל [course_unit id="1"]</p>';
     }
 
+    // v4 item structure (chapters > groups > items) - live once switched on,
+    // or previewed by an admin with ?v4=1.
+    if (function_exists('cpt_v4_active_for_request') && cpt_v4_active_for_request()) {
+        $v4 = cpt_v4_get($slug);
+        if ($v4) {
+            if (apply_filters('cpt_require_login_for_units', false) && !is_user_logged_in()) {
+                return '<div class="course-login-gate"><p>כדי לצפות ביחידה זו יש להתחבר לחשבון.</p>'
+                    . '<p><a class="course-login-gate-btn" href="' . esc_url(wp_login_url(get_permalink())) . '">התחברות / הרשמה</a></p></div>';
+            }
+            return cpt_v4_render_unit($slug, $v4);
+        }
+    }
+
     // Structured content (Phase 2 editor) takes precedence over the HTML file
     // when it exists; otherwise fall back to the hand-authored unit file.
     // A unit created in the editor (e.g. unit 10) has no file at all.
@@ -213,6 +226,7 @@ add_action('wp_enqueue_scripts', function () {
     }
     $post = get_post();
     if ($post && has_shortcode($post->post_content, 'course_unit')) {
+        if (function_exists('cpt_v4_page_active') && cpt_v4_page_active($post->ID)) { return; } // v4 has its own engine
         cpt_unit_engine_enqueue_assets();
     }
 });

@@ -67,6 +67,9 @@ function cpt_enqueue_course_scripts() {
     if (!$should_load) {
         return;
     }
+    if (function_exists('cpt_v4_page_active') && cpt_v4_page_active($post_id)) {
+        return; // the v4 item engine tracks by itself
+    }
 
     wp_enqueue_script('cpt-course-tracker',
         CPT_PLUGIN_URL . 'assets/course-tracker.js',
