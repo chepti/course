@@ -278,10 +278,11 @@ html.cpt-v4-root, html:has(body.cpt-v4-page), body.cpt-v4-page { overflow-x: cli
 #cu4 .cu4-content .button-wrapper { margin: 14px 0; }
 #cu4 .cu4-content a.styled-button, #cu4 .cu4-content .styled-button {
   display: inline-block; padding: 10px 22px; border-radius: 999px; border: none; cursor: pointer;
-  background: var(--cu4-accent); color: #fff; font-weight: 500; text-decoration: none;
-  transition: transform .15s, box-shadow .2s, background .2s;
+  background: linear-gradient(45deg, var(--cu4-accent), #27ae60); color: #fff; font-weight: 700; text-decoration: none;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--cu4-accent) 30%, transparent);
+  transition: transform .15s, box-shadow .2s, filter .2s;
 }
-#cu4 .cu4-content .styled-button:hover { transform: translateY(-2px); box-shadow: 0 6px 14px color-mix(in srgb, var(--cu4-accent) 35%, transparent); color: #fff; }
+#cu4 .cu4-content .styled-button:hover { transform: translateY(-2px); filter: brightness(.94); box-shadow: 0 4px 12px rgba(46, 204, 113, .4); color: #fff; }
 #cu4 .cu4-content a.chip, #cu4 .cu4-content .chip {
   display: inline-block; padding: 7px 16px; margin: 4px; border-radius: 999px;
   background: var(--cu4-tint); color: var(--cu4-accent); font-weight: 500; text-decoration: none; border: 1px solid color-mix(in srgb, var(--cu4-accent) 30%, #fff);
