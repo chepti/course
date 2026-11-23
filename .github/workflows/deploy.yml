@@ -1,0 +1,35 @@
+name: Deploy course to Hostinger
+
+# כל דחיפה ל-master (מהמחשב או מהסלולרי) מפרסמת לשרת: שלושת התוספים + INSTINCT/site.
+# ה-workflow רק קורא ב-HTTPS ל-course-deploy.php; השרת מושך את הקוד בעצמו מ-GitHub.
+# הסוד DEPLOY_TOKEN חייב להתאים לתוכן ~/.course-deploy-token בשרת.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.repository == 'chepti/course'
+    steps:
+      - name: Call deploy endpoint
+        env:
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          set -u
+          for i in 1 2 3; do
+            code=$(curl -sS -o resp.json -w '%{http_code}' --max-time 150 -X POST \
+              -H "X-Deploy-Token: ${DEPLOY_TOKEN}" \
+              --data-urlencode "sha=${GITHUB_SHA}" \
+              https://tikshuv.chepti.com/course-deploy.php) || code=000
+            cat resp.json || true; echo
+            if [ "$code" = "200" ]; then exit 0; fi
+            echo "attempt $i failed (HTTP $code)"; sleep 10
+          done
+          echo "::error::deploy failed (last HTTP $code)"
+          exit 1
