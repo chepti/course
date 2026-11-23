@@ -176,6 +176,14 @@ html.cpt-v4-root, html:has(body.cpt-v4-page), body.cpt-v4-page { overflow-x: cli
 #cu4 .is-current { background: var(--cu4-tint) !important; border-right-color: var(--cu4-accent); }
 #cu4 .cu4-row.is-current, #cu4 .cu4-ch-head.is-current { font-weight: 700; }
 
+/* hierarchy in the sidebar: chapter circle is full size, what's inside a chapter is smaller and tabbed in */
+#cu4 .cu4-ch:not(.cu4-ch-flat) > .cu4-g { padding-right: 16px; }
+#cu4 .cu4-ch:not(.cu4-ch-flat) .cu4-g .cu4-mark { width: 15px; height: 15px; }
+#cu4 .cu4-ch:not(.cu4-ch-flat) .cu4-g .cu4-mark .cu4-ic { width: 9px; height: 9px; stroke-width: 3.4; }
+#cu4 .cu4-ch:not(.cu4-ch-flat) .cu4-items { padding-right: 14px; }
+#cu4 .cu4-ch:not(.cu4-ch-flat) .cu4-items .cu4-mark { width: 13px; height: 13px; }
+#cu4 .cu4-ch:not(.cu4-ch-flat) .cu4-items .cu4-mark .cu4-ic { width: 8px; height: 8px; }
+
 /* ---------- page ---------- */
 
 #cu4 .cu4-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 14px; color: var(--cu4-muted); margin-bottom: 8px; }
