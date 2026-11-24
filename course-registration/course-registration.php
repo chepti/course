@@ -168,6 +168,24 @@ function car_auth_cookie_expiration_for_learners($expiration, $user_id, $remembe
 add_filter('auth_cookie_expiration', 'car_auth_cookie_expiration_for_learners', 10, 3);
 
 /**
+ * Learners' comments are published immediately, never held for moderation.
+ * WordPress's "author must have a previously approved comment" rule breaks
+ * whenever the first comment was trashed or the display name / email changed,
+ * so we do not rely on it for course learners. Spam verdicts are untouched.
+ */
+function car_auto_approve_learner_comments($approved, $commentdata) {
+    if ($approved !== 0 && $approved !== '0') {
+        return $approved; // already approved, or spam/trash - leave as is
+    }
+    $user_id = isset($commentdata['user_id']) ? (int) $commentdata['user_id'] : 0;
+    if ($user_id && car_user_has_course_role($user_id)) {
+        return 1;
+    }
+    return $approved;
+}
+add_filter('pre_comment_approved', 'car_auto_approve_learner_comments', 99, 2);
+
+/**
  * Refresh auth cookie when a learner views a private (course) page – keeps connection stable.
  */
 function car_refresh_cookie_on_course_page() {
